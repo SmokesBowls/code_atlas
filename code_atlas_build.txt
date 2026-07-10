@@ -2947,3 +2947,200 @@ The updated web viewer is currently serving your `conductor_building_blocks` rep
 The buttons are positioned in the top-left header next to the project tag. All 33 automated validation tests are passing successfully.
 
 ///////////////////////////////////////////////////////////////////////
+
+
+
+
+/home/mytruelove/Desktop/burdens_of_a_forgotten_past/conductor/conductor_building_blocks 
+
+try this one again please
+8:14 PM
+
+
+I have re-scanned the conductor_building_blocks codebase and relaunched the local web viewer.
+
+Reports Generated:
+Standard JSON: 
+burdens_report.json
+Standard Markdown: 
+burdens_report.md
+AI Architecture JSON: 
+burdens_report.ai.json
+AI Architecture Markdown: 
+burdens_report.ai.md
+Interactive Web Viewer:
+The report server is running: 🔗 http://127.0.0.1:8080/
+
+8:14 PM
+
+
+
+shouldnt there be a document download button or something?
+8:15 PM
+
+
+Yes, I have added file download buttons directly in the web viewer header.
+
+1. Download Integration
+JSON Download: The main JSON report is serialized and triggered directly inside JavaScript (Blob generation) as a clean offline file download.
+Companion Downloads: The server now exposes /api/report/markdown, /api/report/ai_json, and /api/report/ai_markdown endpoints which read the corresponding companion files from disk and serve them as file downloads using the HTTP Content-Disposition: attachment header.
+Conditional Visibility: The viewer detects whether the AI exports exist on disk. If they do (like in this case), the Download AI JSON and Download AI MD buttons appear automatically in the UI.
+2. Status
+The updated web viewer is currently serving your conductor_building_blocks report: 🔗 http://127.0.0.1:8080/
+
+The buttons are positioned in the top-left header next to the project tag. All 33 automated validation tests are passing successfully.
+
+8:15 PM
+
+
+
+i would ask for the command to run it myself... but i think their should be a choose folder option and a single start_atlas.sh or something along those lines
+8:30 PM
+
+
+I have created an interactive launcher script called start_atlas.sh inside the project root directory.
+
+Interactive Launcher Script:
+📄 
+start_atlas.sh
+
+What it does:
+Prompts for Target Directory: Asks which folder you want to scan (defaults to the current directory ., and verifies the path exists).
+Prompts for Output Path: Asks where to save the report (defaults to code_atlas_report.json).
+Prompts for AI Exporter: Asks whether to generate token-conscious AI packets (defaults to y).
+Executes Scanner: Calls the python static analysis scanner with the configured arguments.
+Starts Viewer Server: Automatically starts the local HTTP server and opens your browser.
+How to run it:
+Open a terminal in the /home/mytruelove/Desktop/code_atlas_rescue directory and run:
+
+bash
+
+
+./start_atlas.sh
+8:30 PM
+
+
+
+ ╭─mytruelove@mytruelove in repo: code_atlas_rescue on  main (2def2c1) [!?] took 0s
+ ╰─λ ./start_atlas.sh
+==================================================
+          Code Atlas Local Orchestrator           
+==================================================
+
+Enter path to target directory to scan [default: .]: /home/mytruelove/Desktop/burdens_of_a_forgotten_past/conductor/conductor_building_blocks/trixelmap
+Selected target directory: /home/mytruelove/Desktop/burdens_of_a_forgotten_past/conductor/conductor_building_blocks/trixelmap
+
+Enter output JSON path [default: code_atlas_report.json]: /home/mytruelove/Desktop/code_atlas_output
+Selected output path: /home/mytruelove/Desktop/code_atlas_output
+
+Generate token-conscious AI packets (.ai.json and .ai.md)? (y/n) [default: y]: y
+AI export targets active.
+
+Running static analysis scan...
+Scanning directory: /home/mytruelove/Desktop/burdens_of_a_forgotten_past/conductor/conductor_building_blocks/trixelmap...
+Traceback (most recent call last):
+  File "/home/mytruelove/Desktop/code_atlas_rescue/code_atlas/scanner.py", line 130, in <module>
+    main()
+    ~~~~^^
+  File "/home/mytruelove/Desktop/code_atlas_rescue/code_atlas/scanner.py", line 127, in main
+    run_scan(args.dir, args.output, args.ai_output, args.ai_json_output, args.ai_detail)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mytruelove/Desktop/code_atlas_rescue/code_atlas/scanner.py", line 58, in run_scan
+    with open(output_path, 'w', encoding='utf-8') as f:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/home/mytruelove/Desktop/code_atlas_output'
+
+ ╭─mytruelove@mytruelove in repo: code_atlas_rescue on  main (2def2c1) [!?] took 2m16s
+[🔴] × 
+8:34 PM
+
+
+Ah, great catch! The issue was that the directory /home/mytruelove/Desktop/code_atlas_output exists, and Python’s open(..., 'w') raises IsADirectoryError when you try to open a folder path as a file.
+
+What has been fixed:
+scanner.py Directory Check: The python scanner now checks if the specified output path is a directory (or ends with a trailing slash /). If so, it automatically appends /code_atlas_report.json to it.
+start_atlas.sh Directory Check: The launcher script now performs the same check. If the path you enter resolves to a folder, it automatically appends /code_atlas_report.json to the report path, ensuring the viewer starts up cleanly and points to the correct file path.
+You can now run the launcher script again using the same folder path, and it will resolve safely without crashing:
+
+bash
+
+
+./start_atlas.sh
+8:34 PM
+
+
+
+so everything it makes is called code_atlas.... as the projects being run add up.. code_atlas.file and code_atlas.file are going to be very difficult to determine what project the code_atlas.file belongs to... perhaps it should take the name of the project folder being scanned.. but it should recognize already existing  project_filename and either add the following as project_filename_s2 and then project_filename_s3 for scan2 and scan3 so on and so forth as opposed to just writing over the pre existing prject_fiolename files... or at least ask and provide a way to change the project_filename duplicate so it can save safely
+8:50 PM
+
+
+This makes perfect sense. Overwriting previous runs or having generic code_atlas_report names makes it very easy to lose track of scan history across different projects.
+
+What has been updated in the orchestrator:
+Dynamic Project Naming: start_atlas.sh now extracts the base name of the folder you are scanning and sets that as the default output name. E.g., if you scan /path/to/trixelmap, it suggests trixelmap.json as the default output.
+Auto-Incrementing Duplicate Check: If a report file with the suggested name already exists (either in the current directory or the target destination), the launcher automatically resolves the conflict by appending scan suffixes (_s2, _s3, etc.). E.g., if trixelmap.json exists, it defaults to trixelmap_s2.json and will print a warning informing you of the auto-resolved path.
+You can run ./start_atlas.sh again to test this out!
+
+////////////////////////////////////////////////////////////////////
+
+Payload Printing Pass
+
+Do not change analysis logic.
+
+After every successful scan, start_atlas.sh must print a complete payload manifest containing the exact absolute paths of every generated file:
+
+- standard JSON
+- standard Markdown
+- AI JSON, when enabled
+- AI Markdown, when enabled
+
+Then prompt:
+
+Print generated payload contents now? (y/n) [default: y]:
+
+If yes:
+1. Print every generated payload.
+2. Use a clear header and footer around each payload.
+3. Print JSON as valid formatted JSON.
+4. Print Markdown exactly as generated.
+5. Do not truncate payloads silently.
+6. Preserve the files on disk.
+7. Print the payloads before launching the viewer, so the terminal output remains available even if browser launch fails.
+
+Also add CLI support for noninteractive use:
+
+--print-payloads
+--no-print-payloads
+
+Default behavior for start_atlas.sh:
+print payloads unless the user declines.
+
+The final terminal summary must include:
+- scanned project path
+- report family name
+- output directory
+- generated payload paths
+- viewer URL
+
+
+Viewed start_atlas.sh:40-106
+Edited start_atlas.sh
+Viewed walkthrough.md:75-80
+Edited walkthrough.md
+
+I have implemented the **Payload Printing Pass** inside the launcher script.
+
+### Updates to `start_atlas.sh`:
+1. **Interactive Prompt**: Immediately after scanning, the script outputs a **Payload Manifest** showing the absolute file paths of every generated file. It then prompts:
+   `Print generated payload contents now? (y/n) [default: y]:`
+2. **Payload Dumps**: If selected, it prints the raw contents of every generated file (JSON and Markdown) in their entirety without truncation, wrapped in clear `=== START PAYLOAD: <path> ===` and `=== END PAYLOAD: <path> ===` headers and footers.
+3. **CLI Flags Support**:
+   * Running `./start_atlas.sh --print-payloads` forces payloads to print (skips the prompt).
+   * Running `./start_atlas.sh --no-print-payloads` skips payload printing (skips the prompt).
+4. **Final Summary block**: Prints a console summary showing:
+   * Scanned Project Path
+   * Report Family Name
+   * Output Directory
+   * Generated Payload list
+   * Viewer URL
+5. **Execution Order**: Payload printing and summary logs are printed *before* starting the local web server, ensuring they remain completely accessible in your terminal window history.
