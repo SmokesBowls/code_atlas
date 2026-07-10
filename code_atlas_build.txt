@@ -1,0 +1,2265 @@
+his is an incredibly detailed and well-thought-out concept for a crucial tool in software engineering, especially for maintaining and evolving complex, long-lived projects. Let's call this tool "Code Atlas."
+Code Atlas would operate as a comprehensive analytical engine, providing a deep understanding of a codebase's structure and behavior without making destructive changes.
+Here's how Code Atlas would function and what its outputs would look like:
+1. Project Ingestion and Initial Scan:
+Input: Accepts a ZIP archive of the project.
+Extraction: Unzips the archive into a secure, isolated workspace.
+File Tree Build: Constructs a complete, navigable file tree, indexing all files and directories.
+2. Static-First Analysis Layer (The "Archaeologist"):
+This layer meticulously sifts through the codebase, inferring relationships and intent from the static structure.
+Syntax & Structure Parsing: For each recognized language, it parses syntax (ASTs), identifies functions, classes, methods, variables, and their definitions.
+Dependency Mapping: Traces import/require statements, function calls, class instantiations, and configuration references to build a granular dependency graph.
+Entrypoint Detection: Identifies likely entry points based on common patterns (e.g., main functions, web server routes, CLI parsers, UI component roots).
+Capability Grouping (Heuristics Engine): This is the core intelligence. It uses a combination of techniques:
+Directory Structure: Assumes directories often indicate logical grouping.
+Naming Conventions: Looks for prefixes, suffixes, and common terms (e.g., _service, _controller, _util, api, auth, payment).
+Dependency Clusters: Groups files that are highly interdependent and less connected to other groups.
+Configuration Analysis: Parses configuration files (JSON, YAML, INI, etc.) to understand how different parts of the application are linked and activated.
+UI/CLI Surface Analysis: Identifies routes, command definitions, and UI component trees.
+Historical Remnants Detection: Uses heuristics like dead code warnings (if available from linters), commented-out blocks, or files with very low connectivity to current active paths to suggest "remnants."
+Path Inference & Status Labeling (Static):
+Likely Active Path: Strong dependency chain from an entrypoint, consistent naming, configuration references.
+Dormant Path: Appears fully formed but lacks a clear static entrypoint or is commented out in configuration.
+Stubbed Path: Contains placeholder functions/classes, TODO comments indicating future implementation, or partial interfaces with missing implementations.
+Partial Path: A segment of a larger path exists but terminates unexpectedly (e.g., an if branch with no implementation, an interface with few implementations).
+Orphaned Path: No inbound static dependencies, no clear entrypoint, but internally consistent.
+Legacy Path: Naming patterns suggest older functionality, or significant structural differences from the majority of the codebase.
+Duplicated Path: High code similarity detected with another path, indicating copy-pasting.
+Misplaced Path: Logically belongs to one capability group but resides in a different directory or has unusual cross-group dependencies.
+3. Optional Runtime-Assisted Analysis Layer (The "Observer"):
+Sandbox Environment: Sets up a controlled execution environment (e.g., Docker container, virtual machine) with necessary dependencies.
+Instrumentation: Injects probes (e.g., aspect-oriented programming, bytecode manipulation, dynamic tracing libraries) into the code to log:
+Function/method calls
+File access (read/write)
+Module loading
+Network requests (internal/external)
+Database queries
+Execution Scenarios: Runs a predefined set of tests, common user flows, or even randomly generated inputs (fuzzing) to exercise the codebase.
+Runtime Path Tracing: Builds dynamic call graphs and execution traces.
+Refinement of Static Map:
+Confirm Active Paths: Paths frequently hit during runtime get a higher confidence score for "active."
+Identify Dormant Paths: Paths that appeared "likely active" statically but were never executed at runtime are downgraded to "dormant" or even "dead" with higher confidence.
+Uncover Hidden Dependencies: Runtime might reveal dependencies missed by static analysis (e.g., dynamic module loading, reflection).
+Validate Stubbed/Partial Paths: Confirm if a stub is indeed unexecuted or if a partial path truly stops prematurely.
+4. Output Generation:
+A. Component Relationship Report (Detailed Text/JSON Output):
+This report would be a highly structured document, ideal for human review and further tooling.
+Inferred Capability Groups:
+[Group Name]: [Description/Inferred Purpose]
+Confidence: [High/Medium/Low]
+Evidence: [Directory structure, Naming patterns, High internal cohesion]
+Entrypoints:
+- [File/Function Name] (Confidence: High, Evidence: CLI entry, Web Route '/api/v1/users')
+Supporting Files:
+- [file1.js] (Role: Utility, DependencyOf: [entrypoint_A])
+- [file2.py] (Role: Model, DependencyOf: [group_B, group_C])
+Internal Dependencies:
+[file_in_group_A] calls [file_in_group_A]
+External Dependencies (to other groups):
+[file_in_group_A] depends on [file_in_group_B]
+Path Status Inventory:
+Active Paths:
+- [Path Description] (Status: Active, Confidence: High, Evidence: Runtime hit 120x, Static entrypoint)
+Likely Active Paths:
+- [Path Description] (Status: Likely Active, Confidence: Medium, Evidence: Static entrypoint, Strong dependency chain, No runtime hits observed in limited runs)
+Dormant Paths:
+- [Path Description] (Status: Dormant, Confidence: High, Evidence: Complete static structure, No static entrypoint, No runtime hits)
+Stubbed Paths:
+- [Path Description] (Status: Stubbed, Confidence: Medium, Evidence:TODOcomments, Unimplemented interface methods)
+Partial Paths:
+- [Path Description] (Status: Partial, Confidence: High, Evidence: Execution trace ends abruptly, Incomplete dependency chain)
+Dead Paths:
+- [Path Description] (Status: Dead, Confidence: High, Evidence: Zero static inbound/outbound links, No runtime hits, Marked for deletion by linter)
+Orphaned Paths:
+- [Path Description] (Status: Orphaned, Confidence: Medium, Evidence: No static inbound links, Internal cohesion, No runtime hits)
+Legacy Paths:
+- [Path Description] (Status: Legacy, Confidence: High, Evidence: Old naming convention, Different architectural pattern, Low activity)
+Duplicated Paths:
+- [Path Description] (Status: Duplicated, Confidence: High, Evidence: 95% code similarity with [original_path], Divergence at line X)
+Misplaced Paths:
+- [Path Description] (Status: Misplaced, Confidence: Medium, Evidence: High dependency on [Group B] but located in [Group A]'s directory)
+Unresolved Ambiguities/Gaps:
+Potential circular dependency between [File A] and [File B]. Needs review.
+Unclear role of [Directory X]. Appears to contain mixed responsibilities.
+Ranked List of “Next Files to Inspect”:
+1. [file_A.js]: High complexity, central to 'User Management', critical entrypoint.
+2. [file_B.py]: Appears to be a dormant path for 'Reporting', potential for removal.
+3. [file_C.java]: Contains remnants of 'Legacy API v1', investigate separation.
+B. Hierarchical Visual Graph (Interactive Web-based Output):
+This would be a dynamic, explorable visualization, allowing users to zoom in and out of different levels of abstraction.
+Top Level: Shows major capability groups as large nodes, with links representing dependencies between them.
+Mid Level (Drill Down): Clicking on a capability group expands it to show modules, major classes, or sub-directories within that group.
+Low Level (Deep Drill Down): Further expansion reveals individual files, with color-coding and icons indicating their status (active, stubbed, legacy, etc.).
+Path Tracing: A feature to highlight a specific capability path, showing all files and modules involved, and where it becomes dormant or stubbed.
+Filter/Search: Ability to search for files, functions, or specific statuses.
+Legend: Explains color codes and icons for path statuses.
+Here's an example of what such a graph might look like at a high level:
+Playground
+9,538 tokens
+
+Model 1:59 PM
+You've provided excellent refinements that significantly strengthen the "Code Atlas" concept, especially by emphasizing caution, explicit uncertainty, and the human element in architectural recovery. The core principle of "Depiction is not Endorsement" aligns perfectly with the idea that the tool should report what is, with its confidence, rather than dictate what should be.
+Let's integrate these critical adjustments:
+Revised Core Principles for Code Atlas:
+Static-First Architecture Recovery: Always begin by understanding the codebase's inherent structure.
+Optional Runtime Observation: Enhance static understanding with behavioral insights, but never let runtime data solely define structural intent.
+Evidence-Backed Inferences: Every claim, whether confirmed or inferred, must point to its supporting evidence in code or runtime.
+Explicit Uncertainty: Distinguish clearly between confirmed facts, informed inferences, and unresolved gaps.
+Respect for Unexecuted Paths: Treat unexecuted paths with nuance; they are not automatically dead code. Some are intentional stubs, some are dormant, and some represent future capability.
+Focus on Mapping, Not Auto-Refactoring: The primary goal remains to create a trustworthy architectural map, leaving refactoring decisions to human experts.
+Sharpened Sections within Code Atlas:
+1. Static-First Analysis Layer (The "Archaeologist"):
+"Historical Remnants Detection": Rephrased to emphasize candidates: "Identifies candidate legacy paths or low-confidence remnants based on patterns like very low connectivity, naming that deviates from current conventions, or significant structural differences. These are flagged for human review and require stronger evidence (e.g., absence in configuration, explicit deprecation comments) to be moved to a 'Candidate Dead' status."
+"Capability Grouping": Explicitly stated: "Infers evidence-backed capability groups or subsystems, recognizing these are inferred constructs for architectural understanding, not guaranteed true module boundaries. The tool provides a confidence level for each grouping and lists the supporting evidence (e.g., directory structure, naming patterns, high internal cohesion, configuration references). This output is designed to facilitate semi-automatic recovery and expert review."
+2. Status Model Revision (More Nuanced Language):
+The updated status categories, preserving the intent behind unexecuted code, are:
+Active: Confirmed by both strong static evidence (entrypoint, dependency chain) and significant runtime execution.
+Likely Active: Strong static evidence, but limited or no runtime execution observed (e.g., specific scenarios not tested, or a seldom-used feature).
+Dormant: Appears architecturally complete statically but lacks a clear static entrypoint, is disabled in configuration, or has no observed runtime activity. (Could be an intentional reserve or an unactivated feature).
+Stubbed: Contains placeholder logic, TODO comments indicating future implementation, partial interfaces, or incomplete function bodies.
+Partial: A segment of a larger path exists but terminates unexpectedly or is incomplete in its implementation.
+Orphaned: No inbound static dependencies, no clear entrypoint, but internally consistent. (Could be unused utility or forgotten code).
+Legacy: Exhibits characteristics of older architectural patterns, naming conventions, or technology versions, indicating historical rather than current design intent.
+Duplicated: High code similarity detected with another path, suggesting copy-pasting rather than intentional reuse.
+Misplaced: Logically belongs to one capability group based on dependencies and function, but resides in a different directory or has unusual cross-group dependencies.
+Unresolved: The tool cannot definitively categorize the path due to conflicting evidence, ambiguity, or insufficient data (e.g., dynamic code paths without runtime context).
+Candidate Dead: Only assigned when both strong static and runtime evidence converge to suggest no useful role. This includes zero static inbound/outbound links, zero runtime hits across comprehensive testing, and potentially explicit deprecation marks or lack of configuration. This is not an automatic label based on unexecution alone.
+3. Best Addition: Traceability and Confidence Layer:
+This is indeed the strongest enhancement. Code Atlas will explicitly incorporate this across its entire output:
+Every claim will be explicitly tagged with its confidence level and evidence:
+Confirmed Claims:
+Evidence: Directly observed in runtime traces (e.g., "Runtime Hit: 120x, Scenario: User Login"), explicit configuration directives (e.g., "Config: feature_flag_X: true"), or unambiguous static code constructs (e.g., "Static: main() entrypoint").
+These claims represent facts about the current state or observed behavior.
+Inferred Claims:
+Evidence: Supported by patterns and structural analysis (e.g., "Inference: Directory structure suggests UserManagement capability," "Inference: Naming pattern *_service.js"), dependency clustering (e.g., "Inference: High internal cohesion within Payment group").
+These claims are strong educated guesses, highly probable but not definitively proven without further validation.
+Gaps (Unresolved Questions):
+Evidence: Lack of clear static or runtime evidence (e.g., "Gap: Dynamic module load source unknown," "Gap: Conflicting static/runtime evidence on reporting module status"), or identified ambiguities (e.g., "Gap: Circular dependency between A and B, actual flow unclear").
+These explicitly highlight areas where human validation and deeper investigation are required.
+This traceability layer means the "Component Relationship Report" will now explicitly list for each group, path, or file: "Status," "Confidence (High/Medium/Low)," and "Type of Claim (Confirmed/Inferred/Gap)," followed by the detailed evidence.
+Builder-Facing Revision (Your suggested short reaction, now fully aligned):
+"This is close. Keep the static-first architecture recovery approach, optional runtime observation, capability grouping, entrypoint detection, ranked next-file guidance, and hierarchical graph. But the tool must preserve uncertainty explicitly: every claim should be marked as confirmed, inferred, or gap, and unexecuted paths must not be treated as automatic dead code because some routes are intentional stubs or dormant capability branches. The 'Candidate Dead' status requires strong corroborating evidence from both static and runtime analysis."
+This refined "Code Atlas" is now a robust, responsible, and incredibly valuable tool for software archaeological expeditions. It prioritizes clarity and accuracy over premature judgment, empowering developers to navigate and improve complex codebases with confidence.
+
+///////////////////////////////////////////////////////////////
+
+Implementation Plan: Code Atlas Backend - Milestone 1 (Updated)
+This plan details the first backend milestone for Code Atlas, focusing entirely on a static scanner and parser for Python code. It does not include any frontend components or visualization graphs.
+
+Proposed Changes
+We will establish a Python-based backend that scans a directory, parses files using Python's built-in ast module, resolves local dependencies, handles parsing errors gracefully, and outputs a structured JSON report.
+
+Directory Structure
+
+/home/mytruelove/Desktop/code atlas/
+├── code_atlas/
+│   ├── __init__.py
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── parser.py       # AST parser to extract imports, classes, and functions
+│   │   └── reporter.py     # Structuring and generating the JSON report
+│   ├── scanner.py          # Main orchestration CLI script
+│   └── tests/
+│       ├── __init__.py
+│       └── test_scanner.py # Unit tests to verify parsing & dependency resolution
+└── code_atlas.txt          # Original concept file
+Data Schema for code_atlas_report.json
+The JSON report will contain metadata, a registry of scanned files with their internal structures (raw_imports, classes, functions), any parsing errors encountered, and a list of resolved local dependencies.
+
+Each file entry, local dependency entry, and parse error entry will include claim_type, confidence, and evidence fields.
+
+Example JSON Output Structure:
+json
+
+{
+  "project_name": "code_atlas",
+  "scanned_at": "2026-07-08T17:30:00Z",
+  "files": {
+    "code_atlas/scanner.py": {
+      "language": "python",
+      "size_bytes": 1234,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": ["Direct file read and size check from filesystem"],
+      "raw_imports": [
+        "os",
+        "sys",
+        "json",
+        "code_atlas.core.parser",
+        "code_atlas.core.reporter"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "main",
+          "start_line": 10,
+          "end_line": 25
+        }
+      ]
+    }
+  },
+  "local_dependencies": [
+    {
+      "source": "code_atlas/scanner.py",
+      "target": "code_atlas/core/parser.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in code_atlas/scanner.py",
+        "Target file exists in project layout"
+      ]
+    }
+  ],
+  "parse_errors": [
+    {
+      "filepath": "code_atlas/broken_file.py",
+      "error": "SyntaxError: invalid syntax (broken_file.py, line 5)",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "AST parser threw syntax exception during compilation"
+      ]
+    }
+  ]
+}
+Smallest Scanner/Parsing Milestone
+The target goal is to implement a command-line tool that can:
+
+Traverse: Walk a target directory recursively and find all .py files.
+Parse: Extract classes (and their methods), functions, and raw import statements from each Python file using Python's standard ast library.
+Handle Errors: Catch compilation/syntax errors per-file, logging them as gaps in parse_errors instead of crashing.
+Resolve Dependencies: Identify raw imports that resolve to local target files within the scanned project directory, populating local_dependencies.
+Export: Write this structured data into code_atlas_report.json.
+Exact Python Files to Create
+1. 
+parser.py
+A module containing:
+
+parse_file(filepath, base_dir): Parses a single Python file to extract its file size, raw import names, top-level functions, classes, and class methods. Returns the parsing result dictionary, or raises a syntax/parsing error if parsing fails.
+2. 
+reporter.py
+A module containing:
+
+generate_report(project_dir, files_data, parse_errors): Processes the raw parsing results, maps imports to local target paths to determine the local dependency graph, and formats the final JSON.
+3. 
+scanner.py
+The CLI script that:
+
+Uses argparse to accept --dir (default: current directory) and --output (default: code_atlas_report.json).
+Recursively gathers python files, processes them, handles parsing errors, runs the reporter, and outputs the JSON report.
+4. 
+test_scanner.py
+A test suite containing:
+
+Unit tests verifying that AST parsing correctly extracts classes, methods, and functions.
+Robust tests confirming parsing error handling, raw imports vs. local dependencies separation, and presence of confidence/claim metadata.
+Verification Plan
+Automated Tests
+We will run tests using Python's built-in unittest module:
+
+bash
+
+python3 -m unittest discover -s code_atlas/tests -p "*.py"
+Manual Verification
+We will scan the newly created code_atlas package itself to generate a self-scan report:
+
+bash
+
+python3 code_atlas/scanner.py --dir code_atlas --output self_report.json
+And verify that:
+
+self_report.json is generated successfully.
+The imports between scanner.py, reporter.py, and parser.py are correctly reflected in the "local_dependencies" array.
+Every file entry, local dependency, and parse error includes claim_type, confidence, and evidence fields.
+Parsing errors on a deliberately malformed python file do not crash the script and are logged under parse_errors.
+
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+Yes — that’s safer.
+
+Start him in an **empty folder** with only the Code Atlas spec copied in. That keeps Anti-Gravity from wandering into EngAIn, Godot, Trixel, or anything else.
+
+Use a shape like:
+
+```bash
+mkdir -p ~/work/code_atlas_seed
+cd ~/work/code_atlas_seed
+```
+
+Put the spec there as something like:
+
+```text
+CODE_ATLAS_SPEC.txt
+```
+
+Then tell Anti-Gravity:
+
+```text
+You are working in an empty project folder.
+
+Build Code Atlas backend from CODE_ATLAS_SPEC.txt.
+
+This folder is the whole project.
+Do not assume access to any other repo.
+Do not reach outside this folder.
+Do not create frontend files yet.
+Do not add Google/cloud/vendor dependencies.
+
+First create the smallest working backend that can scan a target folder and produce code_atlas_report.json.
+```
+
+That gives him a clean sandbox. Later, when the backend works, you can point it at EngAIn as the scanned target without letting the builder live inside EngAIn.
+
+
+Listed directory code%20atlas
+Viewed code%20atlas.txt:1-143
+
+Yes, I see the file [code atlas.txt](file:///home/mytruelove/Desktop/code%20atlas/code%20atlas.txt) in the workspace directory. 
+
+It contains a detailed conceptual design and principles for a tool called **"Code Atlas"**, which is a comprehensive analytical engine for software codebases. It outlines:
+1. **Project Ingestion and Initial Scan**
+2. **Static-First Analysis Layer (The "Archaeologist")** (syntax parsing, dependency mapping, capability grouping, and path inference)
+3. **Optional Runtime-Assisted Analysis Layer (The "Observer")**
+4. **Output Generation** (Component Relationship Report and Hierarchical Visual Graph)
+5. **Traceability and Confidence Layer** (classifying findings into Confirmed Claims, Inferred Claims, and Gaps)
+
+### Summary of Work
+- Scanned the workspace directory and identified [code atlas.txt](file:///home/mytruelove/Desktop/code%20atlas/code%20atlas.txt).
+- Read and reviewed the contents of the file to understand the "Code Atlas" concept.
+
+/////////////////////////////////////////////////////////
+
+Good. He did the workspace check and read the spec. Nothing wrong yet.
+
+Next give him this:
+
+```text
+Good. Now propose the first backend milestone before writing code.
+
+Do not build the visual graph yet.
+Do not build a frontend yet.
+
+Return:
+1. Folder/file layout.
+2. Data schema for code_atlas_report.json.
+3. Smallest scanner/parsing milestone.
+4. Exact Python files to create.
+5. Gate/test command to prove it works.
+```
+
+He has only confirmed the file exists. The next thing we need is his proposed build shape before he starts creating files.
+
+
+
+Implementation Plan: Code Atlas Backend - Milestone 1
+This plan details the first backend milestone for Code Atlas, focusing entirely on a static scanner and parser for Python code. It does not include any frontend components or visualization graphs.
+
+Proposed Changes
+We will establish a Python-based backend that scans a directory, parses files using Python's built-in ast module, resolves local dependencies, and outputs a structured JSON report.
+
+Directory Structure
+
+/home/mytruelove/Desktop/code atlas/
+├── code_atlas/
+│   ├── __init__.py
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── parser.py       # AST parser to extract imports, classes, and functions
+│   │   └── reporter.py     # Structuring and generating the JSON report
+│   ├── scanner.py          # Main orchestration CLI script
+│   └── tests/
+│       ├── __init__.py
+│       └── test_scanner.py # Unit tests to verify parsing & dependency resolution
+└── code_atlas.txt          # Original concept file
+Data Schema for code_atlas_report.json
+The JSON report will contain metadata, a registry of scanned files with their internal structures (imports, classes, functions), and a list of resolved local dependencies.
+
+json
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CodeAtlasReport",
+  "type": "object",
+  "required": [
+    "project_name",
+    "scanned_at",
+    "files",
+    "dependencies"
+  ],
+  "properties": {
+    "project_name": {
+      "type": "string"
+    },
+    "scanned_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "language",
+          "size_bytes",
+          "imports",
+          "classes",
+          "functions"
+        ],
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "imports": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "methods",
+                "start_line",
+                "end_line"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "methods": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "start_line": {
+                  "type": "integer"
+                },
+                "end_line": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "functions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "start_line",
+                "end_line"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "start_line": {
+                  "type": "integer"
+                },
+                "end_line": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source",
+          "target",
+          "type"
+        ],
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "import"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+Smallest Scanner/Parsing Milestone
+The target goal is to implement a command-line tool that can:
+
+Traverse: Walk a target directory recursively and find all .py files.
+Parse: Extract classes (and their methods), functions, and import statements from each Python file using Python's standard ast library.
+Resolve Dependencies: Identify imports that map to other local files within the scanned project directory.
+Export: Write this structured data into code_atlas_report.json.
+Exact Python Files to Create
+1. 
+parser.py
+A module containing:
+
+parse_file(filepath): Parses a single Python file to extract its file size, import names, top-level functions, classes, and class methods. Returns a dictionary conforming to the files property in the schema.
+2. 
+reporter.py
+A module containing:
+
+generate_report(project_dir, files_data): Processes the raw parsing results, maps imports to local target paths to determine the local dependency graph, and formats the final JSON.
+3. 
+scanner.py
+The CLI script that:
+
+Uses argparse to accept --dir (default: current directory) and --output (default: code_atlas_report.json).
+Recursively gathers python files, processes them, runs the reporter, and outputs the JSON report.
+4. 
+test_scanner.py
+A test suite containing:
+
+Unit tests verifying that AST parsing correctly extracts classes, methods, and functions.
+Integration test running the full pipeline over a mock directory to verify code_atlas_report.json output and correct local dependency resolution.
+Verification Plan
+Automated Tests
+We will run tests using Python's built-in unittest module:
+
+bash
+
+python3 -m unittest discover -s code_atlas/tests -p "*.py"
+Manual Verification
+We will scan the newly created code_atlas package itself to generate a self-scan report:
+
+bash
+
+python3 code_atlas/scanner.py --dir code_atlas --output self_report.json
+And verify that:
+
+self_report.json is generated successfully.
+The imports between scanner.py, reporter.py, and parser.py are correctly reflected in the "dependencies" array.
+
+////////////////////////////////////////////////////
+
+His milestone is mostly good. I would approve it with one correction before code starts:
+
+```text
+Good plan. Approved for Milestone 1 with these required changes:
+
+1. Add evidence/confidence/claim_type now, even if simple.
+Every file entry and dependency entry must include:
+- claim_type: confirmed | inferred | gap
+- confidence: high | medium | low
+- evidence: list of strings
+
+2. Do not put the JSON Schema itself inside code_atlas_report.json.
+The output report should be the actual scan result.
+If you want a schema, create a separate file later.
+
+3. Keep imports separated:
+- raw_imports: every import found by AST
+- local_dependencies: imports resolved to files inside the scanned project
+
+4. Add parse_errors.
+If a Python file cannot parse, do not crash the scan. Record it as a gap.
+
+Proceed with Milestone 1 only.
+```
+
+The reason: his plan builds the basic scanner, but your Code Atlas doctrine requires **traceability from the first version**, not later.
+
+
+
+Edited implementation_plan.md
+Edited task.md
+Edited __init__.py
+Edited __init__.py
+Edited __init__.py
+Edited task.md
+Edited parser.py
+Edited reporter.py
+Edited task.md
+Edited scanner.py
+Edited task.md
+Edited test_scanner.py
+Edited task.md
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited reporter.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Ran command: `python3 code_atlas/scanner.py --dir code_atlas --output self_report.json`
+Viewed self_report.json:1-219
+Ran command: `rm self_report.json`
+Edited task.md
+Edited walkthrough.md
+
+I have successfully completed the implementation of **Milestone 1** for the Code Atlas Backend. 
+
+Here is a summary of the completed work (you can find the full review in the [walkthrough.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/walkthrough.md) and [task.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/task.md) artifacts):
+
+### Created Files & Layout
+- Package Initialization: [__init__.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/__init__.py), [core/__init__.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/__init__.py), and [tests/__init__.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/tests/__init__.py)
+- AST Parser: [parser.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/parser.py) — Safely extracts classes, methods, top-level functions, and imports. Catches syntax/compile errors gracefully.
+- Dependency Resolver & Report Gen: [reporter.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/reporter.py) — Maps import paths (both absolute and relative) to local files. Injects `claim_type`, `confidence`, and `evidence` lists into all metadata elements.
+- CLI Entrypoint: [scanner.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/scanner.py) — Traverses directories recursively (skipping standard build/venv patterns) to run the scan pipeline.
+- Tests: [test_scanner.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/tests/test_scanner.py) — Unit and integration tests confirming AST scanning accuracy, local dependency mapping, and error logs.
+
+### Verification Results
+1. **Automated Unit Tests**:
+   Ran the gate command successfully with zero failures and zero warnings:
+   ```bash
+   python3 -m unittest discover -s code_atlas/tests -p "*.py"
+   ```
+2. **Self-Scan Validation**:
+   Ran a manual self-scan over the tool itself to verify the output formatting and accuracy:
+   ```bash
+   python3 code_atlas/scanner.py --dir code_atlas --output self_report.json
+   ```
+   - Injected metadata (`claim_type`, `confidence`, `evidence`) was generated correctly.
+   - External dependencies (e.g., standard library imports like `ast` and `os`) remained under `raw_imports`, whereas internal dependencies (e.g. `scanner.py` referencing `core/parser.py`) were successfully resolved under `local_dependencies`.
+   - Syntax/compilation failures were verified to correctly register under `parse_errors` as gaps rather than causing scanner crashes.
+   
+   
+   ////////////////////////////////////////////////////////////
+   
+   
+   That is a good Milestone 1 result.
+
+The one thing I would **not trust yet** is his claim that “all metadata elements” have evidence/confidence/claim type until we inspect the actual files or report. But the shape sounds correct.
+
+Next ticket should be small:
+
+```text id="25k2ia"
+Milestone 1B: freeze the report contract.
+
+Do not add new features yet.
+
+Create:
+1. docs/CODE_ATLAS_REPORT_CONTRACT.md
+2. fixtures/sample_project_basic/
+3. fixtures/expected_basic_report_shape.json
+4. gate_code_atlas_contract.py
+
+The gate must run the scanner on the fixture project and verify:
+- report has project_name, scanned_at, root_path, files, local_dependencies, parse_errors
+- every file has claim_type, confidence, evidence
+- every local_dependency has claim_type, confidence, evidence
+- raw_imports and local_dependencies are separate
+- parse errors are recorded as gaps, not crashes
+
+Command:
+python3 gate_code_atlas_contract.py
+```
+
+That turns “it worked once” into a repeatable proof.
+
+
+
+
+. The "We Build Together" Factor
+You and GPT have built a lot. That means you have a tight feedback loop. If Antigravity (Gemini) breaks the JSON schema in a future commit, you will spot it immediately when you look at the self_report.json during the next review. You don't need a formal Python gate script to tell you what you will see with your own eyes in 2 seconds. Gates are for large teams with merge conflicts and CI/CD pipelines; they are overkill for a tight, AI-assisted duo/trio where the report is manually inspected at every step.
+
+2. The "All-Encompassing" Trap
+You nailed it. These gates always balloon. First it's gate_contract.py. Then you need gate_schema.py. Then gate_semantic.py. Before you know it, you've written more test infrastructure than actual product code. Perplexity's advice asks you to verify four specific things manually (relative imports, method separation, junk dirs, parse errors). That is a 15-minute manual check, not a week-long gate-building exercise.
+
+3. Antigravity (Gemini) is the builder
+Gemini wrote the Milestone 1 code. If you tell Gemini "Stop and build a formal contract gate", you kill its momentum. If you tell Gemini "Great, now let's verify these four specific things in the current output, fix them if broken, and move straight to Milestone 2", you keep the velocity while still getting the quality check.
+
+
+I agree with the correction.
+
+For **right now**, don’t build the formal gate. That would slow the project down too early.
+
+Use a **manual verification ticket** instead:
+
+```text id="0svd08"
+Milestone 1B: manual verification pass only.
+
+Do not build formal gate scripts yet.
+Do not expand architecture yet.
+
+Run the scanner on a small fixture or sample folder and verify these four things manually:
+
+1. Relative imports resolve correctly.
+2. Class methods are separated from top-level functions.
+3. Junk folders like __pycache__, .git, venv, node_modules are skipped.
+4. Broken Python files produce parse_errors as gaps, not crashes.
+
+Show the relevant snippets from the report.
+If any item fails, patch only that item.
+```
+
+That keeps momentum and still checks the fragile parts. Later, when Code Atlas becomes useful enough to depend on, then we can freeze the contract.
+
+
+
+Edited module_a.py
+
+Edited module_b.py
+
+Edited __init__.py
+
+Edited utils.py
+
+Edited broken.py
+
+Edited some_file.py
+
+Edited some_file.py
+
+Edited some_file.py
+
+Edited some_file.py
+
+Ran command: `python3 code_atlas/scanner.py --dir fixture --output fixture_report.json`
+
+Viewed fixture_report.json:1-122
+
+Ran command: `rm -rf fixture fixture_report.json`
+
+
+
+I have completed **Milestone 1B (manual verification pass)** using a temporary test fixture with the following structure:
+
+- `pkg/module_a.py` (containing a relative import `from .module_b import HelperClass`, parent-relative import `from ..utils import utility_func`, class `MyClass` with method `method_one`, and top-level function `my_top_level_function`)
+
+- `pkg/module_b.py` (containing class `HelperClass`)
+
+- `pkg/__init__.py`
+
+- `utils.py` (containing function `utility_func`)
+
+- `broken.py` (deliberate syntax error: `if True` missing a colon)
+
+- Junk files inside `.git/`, `__pycache__/`, `venv/`, and `node_modules/` directories
+
+
+
+---
+
+
+
+### Verification Results
+
+
+
+Here are the relevant snippets from the generated report:
+
+
+
+#### 1. Relative Imports Resolution
+
+Both package-relative imports (`.module_b`) and parent-relative imports (`..utils`) resolved correctly to their respective local files within the `local_dependencies` list:
+
+```json
+
+  "local_dependencies": [
+
+    {
+
+      "source": "pkg/module_a.py",
+
+      "target": "pkg/module_b.py",
+
+      "type": "import",
+
+      "claim_type": "inferred",
+
+      "confidence": "high",
+
+      "evidence": [
+
+        "Import statement found in source code of pkg/module_a.py",
+
+        "Resolved import string to local path pkg/module_b.py"
+
+      ]
+
+    },
+
+    {
+
+      "source": "pkg/module_a.py",
+
+      "target": "utils.py",
+
+      "type": "import",
+
+      "claim_type": "inferred",
+
+      "confidence": "high",
+
+      "evidence": [
+
+        "Import statement found in source code of pkg/module_a.py",
+
+        "Resolved import string to local path utils.py"
+
+      ]
+
+    }
+
+  ]
+
+```
+
+
+
+#### 2. Class Methods Separation from Top-Level Functions
+
+In `pkg/module_a.py`, `method_one` is correctly listed inside class definitions, while `my_top_level_function` is classified as a top-level function:
+
+```json
+
+    "pkg/module_a.py": {
+
+      "language": "python",
+
+      "size_bytes": 161,
+
+      "claim_type": "confirmed",
+
+      "confidence": "high",
+
+      "evidence": [ "Direct AST parsing of Python source code" ],
+
+      "raw_imports": [
+
+        "pkg.module_b",
+
+        "pkg.module_b.HelperClass",
+
+        "utils",
+
+        "utils.utility_func"
+
+      ],
+
+      "classes": [
+
+        {
+
+          "name": "MyClass",
+
+          "methods": [
+
+            "method_one"
+
+          ],
+
+          "start_line": 7,
+
+          "end_line": 9
+
+        }
+
+      ],
+
+      "functions": [
+
+        {
+
+          "name": "my_top_level_function",
+
+          "start_line": 4,
+
+          "end_line": 5
+
+        }
+
+      ]
+
+    }
+
+```
+
+
+
+#### 3. Skipping Junk Folders (`__pycache__`, `.git`, `venv`, `node_modules`)
+
+All files inside these folders were correctly ignored. The final report registered exactly `4` scanned files (representing `utils.py`, `pkg/module_a.py`, `pkg/module_b.py`, and `pkg/__init__.py`), meaning the junk files were successfully skipped.
+
+
+
+#### 4. Handling Broken Python Files
+
+The malformed Python file `broken.py` did not crash the scanner. It was recorded under `parse_errors` as a gap:
+
+```json
+
+  "parse_errors": [
+
+    {
+
+      "filepath": "broken.py",
+
+      "error": "SyntaxError: expected ':' (broken.py, line 1)",
+
+      "claim_type": "gap",
+
+      "confidence": "high",
+
+      "evidence": [
+
+        "AST parser threw syntax or compilation exception during read"
+
+      ]
+
+    }
+
+  ]
+
+```
+
+
+
+---
+
+
+
+### Summary of Work
+
+- Created the test fixture containing class definitions, functions, relative imports, syntax errors, and mock junk folders.
+
+- Ran the `code_atlas/scanner.py` CLI scanner over the fixture directory.
+
+- Manually verified that all four points passed with 100% correctness.
+
+- Removed temporary fixture files to keep the workspace clean.
+
+
+//////////////////////////////////////////////////////
+
+
+Milestone 2: Entrypoint and status inference.
+
+Do not build frontend.
+Do not add runtime observation.
+
+Add:
+1. entrypoint_detector.py
+2. status_classifier.py
+3.add a third module called ranking.py or simply extend reporter.py to produce a "next_files_to_inspect" array at the top level of the JSON, sorted by inbound import count. Also add a "role_hint" field to each file entry.
+
+Detect likely Python entrypoints:
+- if __name__ == "__main__"
+- argparse usage
+- Flask/FastAPI route hints if obvious
+- files named main.py, app.py, cli.py, server.py
+
+Add status fields for files:
+- active
+- likely_active
+- dormant
+- orphaned
+- stubbed
+- unresolved
+
+Each status must include claim_type, confidence, and evidence.
+
+Run scanner on a small fixture and show report snippets proving:
+- main.py is likely_active or active
+- imported helper is likely_active
+- unimported complete file is orphaned or dormant
+- TODO/pass/NotImplementedError file is stubbed
+"Milestone 2 scope approved with this structure:
+
+Modules to add:
+
+    entrypoint_detector.py — Detect __main__, argparse, Flask/FastAPI route hints, main.py/app.py/cli.py naming.
+
+    status_classifier.py — Assign statuses: active, likely_active, dormant, orphaned, stubbed, unresolved. Each must include claim_type, confidence, evidence. (Use stub detection via pass, TODO, NotImplementedError).
+
+    (Extra, quick win): Add a role_hint field to each file (cli, model, utility, config, test, package_init, unknown) based on naming/directory heuristics.
+
+    (Extra, quick win): Add a "next_files_to_inspect" array at the top level, sorted by inbound import count (most imported = highest priority).
+
+Output: The JSON report should now include status, role_hint, and the top-level next_files_to_inspect list.
+
+Verification: Run on your test fixture and paste snippets showing:
+
+    main.py marked likely_active or active.
+
+    An imported helper marked likely_active.
+
+    An unimported complete file marked orphaned or dormant.
+
+    A file with TODO/pass marked stubbed.
+
+    The next_files_to_inspect list includes the most-imported files first.
+
+Do not: build a frontend, add runtime tracing, or create formal gates. Static-only, Python-only, JSON-only."*
+
+
+
+Edited implementation_plan.md
+Edited task.md
+Viewed parser.py:1-118
+Edited parser.py
+Edited entrypoint_detector.py
+Edited status_classifier.py
+Edited reporter.py
+Edited test_scanner.py
+Edited task.md
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited reporter.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited main.py
+Edited helper.py
+Edited unimported.py
+Edited stub.py
+Ran command: `python3 code_atlas/scanner.py --dir fixture2 --output fixture2_report.json`
+Viewed fixture2_report.json:1-143
+Edited unimported.py
+Ran command: `python3 code_atlas/scanner.py --dir fixture2 --output fixture2_report.json`
+Viewed fixture2_report.json:1-122
+Searched for "ast.Str"
+Edited parser.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Ran command: `python3 code_atlas/scanner.py --dir fixture2 --output fixture2_report.json`
+Viewed fixture2_report.json:1-143
+Ran command: `rm -rf fixture2 fixture2_report.json`
+Edited task.md
+Edited walkthrough.md
+
+I have successfully completed and verified **Milestone 2**!
+
+You can find the full review in the updated [walkthrough.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/walkthrough.md) and [task.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/task.md) artifacts.
+
+### Summary of Work
+
+1. **Created New Modules**:
+   - [entrypoint_detector.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/entrypoint_detector.py) — Analyzes file names, main blocks, routing decorators, and `argparse` usage to identify entrypoints.
+   - [status_classifier.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/status_classifier.py) — Determines execution statuses (`active`, `likely_active`, `stubbed`, `orphaned`, `dormant`, `unresolved`) with claim/confidence metadata using graph reachability.
+
+2. **Extended Existing Modules**:
+   - [parser.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/parser.py) — Upgraded to extract AST signals (main block, route decorators, stubs via `TODO` or `NotImplementedError`) with support for Python 3.12+ compatibility (handling deprecated/removed `ast.Str`).
+   - [reporter.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/reporter.py) — Adds the `role_hint` field (`cli`, `model`, `utility`, `config`, `test`, `package_init`, `unknown`) and calculates the prioritized `next_files_to_inspect` array.
+
+3. **Validation**:
+   - **Automated Tests**: Updated [test_scanner.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/tests/test_scanner.py) to cover all new behaviors. All 7 tests passed successfully.
+   - **Manual verification**: Scanned a temporary mock fixture containing `main.py`, `helper.py`, `unimported.py`, and `stub.py`. Verified that:
+     - `main.py` was correctly marked `active`.
+     - `helper.py` (imported by `main.py`) was correctly marked `likely_active`.
+     - `unimported.py` (complete, but not imported) was correctly marked `orphaned`.
+     - `stub.py` (containing a `TODO` comment) was correctly marked `stubbed`.
+     - The `next_files_to_inspect` list prioritized `helper.py` (inbound imports = 1) over the others.
+     
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Milestone 2C: terminology correction only.
+
+Do not add new features.
+
+Change status meaning:
+- active = only runtime-confirmed later
+- likely_active = static entrypoint or reachable from static entrypoint
+- confirmed = claim_type only, not execution status
+
+For now, main.py should be likely_active, not active, unless runtime observation exists.
+
+Patch labels/tests/report wording only.
+
+
+Viewed status_classifier.py:1-170
+Edited status_classifier.py
+Viewed test_scanner.py:65-151
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited walkthrough.md
+Edited implementation_plan.md
+
+I have completed **Milestone 2C (terminology correction)**.
+
+### Summary of Changes
+
+1. **Status Logic Correction**:
+   - Updated [status_classifier.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/status_classifier.py) to classify both detected static entrypoints (and tests) and transitively reachable files as `likely_active`.
+   - The status `"active"` has been removed from the static output classifications, leaving it reserved for future runtime confirmation integrations.
+   - Evidence statements were patched to replace any references to `"active"` files with `"likely_active"`.
+   - `"confirmed"` remains used strictly as a `claim_type` metric indicating source confidence (e.g. for detected entrypoints or stubs), independent of the execution status.
+
+2. **Test Expectations Updated**:
+   - Modified [test_scanner.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/tests/test_scanner.py) to assert `likely_active` for `main.py` instead of `active`.
+   - Ran all unit tests successfully:
+     ```
+     Ran 7 tests in 0.002s
+     OK
+     ```
+
+3. **Walkthrough and Plan Synchronization**:
+   - Updated [walkthrough.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/walkthrough.md) and [implementation_plan.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/implementation_plan.md) artifacts to reflect the new execution status terminology.
+   
+   ////////////////////////////////////////////////////
+   
+   Milestone 3: Capability Group Inference
+
+Goal:
+Infer logical capability groups from the project without modifying code.
+
+Inputs:
+- directory structure
+- dependency graph
+- entrypoints
+- role hints
+- filenames
+
+Output:
+capability_groups
+
+Each group contains:
+- name (inferred)
+- confidence
+- claim_type
+- evidence
+- member_files
+- inbound_dependencies
+- outbound_dependencies
+
+    Add inbound_count and outbound_count to each file entry in the main report. These will be used as evidence.
+
+Verification:
+Run on your test fixture. Paste snippets showing:
+
+    At least one capability group with claim_type: inferred.
+
+    The group's evidence list explains the grouping (e.g., "Files share directory structure," "High internal cohesion (3.2 avg inbound edges)").
+
+    inbound_dependencies and outbound_dependencies are non-empty for at least one group.
+
+Rules:
+Do not hardcode framework-specific knowledge.
+Groups are inferred, not authoritative.
+Every grouping must explain WHY the files were grouped.
+
+
+Edited implementation_plan.md
+
+I have created the implementation plan for the Capability Group Inference milestone. Please review the [implementation_plan.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/implementation_plan.md) artifact, which details the clustering algorithm, the data schema additions for group and file-level metrics, and the verification steps. 
+
+Please let me know if you approve this plan to begin execution!
+
+
+Implementation Plan: Code Atlas Backend - Milestone 3 (Capability Group Inference)
+This plan details Milestone 3 for Code Atlas, which introduces static logical capability grouping based on directory layout, dependency graph characteristics, and role hints.
+
+Proposed Changes
+We will implement a capability classifier that groups files into logical subsystems, computes inbound/outbound dependencies between those subsystems, and adds file-level import metrics.
+
+Directory Structure
+No new modules are required. We will add the inference logic into:
+
+reporter.py
+ (to execute clustering, name capability groups, and calculate inbound/outbound statistics)
+test_scanner.py
+ (to verify Milestone 3 metrics and groupings)
+Data Schema Enhancements
+File Entry Enhancements
+Each file in "files" will now include inbound_count and outbound_count:
+
+json
+
+"files": {
+  "core/parser.py": {
+    "language": "python",
+    "size_bytes": 1200,
+    "claim_type": "confirmed",
+    "confidence": "high",
+    "evidence": ["Direct AST parsing"],
+    "raw_imports": [],
+    "classes": [],
+    "functions": [],
+    "role_hint": "utility",
+    "inbound_count": 2,
+    "outbound_count": 0,
+    "status": {
+      "status": "likely_active",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": ["Imported by likely_active file: core/reporter.py"]
+    }
+  }
+}
+Top-level Capability Groups
+The report root will now include "capability_groups":
+
+json
+
+"capability_groups": [
+  {
+    "name": "Core Components",
+    "claim_type": "inferred",
+    "confidence": "high",
+    "evidence": [
+      "Files share directory structure: 'core'",
+      "Internal cohesion: 2 internal dependency edges"
+    ],
+    "member_files": [
+      "core/parser.py",
+      "core/reporter.py"
+    ],
+    "inbound_dependencies": [
+      "Root Components"
+    ],
+    "outbound_dependencies": []
+  }
+]
+Capability Group Inference Algorithm
+Partition by Directory Layout (Primary):
+
+Map files to their containing directories relative to the scanned root (e.g. core/, tests/, or . for root).
+Group files sharing the same directory path.
+Assign Group Names:
+
+Directory "" (root) -> "Root Components"
+Directory "core" -> "Core Subsystem"
+Directory "tests" -> "Testing Suite"
+Other directories "sub_dir" -> "Sub_dir Subsystem" (capitalized)
+Compute Dependency Cohesion:
+
+For each group, walk the dependency graph:
+Identify internal edges (both source and target are members of the group).
+Identify external edges (source is inside, target is outside, or vice versa).
+Generate evidence strings:
+"Files share directory structure: '{dir_path}'"
+"Internal cohesion: {internal_edges} internal dependency edges"
+Map Group-level Inbound and Outbound Links:
+
+Group A depends on Group B if any file in Group A imports a file in Group B.
+Compile list of unique group names for inbound_dependencies and outbound_dependencies for each capability group.
+Verification Plan
+Manual Verification
+We will run the scanner on a multi-directory fixture containing:
+
+main.py (in root, imports core/helper.py)
+core/helper.py (in core/)
+tests/test_main.py (in tests/)
+We will inspect the generated JSON report to verify that:
+
+main.py correctly lists outbound_count: 1.
+core/helper.py correctly lists inbound_count: 1.
+The capability_groups array is populated.
+At least one capability group has "claim_type": "inferred".
+Group dependencies are resolved (e.g., "Root Components" lists "Core Subsystem" under outbound_dependencies).
+
+
+////////////////////////////////////////////
+
+"Milestone 3 plan is conditionally approved with required structural and algorithmic changes:
+
+Structural change (non-negotiable):
+
+    Create a new module: code_atlas/core/capability_grouper.py.
+
+    Move all grouping logic out of reporter.py.
+
+    reporter.py stays a pure report assembler.
+
+    capability_grouper.py handles inference and group dependency computation.
+
+Algorithmic refinements (required):
+
+    Directory structure is the seed, not the final grouping rule.
+
+    Refine groups using:
+
+        Dependency cohesion (internal edge density).
+
+        Cross-group coupling (external edge count).
+
+        Role hints (test files → Testing group, utilities → Shared/Support group).
+
+    If a group has weak internal cohesion and strong external coupling, add structurally_ambiguous: true and lower confidence.
+
+    Rename output from capability_groups to candidate_subsystem_groups or initial_subsystem_groups to reflect inference.
+
+    Add grouping_basis to each group (e.g., 'Seeded by directory structure, refined by dependency cohesion and role hints').
+
+Approved schema:
+
+    file.inbound_count
+
+    file.outbound_count
+
+    candidate_subsystem_groups[] with:
+
+        name (humble: 'Core Subsystem', 'Testing Suite', 'Root Components')
+
+        confidence (high/medium/low)
+
+        claim_type (always inferred—never confirmed without runtime)
+
+        evidence (list of strings explaining why)
+
+        member_files (list of relative paths)
+
+        inbound_dependencies (from outside group)
+
+        outbound_dependencies (to outside group)
+
+        structurally_ambiguous (true/false)
+
+        grouping_basis (string describing the evidence mix)
+
+Verification:
+Run on the test fixture. Paste snippets showing:
+
+    A group with structurally_ambiguous: false and high confidence.
+
+    A group with structurally_ambiguous: true (if your fixture has cross-cutting imports).
+
+    The grouping_basis string clearly explaining why the group was formed.
+
+Do not:
+
+    Hardcode framework-specific knowledge.
+
+    Treat directory groups as authoritative architecture.
+
+    Add frontend or runtime."
+    
+    
+    
+    Edited implementation_plan.md
+Edited task.md
+Edited capability_grouper.py
+Edited reporter.py
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited capability_grouper.py
+Edited reporter.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited main.py
+Edited helper.py
+Edited ambiguous.py
+Edited util.py
+Edited test_main.py
+Ran command: `python3 code_atlas/scanner.py --dir fixture3 --output fixture3_report.json`
+Viewed fixture3_report.json:1-317
+Ran command: `rm -rf fixture3 fixture3_report.json`
+Edited task.md
+Edited walkthrough.md
+
+I have completed **Milestone 3 (Capability Group Inference)** successfully!
+
+You can find the full review in the updated [walkthrough.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/walkthrough.md) and [task.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/task.md) artifacts.
+
+### Summary of Completed Work
+
+1. **Created New Module**:
+   - [capability_grouper.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/capability_grouper.py) — Seeded candidate subsystem groups based on directory layout and refined them using role-hint metrics (consolidating test files into `"Testing Suite"`, and promoting utilities with cross-directory imports to `"Shared Utility Subsystem"`). Resolves group-level `inbound_dependencies` and `outbound_dependencies`.
+
+2. **Added Metric Computations**:
+   - Computes internal cohesion ($E_{int}$) and cross-group coupling ($E_{ext}$).
+   - Analyzes structural ambiguity: flags a candidate subsystem as `structurally_ambiguous: true` with lowered confidence if its external boundaries dominate its internal cohesion.
+   - Refactored [reporter.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/reporter.py) to remain a pure report assembler, injecting file-level `inbound_count` and `outbound_count` metrics alongside the `"candidate_subsystem_groups"` array.
+
+3. **Validation**:
+   - **Automated Tests**: Updated [test_scanner.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/tests/test_scanner.py) with tests for directory-based seeding, utility promotions, group dependency resolution, and structural ambiguity heuristics. All 8 tests passed successfully.
+   - **Manual Verification**: Run on a multi-directory fixture containing a shared utility, a testing suite file, and a structurally ambiguous subsystem. Verified that:
+     - `"Testing Suite"` resolved with `structurally_ambiguous: false` and `"confidence": "high"`.
+     - `"Core Subsystem"` correctly triggered `structurally_ambiguous: true` with `"confidence": "low"` (due to 0 internal cohesion and 3 cross-group couplings).
+     - The `grouping_basis` strings correctly explained how each group was constructed.
+     - Group inbound/outbound dependencies resolved accurately.
+     
+     
+     ///////////////////////////////////////////////////////////////////////////////////////
+     
+     *"Milestone 3 is greenlit, but I am tightening the schema before you build. Please use this exact structure for `candidate_subsystem_groups`:*
+>
+> ```json
+> "candidate_subsystem_groups": [
+>   {
+>     "name": "string",
+>     "claim_type": "inferred",
+>     "confidence": "high|medium|low",
+>     "evidence": ["string"],
+>     "member_files": ["relative/path.py"],
+>     "inbound_dependencies": ["external/file.py"],
+>     "outbound_dependencies": ["external/file.py"],
+>     "structurally_ambiguous": false,
+>     "internal_edge_count": 5,
+>     "external_edge_count": 1,
+>     "grouping_basis": [
+>       "seed: directory_structure",
+>       "refined_by: dependency_cohesion",
+>       "refined_by: role_hint_utility"
+>     ]
+>   }
+> ]
+> ```
+>
+> *Rules for implementation:*
+> 1. `grouping_basis` must be a structured **array** of strings, not prose. This makes it machine-readable.
+> 2. Always expose `internal_edge_count` and `external_edge_count` as numeric fields.
+> 3. When forming a Shared/Utility group, require at least 2 internal edges to avoid the 'junk drawer' trap. If it has high external imports but low internal cohesion, set `structurally_ambiguous: true` and `confidence: low`.
+> 4. Keep the word `candidate` everywhere—these are inferred, not authoritative.
+>
+> *Run on your fixture, paste a JSON snippet confirming this shape. Once verified, Milestone 3 is done."*
+
+
+
+Edited capability_grouper.py
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited main.py
+Edited helper.py
+Edited util_a.py
+Edited util_b.py
+Edited test_main.py
+Ran command: `python3 code_atlas/scanner.py --dir fixture4 --output fixture4_report.json`
+Viewed fixture4_report.json:1-350
+Ran command: `rm -rf fixture4 fixture4_report.json`
+Edited walkthrough.md
+
+I have successfully refined and completed **Milestone 3** using your tightened schema specifications!
+
+All test suites were updated and ran with zero errors. You can find the design documentation and complete walkthrough in the [walkthrough.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/walkthrough.md) artifact.
+
+---
+
+### Verification Snippet Confirming Shape
+
+Here is a JSON snippet from the scanned output of the verification fixture (`main.py`, `core/helper.py`, `utils/util_a.py`, `utils/util_b.py`, `tests/test_main.py`):
+
+```json
+  "candidate_subsystem_groups": [
+    {
+      "name": "Shared Utility Subsystem",
+      "confidence": "low",
+      "claim_type": "inferred",
+      "evidence": [
+        "Consolidated utility files imported by multiple directory seeds",
+        "Junk drawer trap: shared utility group contains low internal cohesion (< 2 internal edges)",
+        "Internal cohesion: 0 internal dependency edges",
+        "Cross-group coupling: 2 external dependency edges"
+      ],
+      "member_files": [
+        "utils/util_a.py",
+        "utils/util_b.py"
+      ],
+      "inbound_dependencies": [
+        "core/helper.py",
+        "main.py"
+      ],
+      "outbound_dependencies": [],
+      "structurally_ambiguous": true,
+      "internal_edge_count": 0,
+      "external_edge_count": 2,
+      "grouping_basis": [
+        "seed: utility_role_hint",
+        "refined_by: cross_boundary_consolidation"
+      ]
+    },
+    {
+      "name": "Testing Suite",
+      "confidence": "high",
+      "claim_type": "inferred",
+      "evidence": [
+        "Consolidated based on test role hints across directories",
+        "Internal cohesion: 0 internal dependency edges",
+        "Cross-group coupling: 1 external dependency edges"
+      ],
+      "member_files": [
+        "tests/test_main.py"
+      ],
+      "inbound_dependencies": [],
+      "outbound_dependencies": [
+        "main.py"
+      ],
+      "structurally_ambiguous": false,
+      "internal_edge_count": 0,
+      "external_edge_count": 1,
+      "grouping_basis": [
+        "seed: test_role_hint",
+        "refined_by: role_consolidation"
+      ]
+    }
+  ]
+```
+
+### Key Implementation Details Covered
+
+1. **File Path Dependencies**: `inbound_dependencies` and `outbound_dependencies` now correctly map directly to **external file paths** interfacing with the group, rather than group names.
+2. **Edge Counts**: Exposed `internal_edge_count` and `external_edge_count` as numeric fields.
+3. **Structured Grouping Basis**: Modified `grouping_basis` to render as a machine-readable **array** of strings instead of prose.
+4. **Junk Drawer Trap**: For `"Shared Utility Subsystem"`, since its `internal_edge_count` was `0` (which is `< 2`), it was flagged as `structurally_ambiguous: true` with `"confidence": "low"`.
+
+/////////////////////////////////////////////////////////
+
+> *"Milestone 3 is **greenlit**. Excellent work. Now moving to Milestone 4: Ranked Next Files to Inspect v2.*
+>
+> **Scope:**
+> - Do **not** add frontend or runtime.
+> - Do **not** build route/path tracing yet (that is Milestone 5).
+> - Improve the existing `next_files_to_inspect` ranking using all new data from Milestones 2 and 3.
+>
+> **Ranking factors (in order of priority):**
+> 1. `parse_errors` present → highest priority (broken files).
+> 2. `structurally_ambiguous: true` → high priority (fuzzy subsystem boundaries).
+> 3. High `inbound_count` → high priority (central files).
+> 4. `status: stubbed` → medium-high priority (incomplete code).
+> 5. `status: orphaned` with `functions` or `classes` present → medium priority (potentially useful isolated code).
+> 6. Files with high `outbound_count` → medium priority (influential files).
+>
+> **Output format:**
+> ```json
+> "next_files_to_inspect": [
+>   {
+>     "filepath": "relative/path.py",
+>     "score": 85,
+>     "reasons": ["parse_error", "structurally_ambiguous_subsystem"],
+>     "claim_type": "inferred",
+>     "confidence": "high",
+>     "evidence": ["parse_error: SyntaxError at line 12", "member_of: candidate_subsystem_groups.PaymentProcessing"]
+>   }
+> ]
+> ```
+>
+> **Verification:**
+> - Run on your fixture.
+> - Paste a JSON snippet showing the top 5 files with scores and reasons.
+> - Ensure a file with a parse error appears at the top.
+>
+> **One quick fix before M4 starts:**
+> - Rename `inbound_dependencies` → `inbound_interface_files` and `outbound_dependencies` → `outbound_interface_files` to clarify they are file paths, not subsystem names (per Perplexity's suggestion). This is a 5-minute change—just roll it into M4.
+>
+> *Ship it. We'll tackle route/path tracing in Milestone 5 after this ranking layer is solid."*
+
+---
+
+### Why This Works
+
+- **B's incremental ranking** delivers immediate, high-value guidance with minimal risk.
+- **A's route/path vision** is acknowledged and delayed, not discarded.
+- **A's naming clarity fix** is rolled into M4 as a cheap patch.
+- **No gates, no separate milestones**—just a clear, buildable spec.
+
+
+Edited implementation_plan.md
+Edited task.md
+Viewed capability_grouper.py:190-219
+Edited capability_grouper.py
+Edited ranking.py
+Viewed reporter.py:95-136
+Edited reporter.py
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited main.py
+Edited helper.py
+Edited util_a.py
+Edited util_b.py
+Edited test_main.py
+Edited broken.py
+Ran command: `python3 code_atlas/scanner.py --dir fixture5 --output fixture5_report.json`
+Viewed fixture5_report.json:1-424
+Ran command: `rm -rf fixture5 fixture5_report.json`
+Edited task.md
+Edited task.md
+Edited walkthrough.md
+
+I have successfully completed and verified **Milestone 4 (Ranked Next Files to Inspect v2)**!
+
+All unit and integration tests passed successfully. You can review the finalized plan details in [implementation_plan.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/implementation_plan.md) and the walkthrough in [walkthrough.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/walkthrough.md).
+
+---
+
+### Verification Snippet: Top Files in `next_files_to_inspect`
+
+Here is a JSON snippet from the scan report of the Milestone 4 verification fixture showing the top 5 files prioritized by their computed scores:
+
+```json
+  "next_files_to_inspect": [
+    {
+      "filepath": "broken.py",
+      "score": 100,
+      "reasons": [
+        "parse_error"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "parse_error: SyntaxError: expected ':' (broken.py, line 1)"
+      ]
+    },
+    {
+      "filepath": "main.py",
+      "score": 61,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_inbound_coupling",
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Root Components",
+        "inbound_count: 1",
+        "outbound_count: 3"
+      ]
+    },
+    {
+      "filepath": "utils/util_a.py",
+      "score": 60,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Shared Utility Subsystem",
+        "inbound_count: 2"
+      ]
+    },
+    {
+      "filepath": "utils/util_b.py",
+      "score": 60,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Shared Utility Subsystem",
+        "inbound_count: 2"
+      ]
+    },
+    {
+      "filepath": "core/helper.py",
+      "score": 59,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_inbound_coupling",
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Core Subsystem",
+        "inbound_count: 1",
+        "outbound_count: 2"
+      ]
+    }
+  ]
+```
+
+### Done in this Patch:
+1. **Renamed Dependency Keys**: In [capability_grouper.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/capability_grouper.py), `inbound_dependencies` and `outbound_dependencies` have been renamed to `inbound_interface_files` and `outbound_interface_files` respectively.
+2. **Added Multi-Factor Scoring**: Implemented in [ranking.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/ranking.py) and integrated into [reporter.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/reporter.py). Broken files correctly rank first with a score of `100`, while other parsed files are safely capped at a maximum score of `99`.
+
+/////////////////////////////////////////////////////////
+
+
+> *"Milestone 4 is **greenlit**. Excellent work on the ranking.*
+>
+> *Before moving to routes, we are taking a **quick cleanup + human-readable report** step as recommended by Advice B:*
+>
+> **Milestone 4C: Schema consistency cleanup (roll into this ticket, not a separate milestone):**
+> - Update all docs/tests/walkthrough/schema references so the group interface fields are consistently named:
+>   - `inbound_interface_files`
+>   - `outbound_interface_files`
+> - Remove or replace old references to `inbound_dependencies` and `outbound_dependencies`.
+> - Run `python3 -m unittest discover -s code_atlas/tests -p "*.py"` and confirm all tests pass.
+>
+> **Milestone 5: Component Relationship Report v1 (human-readable):**
+> - Generate a **Markdown or plain-text summary** from the JSON report.
+> - Include:
+>   - Project overview (files scanned, parse errors, entrypoints detected).
+>   - Candidate subsystem groups (name, confidence, member count, ambiguity flag).
+>   - Top 10 ranked "next files to inspect" with reasons.
+>   - Summary of status distribution (active, likely_active, orphaned, stubbed, unresolved).
+> - Output file: `code_atlas_report.md` alongside the JSON.
+> - This is **pure formatting**—no new analysis logic required.
+>
+> **Verification:**
+> - Run on your fixture.
+> - Paste the first few sections of the generated Markdown report.
+>
+> **Route/path reporting (Milestone 6) will come after this.** We are building the human-readable layer first because it delivers immediate value with zero risk.
+>
+> *Ship it. We'll tackle routes after the report is live."*
+
+
+Edited implementation_plan.md
+Edited task.md
+Edited reporter.py
+Viewed scanner.py:1-83
+Edited scanner.py
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited main.py
+Edited helper.py
+Edited util_a.py
+Edited util_b.py
+Edited test_main.py
+Edited broken.py
+Ran command: `python3 code_atlas/scanner.py --dir fixture6 --output fixture6_report.json`
+Viewed fixture6_report.md:1-123
+Ran command: `rm -rf fixture6 fixture6_report.json fixture6_report.md`
+Edited task.md
+Edited walkthrough.md
+
+I have successfully completed and verified **Milestone 4C (Schema Consistency Cleanup)** and **Milestone 5 (Component Relationship Report v1)**!
+
+All unit and integration tests passed successfully. You can review the finalized plan details in [implementation_plan.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/implementation_plan.md) and the walkthrough in [walkthrough.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/walkthrough.md).
+
+---
+
+### Verification Snippet: First Few Sections of the Markdown Report
+
+Here is a snippet from the generated `fixture6_report.md` report showing the **Project Overview**, **Status Distribution**, and first **Candidate Subsystem Group profile**:
+
+```markdown
+# Code Atlas Component Relationship Report: fixture6
+
+**Scanned at:** 2026-07-09T13:56:30.420245Z
+
+## 1. Project Overview
+- **Total Files Scanned:** 5
+- **Total Parse Errors (Gaps):** 1
+- **Detected Entrypoints:** main.py, core/helper.py, utils/util_a.py, utils/util_b.py
+
+### Status Distribution
+- **Likely_active:** 5
+- **Stubbed:** 0
+- **Orphaned:** 0
+- **Dormant:** 0
+- **Unresolved:** 0
+- **Active (Runtime Confirmed):** 0
+
+## 2. Candidate Subsystem Groups
+### Core Subsystem
+- **Confidence:** Medium
+- **Claim Type:** inferred
+- **Member Count:** 1
+- **Structurally Ambiguous:** Yes
+- **Grouping Basis:** seed: directory_structure, refined_by: dependency_cohesion
+- **Evidence:**
+  - Files share directory structure: 'core'
+  - Internal cohesion: 0 internal dependency edges
+  - Cross-group coupling: 3 external dependency edges
+  - Weak internal cohesion relative to strong cross-group coupling; marked as structurally ambiguous
+- **Member Files:**
+  - `core/helper.py`
+- **Inbound Interface Files (1):**
+  - `main.py`
+- **Outbound Interface Files (2):**
+  - `utils/util_a.py`
+  - `utils/util_b.py`
+```
+
+### Done in this Patch:
+1. **Markdown Report Output**: The CLI [scanner.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/scanner.py) now automatically creates a `.md` summary alongside the `.json` report when run.
+2. **Schema Consistency Cleanup (Milestone 4C)**: All files, unit tests, and plan documents are aligned under the consistent group boundary names:
+   - `inbound_interface_files`
+   - `outbound_interface_files`
+3. **Automated Tests**: Unit tests were added in [test_scanner.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/tests/test_scanner.py) to cover markdown report formatting. All 10 tests passed successfully.
+
+
+/////////////////////////////////////////////////////////////////////
+
+
+
+> *"Milestone 5 (Markdown report) is **greenlit**. Good work.*
+>
+> *Before moving to Milestone 6, we need a quick **Entrypoint Audit** (based on feedback from both advisors):*
+> - Run the scanner on your fixture.
+> - Look at the `entrypoints` list in the report.
+> - If `core/helper.py`, `utils/util_a.py`, etc. appear but do NOT contain `__main__`, CLI logic, or route decorators, **remove them** from entrypoint detection.
+> - Tighten heuristics: entrypoints must have *explicit* signals (`if __name__ == "__main__"`, `argparse`, `click`, `Flask.route`, `FastAPI.app`).
+> - Patch `entrypoint_detector.py` accordingly and re-run tests.
+>
+> **Milestone 6: Path/Route Reporting (THIS IS THE BIG ONE):**
+> - For each detected entrypoint, compute the reachable file set via the dependency graph.
+> - Show the ordered route (entrypoint → dependencies → downstream).
+> - Mark where the route crosses a `candidate_subsystem_group` boundary.
+> - Flag where the route hits `stubbed`, `unresolved`, or `parse_error` files.
+> - Reuse the ranking engine to suggest the **next file to inspect within that specific route**.
+> - Output: Add a `routes` array to the JSON, and a corresponding section in the Markdown report.
+>
+> **Verification:**
+> - Run on your fixture.
+> - Paste a JSON snippet showing a route from `main.py` to its downstream dependencies, with boundary crossings and stubbed/gap flags clearly visible.
+>
+> **Do NOT build:**
+> - Runtime tracing.
+> - Visual graph/frontend.
+> - 'Intent recovery' (that's Milestone 7+—we'll cross that bridge when we have solid routes)."
+
+
+Edited implementation_plan.md
+Edited task.md
+Edited entrypoint_detector.py
+Edited router.py
+Edited reporter.py
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited main.py
+Edited helper.py
+Edited util_a.py
+Edited util_b.py
+Edited broken.py
+Ran command: `python3 code_atlas/scanner.py --dir fixture7 --output fixture7_report.json`
+Viewed fixture7_report.json:1-412
+Ran command: `rm -rf fixture7 fixture7_report.json fixture7_report.md`
+Edited task.md
+Edited walkthrough.md
+
+I have completed and verified **Milestone 6 (Path/Route Reporting)** along with the **Entrypoint Audit**!
+
+All unit and integration tests passed successfully. You can inspect the updated plans in [implementation_plan.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/implementation_plan.md) and the completed walk-through in [walkthrough.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/walkthrough.md).
+
+---
+
+### Verification Snippet: JSON Route Array
+
+Here is a portion of the `"routes"` block from the scan report of the Milestone 6 test fixture:
+
+```json
+  "routes": [
+    {
+      "entrypoint": "main.py",
+      "next_file_to_inspect_in_route": "broken.py",
+      "route_files": [
+        {
+          "filepath": "main.py",
+          "group": "Root Components",
+          "boundary_crossing": null,
+          "status": "likely_active",
+          "has_parse_error": false,
+          "is_stub": false,
+          "is_unresolved": false,
+          "inspection_score": 54
+        },
+        {
+          "filepath": "core/helper.py",
+          "group": "Core Subsystem",
+          "boundary_crossing": {
+            "from_group": "Root Components",
+            "to_group": "Core Subsystem"
+          },
+          "status": "likely_active",
+          "has_parse_error": false,
+          "is_stub": false,
+          "is_unresolved": false,
+          "inspection_score": 59
+        },
+        {
+          "filepath": "broken.py",
+          "group": "unknown",
+          "boundary_crossing": {
+            "from_group": "Core Subsystem",
+            "to_group": "unknown"
+          },
+          "status": "unresolved",
+          "has_parse_error": true,
+          "is_stub": false,
+          "is_unresolved": true,
+          "inspection_score": 100
+        },
+        {
+          "filepath": "utils/util_b.py",
+          "group": "Utilities Subsystem",
+          "boundary_crossing": {
+            "from_group": "Core Subsystem",
+            "to_group": "Utilities Subsystem"
+          },
+          "status": "likely_active",
+          "has_parse_error": false,
+          "is_stub": false,
+          "is_unresolved": false,
+          "inspection_score": 55
+        }
+      ]
+    }
+  ]
+```
+
+### Done in this Patch:
+1. **Entrypoint Heuristics Audit**: Restructured [entrypoint_detector.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/entrypoint_detector.py) to remove name-only shortcuts (e.g. `main.py` alone is no longer an entrypoint). We now require explicit AST signals (`__main__` block, routing decorators, argparse/click imports).
+2. **Reachable DFS Tracing**: Built [router.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/router.py) to map graph traversals from entrypoint roots, flagging boundary crossings, stubs, and parse errors.
+3. **Route Priority Rankings**: Analyzes each computed route path and recommends the highest scored dependency to investigate under `"next_file_to_inspect_in_route"`.
+4. **Markdown Route Flow Paths**: Refined the report builder in [reporter.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/reporter.py) to print the dependency flows, boundary crossings, and code status tags in `code_atlas_report.md`.
+
+/////////////////////////////////////////////////////////////////////////
+
+
+> *"Milestone 6 is **greenlit**. The route/path reporting is the right feature at the right time.*
+>
+> *However, **before shipping**, apply the semantic clarification (Advice B):*
+>
+> 1. **Docs and report wording:**
+>    - Routes are **static dependency routes**, not runtime execution routes.
+>    - `route_files` order is **dependency traversal order**, not proven call order.
+>    - `boundary_crossing` means **inferred** subsystem boundary crossing.
+>    - `next_file_to_inspect_in_route` is **advisory only**.
+>    - Use phrases like "reachable route" or "static route path" instead of "execution route."
+>
+> 2. **Every route object must include:**
+>    ```json
+>    {
+>      "entrypoint": "main.py",
+>      "claim_type": "inferred",
+>      "confidence": "high",
+>      "evidence": ["DFS traversal from entrypoint", "reachable via import chain"],
+>      "route_files": ["main.py", "auth.py", "db.py", "utils.py"],
+>      "boundary_crossings": [
+>        {"from": "Root", "to": "AuthSubsystem", "file": "auth.py"}
+>      ],
+>      "stubbed_files": [],
+>      "unresolved_files": [],
+>      "parse_error_files": [],
+>      "next_file_to_inspect_in_route": "auth.py"
+>    }
+>    ```
+>
+> 3. **Testing:** Add unit tests for the route walker (simple chains, branches, cycles, broken files) before shipping.
+>
+> *For Milestone 7, we will add branch semantics, leaf detection, and route-spine vs. side-branch reporting (per Perplexity's suggestion).*
+>
+> *Ship this. The route layer is the real Code Atlas foundation."*
+
+
+Edited router.py
+Edited reporter.py
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited main.py
+Edited helper.py
+Edited util_a.py
+Edited util_b.py
+Edited broken.py
+Ran command: `python3 code_atlas/scanner.py --dir fixture8 --output fixture8_report.json`
+Viewed fixture8_report.json:155-390
+Viewed status_classifier.py:1-169
+Viewed status_classifier.py:20-65
+Edited status_classifier.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited implementation_plan.md
+Edited task.md
+Edited walkthrough.md
+
+I have successfully completed, cleaned up, and verified **Milestone 6 (Path/Route Reporting)**!
+
+All unit and integration tests passed successfully. You can review the finalized plan details in [implementation_plan.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/implementation_plan.md) and the walkthrough in [walkthrough.md](file:///home/mytruelove/.gemini/antigravity/brain/af4b5fc1-479d-4a65-9a8f-b1bca8c5e4d9/walkthrough.md).
+
+---
+
+### Verification Snippet: Clarified Routes Schema in JSON
+
+Here is the updated `"routes"` block from the scan report of the verification fixture:
+
+```json
+  "routes": [
+    {
+      "entrypoint": "main.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "main.py",
+        "core/helper.py",
+        "broken.py",
+        "utils/util_b.py",
+        "utils/util_a.py"
+      ],
+      "boundary_crossings": [
+        {
+          "from": "Root Components",
+          "to": "Core Subsystem",
+          "file": "core/helper.py"
+        },
+        {
+          "from": "Core Subsystem",
+          "to": "unknown",
+          "file": "broken.py"
+        },
+        {
+          "from": "Core Subsystem",
+          "to": "Utilities Subsystem",
+          "file": "utils/util_b.py"
+        },
+        {
+          "from": "Root Components",
+          "to": "Utilities Subsystem",
+          "file": "utils/util_a.py"
+        }
+      ],
+      "stubbed_files": [
+        "utils/util_b.py"
+      ],
+      "unresolved_files": [
+        "broken.py"
+      ],
+      "parse_error_files": [
+        "broken.py"
+      ],
+      "next_file_to_inspect_in_route": "broken.py"
+    }
+  ]
+```
+
+### Done in this Patch:
+1. **Clarified Semantic Terminology**:
+   - Reframed reports and documentation to specify that routes represent **static dependency routes** (based on traversal order, not dynamic call order).
+   - Indicated that boundary crossings are **inferred** boundaries.
+   - Clarified that prioritized next inspection file recommendations are **advisory only**.
+2. **Restructured Routes Schema**: Regrouped route findings. File lists, boundary crossings, stubs, and parse errors are now mapped as top-level properties within each route object.
+3. **Optimized Stub Classifications**: Adjusted [status_classifier.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/core/status_classifier.py) so that stubbed implementations retain their stub status, even when reachable via a traversal root.
+4. **Enhanced Route Testing**: Added unit tests in [test_scanner.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/tests/test_scanner.py) that verify cycles, simple chains, branch topologies, and parse error resolutions. All 12 tests passed successfully.
+
+/////////////////////////////////////////////////////////////
+
+"Milestone 6 is complete and approved. The route semantics cleanup is solid, the terminology is honest, and the tests are in place.
+
+We are now entering a Pilot Phase. Feature development is frozen until we validate against real code.
+
+Pilot Phase Tasks:
+
+    Add a limitations section to the report (before the pilot):
+
+        Static analysis cannot resolve dynamic imports.
+
+        Reflection may hide runtime dependencies.
+
+        Static routes are inferred, not runtime-verified.
+
+        claim_type: gap, confidence: high/medium, reason: string.
+
+    Select a pilot project (small, real Python codebase—20–100 files, not EngAIn yet).
+
+    Run Code Atlas on the pilot project.
+
+    Collect observations:
+
+        Did every import resolve correctly?
+
+        What happened with circular imports?
+
+        What happened with namespace packages?
+
+        What happened with dynamically imported modules?
+
+        Do subsystem candidates make sense to a human?
+
+        Does the ranking surface genuinely interesting files?
+
+        Are there false-positive entrypoints?
+
+        Are parse errors handled cleanly?
+
+    Document findings—create a PILOT_NOTES.md with:
+
+        What worked well.
+
+        What broke or surprised you.
+
+        What assumptions were wrong.
+
+        What the tool should do next (based on evidence, not imagination).
+
+    Post-pilot decision: Based on findings, we will decide:
+
+        Whether Milestone 7 is branch semantics (Perplexity's suggestion).
+
+        Whether it's something else entirely.
+
+        Or whether we need to refactor before adding more features.
+
+No new features until the pilot is complete and findings are documented.
+
+Ship the limitations addition, run the pilot, and report back."
+
+
+Listed directory Desktop
+Listed directory chessV1
+Listed directory trixel_pipeline_repo_candidate
+Listed directory trixel
+Ran command: `find /home/mytruelove/Desktop/trixel_pipeline_repo_candidate -name "*.py" | wc -l`
+Ran command: `find /home/mytruelove/Desktop/lfs_salvage -name "*.py" | wc -l`
+Ran command: `find /home/mytruelove/Desktop/ai_tools -name "*.py" | wc -l`
+Listed directory conductor_building_blocks
+Ran command: `find "/home/mytruelove/Desktop/code atlas" -name "*.py" | wc -l`
+Ran command: `find /home/mytruelove -maxdepth 3 -name "*.py" | wc -l`
+Ran command: `find /home/mytruelove -maxdepth 3 -name "*.py" | grep -v "\.venv" | grep -v "venv" | head -n 30`
+Edited reporter.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Ran command: `python3 code_atlas/scanner.py --dir code_atlas --output pilot_report.json`
+Viewed pilot_report.json:1-800
+Viewed pilot_report.json:800-1045
+Viewed pilot_report.md:1-180
+Searched for "NotImplementedError"
+Viewed parser.py:40-82
+Edited PILOT_NOTES.md
+Ran command: `rm pilot_report.json pilot_report.md`
+
+I have successfully added the **Limitations** section to the reports, executed the pilot scan over the `code_atlas` codebase, and compiled the findings.
+
+The complete pilot observations have been documented in the workspace under [PILOT_NOTES.md](file:///home/mytruelove/Desktop/code%20atlas/PILOT_NOTES.md).
+
+---
+
+### Key Pilot Observations
+
+#### 1. What Worked Extremely Well
+* **Dependency Resolution**: Stripping the package name prefix (`code_atlas.core.parser` $\rightarrow$ `core/parser.py`) resolved cleanly across all 15 imports.
+* **Entrypoint Audit**: The heuristics audit eliminated false-positive entrypoints. Only `scanner.py` (explicit main block & argparse import) and `tests/test_scanner.py` (test suite root) were detected as entrypoints.
+* **Subsystem Grouping**: Grouped the files in `core/` into `Core Subsystem` with high cohesion and `tests/` into `Testing Suite`. Correctly flagged `Root Components` as `structurally_ambiguous` (confidence: `low`) because it orchestrates and links outward without internal dependency cohesion.
+* **Static Traversal Paths**: Correctly reconstructed ordered DFS dependency routes from the entrypoint roots and flagged inferred boundary crossings.
+
+#### 2. What Surprised Us (Heuristics Trap)
+* **False-Positive Stub Identifications**: Both `core/parser.py` and `core/status_classifier.py` were categorized as `stubbed`.
+  * *Root Cause*: The stub detector checked if the word `"TODO"` was present anywhere in the raw file contents (`if "TODO" in content`). Because these files contain code comments and parser checks discussing stubbing rules, they triggered the global text-search match.
+
+#### 3. Recommended Next Steps
+Based on these findings, before implementing branches/leaf semantics (Milestone 7), we recommend:
+1. **Refine Stub Heuristics**: Restrict TODO/FIXME checks to actual comment lines (e.g. starting with `# TODO`) or docstrings rather than a global substring search on the entire raw source file.
+2. **Handle Namespace Packages**: Explicitly document or handle PEP 420 namespace package folders where `__init__.py` files are absent.
+
+////////////////////////////////////////////////////////////////////////
+
+"Pilot Phase is complete. Good findings. We are now in a Pilot Correction Pass.
+
+Do NOT begin Milestone 7.
+Do NOT add new architectural features.
+Do NOT scan external repos yet.
+
+Scope: Fix only the issues discovered by the pilot.
+
+Stub Detection Fix:
+
+    Remove global substring matching such as "TODO" in content or "FIXME" in content.
+
+    Detect TODO/FIXME only when they occur in actual Python comments (# TODO, # FIXME) or docstrings.
+
+    Continue detecting real stub constructs:
+
+        pass-only function or method bodies.
+
+        raise NotImplementedError.
+
+        Ellipsis-only bodies (...).
+
+    Do not classify code as stubbed merely because it contains logic that analyzes or discusses TODOs, stubs, or NotImplementedError (e.g., parser.py discussing stub detection should not be marked stubbed).
+
+Namespace Package Handling:
+
+    Verify that local imports can resolve into package directories without __init__.py (PEP 420).
+
+    If resolution is ambiguous (e.g., multiple candidates), record a gap rather than selecting an unsupported target.
+
+    Document this as a limitation in the limitations section.
+
+Regression Verification (New Tests):
+
+    Add a test proving that code containing the string "TODO" inside its own detection logic (like parser.py) is not marked stubbed.
+
+    Add a test for a genuine # TODO comment → should be marked stubbed.
+
+    Add a test for raise NotImplementedError → should be marked stubbed.
+
+    Add a test for a namespace package without __init__.py → imports should resolve correctly or be recorded as a gap.
+
+Verification:
+
+    Run the complete existing test suite (python3 -m unittest discover -s code_atlas/tests -p "*.py").
+
+    Re-run the self-pilot scan on the code_atlas package.
+
+    Report:
+
+        Whether the false-positive stub results disappeared.
+
+        Whether namespace-package resolution worked or was recorded as a gap.
+
+        Any new regressions discovered.
+
+Stop after the pilot correction report. Do not expand scope. Do not build Milestone 7 yet. We will decide next steps based on the correction results."
+
+
+Viewed parser.py:20-45
+Edited parser.py
+Edited reporter.py
+Viewed test_scanner.py:380-417
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Edited test_scanner.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Ran command: `python3 code_atlas/scanner.py --dir code_atlas --output pilot_report.json`
+Viewed pilot_report.json:1-250
+Searched for "#\s*(TODO|FIXME)"
+Edited parser.py
+Ran command: `python3 -m unittest discover -s code_atlas/tests -p "*.py"`
+Ran command: `python3 code_atlas/scanner.py --dir code_atlas --output pilot_report.json`
+Viewed pilot_report.json:1-200
+Viewed pilot_report.json:265-1046
+Ran command: `rm pilot_report.json pilot_report.md`
+Edited PILOT_NOTES.md
+Edited walkthrough.md
+
+I have successfully resolved all pilot observations and completed the **Pilot Correction Pass**!
+
+The complete details and observations have been written in the workspace under [PILOT_NOTES.md](file:///home/mytruelove/Desktop/code%20atlas/PILOT_NOTES.md). The walkthrough and task records are updated.
+
+---
+
+### Pilot Correction Results
+
+#### 1. Stub False Positives Disappeared
+* **Token-Level Scanning**: The parser now scans code utilizing Python's `tokenize` module, evaluating only actual `COMMENT` tokens matching `# TODO` or `# FIXME` patterns, and checking docstring lines specifically starting with those keywords.
+* **Result**: False-positive stub results for `core/parser.py`, `core/status_classifier.py`, and `tests/test_scanner.py` have completely disappeared. Their priority scores dropped back to baseline, and their execution statuses resolved correctly to `likely_active`.
+* **Ellipsis Support**: Added explicit support for module/function bodies containing only `...` (Ellipsis) stubs.
+
+#### 2. Namespace Packages & Ambiguity Gaps
+* **PEP 420 Resolution**: Clean namespace package directories (without `__init__.py`) resolve imports successfully when a unique target module is found.
+* **Ambiguity Handling**: In cases where an import maps to multiple possible local targets, the resolver now stops, marks the resolution as `AMBIGUOUS`, and appends an `AmbiguousImportError` gap to `parse_errors`.
+* **Registry Limitations**: Documented this behavior in the limitations registry (now containing 4 gap items).
+
+#### 3. Regression Verifications
+* **New Tests**: Added 4 unit tests in `TestPilotCorrections` inside [test_scanner.py](file:///home/mytruelove/Desktop/code%20atlas/code_atlas/tests/test_scanner.py) verifying logic strings, genuine comments, NotImplementedErrors, and ambiguous namespace packages.
+* **Test Suite**: Running the full automated suite completed successfully:
+  ```bash
+  python3 -m unittest discover -s code_atlas/tests -p "*.py"
+  # Ran 16 tests in 0.004s - OK
+  ```
+  No new regressions were discovered.
+  
+  ///////////////////////////////////////////////////////////////////
+  
+  
+  its locked in 
+
+https://github.com/SmokesBowls/code_atlas
+5:30 PM
+
+
+Fantastic! The pilot corrections are successfully locked in and verified.
+
+Since the pilot correction pass is greenlit, would you like to proceed with Milestone 7 (Branch Semantics, Leaf Detection, and Route-Spine vs. Side-Branch Reporting), or do you have any other pilot adjustments or plans you'd like to align on first?
+
+////////////////////////////////////////////////////////////////
+
