@@ -1,0 +1,390 @@
+{
+  "project_name": "fixture8",
+  "scanned_at": "2026-07-09T14:07:06.275195Z",
+  "next_files_to_inspect": [
+    {
+      "filepath": "broken.py",
+      "score": 100,
+      "reasons": [
+        "parse_error"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "parse_error: SyntaxError: expected ':' (broken.py, line 1)"
+      ]
+    },
+    {
+      "filepath": "core/helper.py",
+      "score": 59,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_inbound_coupling",
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Core Subsystem",
+        "inbound_count: 1",
+        "outbound_count: 2"
+      ]
+    },
+    {
+      "filepath": "utils/util_a.py",
+      "score": 55,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Utilities Subsystem",
+        "inbound_count: 1"
+      ]
+    },
+    {
+      "filepath": "utils/util_b.py",
+      "score": 55,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Utilities Subsystem",
+        "inbound_count: 1"
+      ]
+    },
+    {
+      "filepath": "main.py",
+      "score": 54,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Root Components",
+        "outbound_count: 2"
+      ]
+    }
+  ],
+  "candidate_subsystem_groups": [
+    {
+      "name": "Core Subsystem",
+      "confidence": "medium",
+      "claim_type": "inferred",
+      "evidence": [
+        "Files share directory structure: 'core'",
+        "Internal cohesion: 0 internal dependency edges",
+        "Cross-group coupling: 3 external dependency edges",
+        "Weak internal cohesion relative to strong cross-group coupling; marked as structurally ambiguous"
+      ],
+      "member_files": [
+        "core/helper.py"
+      ],
+      "inbound_interface_files": [
+        "main.py"
+      ],
+      "outbound_interface_files": [
+        "broken.py",
+        "utils/util_b.py"
+      ],
+      "structurally_ambiguous": true,
+      "internal_edge_count": 0,
+      "external_edge_count": 3,
+      "grouping_basis": [
+        "seed: directory_structure",
+        "refined_by: dependency_cohesion"
+      ]
+    },
+    {
+      "name": "Root Components",
+      "confidence": "medium",
+      "claim_type": "inferred",
+      "evidence": [
+        "Files share directory structure: '.'",
+        "Internal cohesion: 0 internal dependency edges",
+        "Cross-group coupling: 2 external dependency edges",
+        "Weak internal cohesion relative to strong cross-group coupling; marked as structurally ambiguous"
+      ],
+      "member_files": [
+        "main.py"
+      ],
+      "inbound_interface_files": [],
+      "outbound_interface_files": [
+        "core/helper.py",
+        "utils/util_a.py"
+      ],
+      "structurally_ambiguous": true,
+      "internal_edge_count": 0,
+      "external_edge_count": 2,
+      "grouping_basis": [
+        "seed: directory_structure",
+        "refined_by: dependency_cohesion"
+      ]
+    },
+    {
+      "name": "Utilities Subsystem",
+      "confidence": "low",
+      "claim_type": "inferred",
+      "evidence": [
+        "Files share directory structure: 'utils'",
+        "Internal cohesion: 0 internal dependency edges",
+        "Cross-group coupling: 2 external dependency edges",
+        "Weak internal cohesion relative to strong cross-group coupling; marked as structurally ambiguous"
+      ],
+      "member_files": [
+        "utils/util_a.py",
+        "utils/util_b.py"
+      ],
+      "inbound_interface_files": [
+        "core/helper.py",
+        "main.py"
+      ],
+      "outbound_interface_files": [],
+      "structurally_ambiguous": true,
+      "internal_edge_count": 0,
+      "external_edge_count": 2,
+      "grouping_basis": [
+        "seed: directory_structure",
+        "refined_by: dependency_cohesion"
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "entrypoint": "main.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "main.py",
+        "core/helper.py",
+        "broken.py",
+        "utils/util_b.py",
+        "utils/util_a.py"
+      ],
+      "boundary_crossings": [
+        {
+          "from": "Root Components",
+          "to": "Core Subsystem",
+          "file": "core/helper.py"
+        },
+        {
+          "from": "Core Subsystem",
+          "to": "unknown",
+          "file": "broken.py"
+        },
+        {
+          "from": "Core Subsystem",
+          "to": "Utilities Subsystem",
+          "file": "utils/util_b.py"
+        },
+        {
+          "from": "Root Components",
+          "to": "Utilities Subsystem",
+          "file": "utils/util_a.py"
+        }
+      ],
+      "stubbed_files": [],
+      "unresolved_files": [
+        "broken.py"
+      ],
+      "parse_error_files": [
+        "broken.py"
+      ],
+      "next_file_to_inspect_in_route": "broken.py"
+    }
+  ],
+  "files": {
+    "main.py": {
+      "language": "python",
+      "size_bytes": 76,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "core.helper",
+        "utils.util_a"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_entrypoint": true,
+      "role_hint": "cli",
+      "inbound_count": 0,
+      "outbound_count": 2,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "confirmed",
+        "confidence": "high",
+        "evidence": [
+          "Contains 'if __name__ == \"__main__\"' execution block"
+        ]
+      },
+      "inspection_score": 54
+    },
+    "core/helper.py": {
+      "language": "python",
+      "size_bytes": 62,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "broken",
+        "utils.util_b"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "run_helper",
+          "start_line": 4,
+          "end_line": 5
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "utility",
+      "inbound_count": 1,
+      "outbound_count": 2,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "inferred",
+        "confidence": "high",
+        "evidence": [
+          "Imported by likely_active file: 'main.py'"
+        ]
+      },
+      "inspection_score": 59
+    },
+    "utils/util_a.py": {
+      "language": "python",
+      "size_bytes": 43,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [],
+      "classes": [],
+      "functions": [
+        {
+          "name": "func_a",
+          "start_line": 2,
+          "end_line": 3
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "utility",
+      "inbound_count": 1,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "inferred",
+        "confidence": "high",
+        "evidence": [
+          "Imported by likely_active file: 'main.py'"
+        ]
+      },
+      "inspection_score": 55
+    },
+    "utils/util_b.py": {
+      "language": "python",
+      "size_bytes": 52,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [],
+      "classes": [],
+      "functions": [
+        {
+          "name": "func_b",
+          "start_line": 1,
+          "end_line": 2
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "utility",
+      "inbound_count": 1,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "inferred",
+        "confidence": "high",
+        "evidence": [
+          "Imported by likely_active file: 'core/helper.py'"
+        ]
+      },
+      "inspection_score": 55
+    }
+  },
+  "local_dependencies": [
+    {
+      "source": "core/helper.py",
+      "target": "broken.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of core/helper.py",
+        "Resolved import string to local path broken.py"
+      ]
+    },
+    {
+      "source": "core/helper.py",
+      "target": "utils/util_b.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of core/helper.py",
+        "Resolved import string to local path utils/util_b.py"
+      ]
+    },
+    {
+      "source": "main.py",
+      "target": "core/helper.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of main.py",
+        "Resolved import string to local path core/helper.py"
+      ]
+    },
+    {
+      "source": "main.py",
+      "target": "utils/util_a.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of main.py",
+        "Resolved import string to local path utils/util_a.py"
+      ]
+    }
+  ],
+  "parse_errors": [
+    {
+      "filepath": "broken.py",
+      "error": "SyntaxError: expected ':' (broken.py, line 1)",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "AST parser threw syntax or compilation exception during read"
+      ]
+    }
+  ]
+}
