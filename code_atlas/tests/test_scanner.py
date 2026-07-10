@@ -454,6 +454,32 @@ def empty_logic():
         res = parse_file(file_path, self.test_dir)
         self.assertTrue(res["_is_stub"])
 
+    def test_stub_detection_pass_only(self):
+        # 3b. pass-only bodies -> should be marked stubbed
+        code = """
+def empty_logic():
+    pass
+"""
+        file_path = os.path.join(self.test_dir, "pass_stub.py")
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(code)
+            
+        res = parse_file(file_path, self.test_dir)
+        self.assertTrue(res["_is_stub"])
+
+    def test_stub_detection_ellipsis_only(self):
+        # 3c. ellipsis-only bodies -> should be marked stubbed
+        code = """
+def empty_logic():
+    ...
+"""
+        file_path = os.path.join(self.test_dir, "ellipsis_stub.py")
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(code)
+            
+        res = parse_file(file_path, self.test_dir)
+        self.assertTrue(res["_is_stub"])
+
     def test_namespace_package_resolution(self):
         # 4. Namespace package without __init__.py -> resolved correctly or recorded as gap
         os.makedirs(os.path.join(self.test_dir, "namespace_pkg"), exist_ok=True)

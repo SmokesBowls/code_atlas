@@ -58,12 +58,10 @@ def check_is_stub(tree, content, filename):
         tokens = tokenize.tokenize(io.BytesIO(content.encode('utf-8')).readline)
         for tok in tokens:
             if tok.type == tokenize.COMMENT:
-                # Match comments starting with # TODO or # FIXME
                 if re.match(r'^#\s*(TODO|FIXME)\b', tok.string, re.IGNORECASE):
                     has_todo_comment = True
                     break
     except Exception:
-        # Fallback if tokenization fails
         pass
         
     if has_todo_comment:
@@ -94,7 +92,6 @@ def check_is_stub(tree, content, filename):
             if isinstance(exc, ast.Call) and isinstance(exc.func, ast.Name) and exc.func.id == 'NotImplementedError':
                 return True
                 
-    # Do not treat __init__.py files as structural stubs by default unless they have TODO/NotImplementedError
     if os.path.basename(filename) == '__init__.py':
         return False
         
@@ -106,7 +103,6 @@ def check_is_stub(tree, content, filename):
             continue
         if hasattr(ast, 'Str') and isinstance(node, ast.Expr) and isinstance(node.value, getattr(ast, 'Str')):
             continue
-        # Check for Ellipsis (...) at module level
         if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and node.value.value is Ellipsis:
             continue
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -131,16 +127,13 @@ def check_has_main_block(tree):
     """Check if the file has an execution entrypoint (if __name__ == '__main__')."""
     for node in tree.body:
         if isinstance(node, ast.If):
-            # Check test: __name__ == '__main__'
             test = node.test
             if isinstance(test, ast.Compare):
                 if isinstance(test.left, ast.Name) and test.left.id == '__name__':
                     if len(test.ops) == 1 and isinstance(test.ops[0], ast.Eq):
                         comparand = test.comparators[0]
-                        # Python 3.8+ Constant
                         if isinstance(comparand, ast.Constant) and comparand.value == '__main__':
                             return True
-                        # Compatibility for older AST Str
                         if hasattr(ast, 'Str') and isinstance(comparand, getattr(ast, 'Str')) and comparand.s == '__main__':
                             return True
     return False
@@ -150,12 +143,10 @@ def check_has_route_decorators(tree):
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             for decorator in node.decorator_list:
-                # Check for call: app.route('/...')
                 if isinstance(decorator, ast.Call):
                     func = decorator.func
                     if isinstance(func, ast.Attribute) and func.attr in {'route', 'get', 'post', 'put', 'delete', 'patch'}:
                         return True
-                # Check for attribute/name: @route
                 elif isinstance(decorator, ast.Attribute) and decorator.attr in {'route', 'get', 'post', 'put', 'delete', 'patch'}:
                     return True
     return False
@@ -176,13 +167,10 @@ def parse_file(filepath, workspace_dir):
                 raw_imports.append(name.name)
         elif isinstance(node, ast.ImportFrom):
             module = node.module if node.module else ""
-            # Handle relative imports level
             if node.level > 0:
-                # Resolve relative level to parent path parts
                 dir_parts = os.path.dirname(rel_path).split(os.sep)
                 if dir_parts == [''] or not dir_parts[0]:
                     dir_parts = []
-                # Go up level-1 times
                 for _ in range(node.level - 1):
                     if dir_parts:
                         dir_parts.pop()
@@ -216,10 +204,8 @@ def parse_file(filepath, workspace_dir):
                 "end_line": getattr(node, "end_lineno", node.lineno)
             })
 
-    # Get lines count
     lines_count = len(content.splitlines())
 
-    # Build response registry info
     return {
         "language": "python",
         "size_bytes": os.path.getsize(filepath),

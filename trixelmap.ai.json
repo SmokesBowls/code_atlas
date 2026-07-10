@@ -1,0 +1,284 @@
+{
+  "contract": "code_atlas.ai_architecture_packet",
+  "contract_version": "1.0.0",
+  "source_report_contract": "code_atlas.report",
+  "source_report_contract_version": null,
+  "project_name": "trixelmap",
+  "scanned_at": "2026-07-10T05:09:09.756976Z",
+  "static_reachability_warning": "WARNING: Static dependency routes and reachability results are derived solely from import statements. They indicate potential compile-time or static dependencies and do not reflect runtime execution sequence, call order, or dynamic control flow.",
+  "limitations": [
+    {
+      "reason": "Namespace packages without __init__.py are supported, but ambiguous resolutions (multiple candidates matching the same import) are recorded as gaps.",
+      "claim_type": "gap",
+      "confidence": "high"
+    },
+    {
+      "reason": "Reflection and dynamic attribute retrieval may hide runtime dependencies.",
+      "claim_type": "gap",
+      "confidence": "high"
+    },
+    {
+      "reason": "Static analysis cannot resolve dynamic imports (e.g. __import__, importlib, or dynamic string execution).",
+      "claim_type": "gap",
+      "confidence": "high"
+    },
+    {
+      "reason": "Static route paths are inferred from import syntax, not runtime-verified.",
+      "claim_type": "gap",
+      "confidence": "medium"
+    }
+  ],
+  "candidate_subsystems": [
+    {
+      "name": "Message_file_package (1) Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 1,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Message_file_package Subsystem",
+      "claim_type": "inferred",
+      "confidence": "low",
+      "member_count": 2,
+      "structurally_ambiguous": true,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Message_file_package3 Subsystem",
+      "claim_type": "inferred",
+      "confidence": "low",
+      "member_count": 2,
+      "structurally_ambiguous": true,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Root Components",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 10,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Unassigned Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 1,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    }
+  ],
+  "top_inspection_targets": [
+    {
+      "filepath": "docs/message_file_package3/unassigned/extracted_block_004.py",
+      "score": 100,
+      "reasons": [
+        "parse_error"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "docs/message_file_package3/vault_spatial_parser_2.py",
+      "score": 100,
+      "reasons": [
+        "parse_error"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "docs/message_file_package3/spatial_pattern_matcher.py",
+      "score": 70,
+      "reasons": [
+        "orphaned_with_code",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py",
+      "score": 52,
+      "reasons": [
+        "high_outbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "docs/message_file_package3/vault_spatial_parser.py",
+      "score": 52,
+      "reasons": [
+        "high_outbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "docs/message_file_package/unassigned/extracted_block_001.py",
+      "score": 20,
+      "reasons": [
+        "orphaned_with_code"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "spatial_pattern_matcher.py",
+      "score": 20,
+      "reasons": [
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "trixelmap_build.py",
+      "score": 8,
+      "reasons": [
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "spatial_authority_extractor.py",
+      "score": 7,
+      "reasons": [
+        "high_inbound_coupling",
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "debug_layout_svg.py",
+      "score": 5,
+      "reasons": [
+        "routine_inspection"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "docs/message_file_package (1)/spatial_authority_extractor.py",
+      "score": 5,
+      "reasons": [
+        "routine_inspection"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "location_ranker.py",
+      "score": 5,
+      "reasons": [
+        "routine_inspection"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "spatial_layout_solver.py",
+      "score": 5,
+      "reasons": [
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "terrain_field_builder.py",
+      "score": 5,
+      "reasons": [
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "trixel_recipe_writer.py",
+      "score": 5,
+      "reasons": [
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "trixel_recipes_mr.py",
+      "score": 5,
+      "reasons": [
+        "routine_inspection"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "vault_spatial_parser.py",
+      "score": 2,
+      "reasons": [
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred"
+    }
+  ],
+  "parse_gaps": [
+    {
+      "filepath": "docs/message_file_package3/unassigned/extracted_block_004.py",
+      "error": "IndentationError: unexpected indent (extracted_block_004.py, line 1)",
+      "claim_type": "gap"
+    },
+    {
+      "filepath": "docs/message_file_package3/vault_spatial_parser_2.py",
+      "error": "IndentationError: unexpected indent (vault_spatial_parser_2.py, line 4)",
+      "claim_type": "gap"
+    }
+  ],
+  "boundary_crossings": [],
+  "route_summaries": {
+    "grouped_warnings": [
+      {
+        "warning_type": "single_file_static_route",
+        "claim_type": "inferred",
+        "count": 6,
+        "affected_paths": [
+          "debug_layout_svg.py",
+          "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+          "docs/message_file_package (1)/spatial_authority_extractor.py",
+          "location_ranker.py",
+          "spatial_pattern_matcher.py",
+          "trixel_recipes_mr.py"
+        ]
+      }
+    ],
+    "multi_file_routes": [
+      {
+        "entrypoint": "trixelmap_build.py",
+        "claim_type": "inferred",
+        "route_length": 6,
+        "advisory_next_step": "spatial_pattern_matcher.py",
+        "boundary_crossings_count": 0
+      },
+      {
+        "entrypoint": "vault_spatial_parser.py",
+        "claim_type": "inferred",
+        "route_length": 2,
+        "advisory_next_step": "spatial_pattern_matcher.py",
+        "boundary_crossings_count": 0
+      }
+    ]
+  }
+}

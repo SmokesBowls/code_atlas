@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Atlas Report Viewer</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-main">
+            <h1>Code Atlas Report Viewer</h1>
+            <span class="viewer-tag">Read-only report viewer</span>
+        </div>
+        <div class="provenance-panel" id="provenance">
+            <!-- Populated dynamically by app.js -->
+        </div>
+    </header>
+
+    <main class="app-container">
+        <!-- Visual Truth Legend Key -->
+        <section class="legend-panel">
+            <h2>Visual Truth & Claim Key</h2>
+            <div class="legend-items">
+                <span class="claim-badge badge-confirmed">confirmed</span>
+                <span class="legend-desc">Direct static AST parsing signal (e.g. file exists, explicit main block, argparse).</span>
+                
+                <span class="claim-badge badge-inferred">inferred</span>
+                <span class="legend-desc">Synthesized logic (e.g. status classification, candidate subsystem boundary, route traversal).</span>
+                
+                <span class="claim-badge badge-gap">gap</span>
+                <span class="legend-desc">Known limitation (e.g. parser syntax errors, unresolved files, dynamic import warnings).</span>
+            </div>
+        </section>
+
+        <!-- Project Overview & Status Distributions -->
+        <section class="panel double-col" id="overview-section">
+            <h2>Project Overview & Status Distribution</h2>
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <h3>Metadata</h3>
+                    <p><strong>Total Files Scanned:</strong> <span id="total-files">-</span></p>
+                    <p><strong>Total Parse Errors / Gaps:</strong> <span id="total-errors">-</span></p>
+                    <p><strong>Detected Entrypoints:</strong> <span id="entrypoints-list">-</span></p>
+                </div>
+                <div class="overview-card">
+                    <h3>File Execution Statuses</h3>
+                    <div class="status-list" id="status-counts">
+                        <!-- Populated dynamically -->
+                    </div>
+                    <div class="status-note">
+                        *Note: <strong>likely_active</strong> represents static reachability only. <strong>active</strong> is reserved for runtime observation (currently not enabled).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parse Errors & Gaps -->
+        <section class="panel" id="gaps-section">
+            <h2>Parse Errors & Gaps <span class="claim-badge badge-gap">gap</span></h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>File Path</th>
+                            <th>Error / Gap Description</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gaps-table-body">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Ranked Next Files to Inspect -->
+        <section class="panel" id="rankings-section">
+            <h2>Top Ranked Next Files to Inspect <span class="badge-advisory">Advisory Only</span></h2>
+            <p class="section-desc">Prioritized order suggesting where to focus inspection based on coupling, gaps, and structural ambiguity.</p>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Priority</th>
+                            <th>File Path</th>
+                            <th>Inspection Score</th>
+                            <th>Reasons for Selection</th>
+                            <th>Evidence</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankings-table-body">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Inferred Candidate Subsystem Groups -->
+        <section class="panel" id="subsystems-section">
+            <h2>Candidate Subsystem Groups <span class="claim-badge badge-inferred">inferred candidate</span></h2>
+            <p class="section-desc">Logical groupings derived from directory structure, dependency cohesion, and role hints.</p>
+            <div class="subsystems-list" id="subsystems-container">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- Payload Handoff Diagnostics -->
+        <section class="panel" id="handoffs-section">
+            <h2>Payload Handoff Diagnostics <span class="claim-badge badge-confirmed">diagnostics</span></h2>
+            <p class="section-desc">Enforces strict scan boundaries to trace candidate connections and boundary gaps.</p>
+            
+            <h3 style="margin-top: 16px; color: var(--text-primary);">Observed connected handoffs</h3>
+            <div class="handoffs-list" id="connected-handoffs-container">
+                <!-- Populated dynamically -->
+            </div>
+            
+            <h3 style="margin-top: 24px; color: var(--text-primary);">Likely handoffs</h3>
+            <div class="handoffs-list" id="likely-handoffs-container">
+                <!-- Populated dynamically -->
+            </div>
+            
+            <h3 style="margin-top: 24px; color: var(--text-primary);">Unresolved routes</h3>
+            <div class="unresolved-list" id="unresolved-routes-container">
+                <!-- Populated dynamically -->
+            </div>
+            
+            <h3 style="margin-top: 24px; color: var(--text-primary);">Producer-only outputs</h3>
+            <div class="unresolved-list" id="producer-outputs-container">
+                <!-- Populated dynamically -->
+            </div>
+            
+            <h3 style="margin-top: 24px; color: var(--text-primary);">Consumer-only inputs</h3>
+            <div class="unresolved-list" id="consumer-inputs-container">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- Static Dependency Routes -->
+        <section class="panel" id="routes-section">
+            <h2>Static Dependency Routes <span class="claim-badge badge-inferred">inferred route</span></h2>
+            <p class="section-desc"><strong>Static routes only:</strong> Traversal order indicates static imports from entrypoint (DFS), not runtime call execution sequence.</p>
+            <div class="routes-list" id="routes-container">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- Architectural Payloads & Exports -->
+        <section class="panel" id="payloads-section">
+            <h2>Architectural Payloads & Exports</h2>
+            <p class="section-desc">View generated database payloads or download files directly.</p>
+            
+            <div class="payloads-grid">
+                <!-- Payload Cards -->
+                <div class="payload-card" id="card-standard-json">
+                    <h3>Standard Report (JSON)</h3>
+                    <p class="payload-desc">Complete parsed AST schema and relationship database.</p>
+                    <div class="payload-actions">
+                        <button class="btn-action view-btn" data-payload="json">View Payload</button>
+                        <button class="btn-action download-btn" data-payload="json">Download File</button>
+                    </div>
+                </div>
+                
+                <div class="payload-card" id="card-standard-md">
+                    <h3>Standard Report (Markdown)</h3>
+                    <p class="payload-desc">Human-readable summary of boundaries and subsystems.</p>
+                    <div class="payload-actions">
+                        <button class="btn-action view-btn" data-payload="markdown">View Payload</button>
+                        <button class="btn-action download-btn" data-payload="markdown">Download File</button>
+                    </div>
+                </div>
+                
+                <div class="payload-card" id="card-ai-json" style="display: none;">
+                    <h3>AI Architecture (JSON)</h3>
+                    <p class="payload-desc">Deterministic, compressed JSON payload optimized for LLMs.</p>
+                    <div class="payload-actions">
+                        <button class="btn-action view-btn" data-payload="ai-json">View Payload</button>
+                        <button class="btn-action download-btn" data-payload="ai-json">Download File</button>
+                    </div>
+                </div>
+                
+                <div class="payload-card" id="card-ai-md" style="display: none;">
+                    <h3>AI Architecture (Markdown)</h3>
+                    <p class="payload-desc">Token-conscious structured Markdown summary for LLM contexts.</p>
+                    <div class="payload-actions">
+                        <button class="btn-action view-btn" data-payload="ai-md">View Payload</button>
+                        <button class="btn-action download-btn" data-payload="ai-md">Download File</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combined Download Button -->
+            <div class="combined-download-container" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                <button class="btn-action" id="btn-download-combined" style="background-color: var(--accent-color); color: #0d1117; font-weight: bold; border-color: var(--accent-color);">
+                    Download Combined Payload Bundle (Single File)
+                </button>
+                <span style="font-size: 12px; color: var(--text-secondary); margin-left: 12px;">Downloads all generated JSON and Markdown payloads appended inside a single document.</span>
+            </div>
+            
+            <!-- Dynamic Payload Viewer Box -->
+            <div class="payload-viewer-box" style="margin-top: 20px;">
+                <h4 id="payload-viewer-title" style="margin-bottom: 8px; color: var(--text-primary);">Payload Content Viewer</h4>
+                <div class="code-container" style="position: relative;">
+                    <button class="btn-action" id="btn-copy-payload" style="position: absolute; right: 10px; top: 10px; display: none;">Copy to Clipboard</button>
+                    <pre style="margin: 0; background-color: #0d1117; border: 1px solid var(--border-color); border-radius: 6px; padding: 16px; overflow: auto; max-height: 400px;"><code id="payload-code-block" style="font-family: var(--font-mono); font-size: 12px; color: #e6edf3; white-space: pre-wrap; word-break: break-all;">Select "View Payload" on any card above to display content...</code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

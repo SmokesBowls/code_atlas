@@ -1,0 +1,489 @@
+{
+  "contract": "code_atlas.ai_architecture_packet",
+  "contract_version": "1.0.0",
+  "source_report_contract": "code_atlas.report",
+  "source_report_contract_version": null,
+  "project_name": "conductor_building_blocks",
+  "scanned_at": "2026-07-10T03:14:28.160629Z",
+  "static_reachability_warning": "WARNING: Static dependency routes and reachability results are derived solely from import statements. They indicate potential compile-time or static dependencies and do not reflect runtime execution sequence, call order, or dynamic control flow.",
+  "limitations": [
+    {
+      "reason": "Namespace packages without __init__.py are supported, but ambiguous resolutions (multiple candidates matching the same import) are recorded as gaps.",
+      "claim_type": "gap",
+      "confidence": "high"
+    },
+    {
+      "reason": "Reflection and dynamic attribute retrieval may hide runtime dependencies.",
+      "claim_type": "gap",
+      "confidence": "high"
+    },
+    {
+      "reason": "Static analysis cannot resolve dynamic imports (e.g. __import__, importlib, or dynamic string execution).",
+      "claim_type": "gap",
+      "confidence": "high"
+    },
+    {
+      "reason": "Static route paths are inferred from import syntax, not runtime-verified.",
+      "claim_type": "gap",
+      "confidence": "medium"
+    }
+  ],
+  "candidate_subsystems": [
+    {
+      "name": "Brushes Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 12,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Gates Subsystem",
+      "claim_type": "inferred",
+      "confidence": "medium",
+      "member_count": 17,
+      "structurally_ambiguous": true,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Libresprite Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 10,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Message_file_package (1) Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 1,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Message_file_package Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 2,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Message_file_package3 Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 2,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Terrain Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 16,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Testing Suite",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 3,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: role_consolidation",
+        "seed: test_role_hint"
+      ]
+    },
+    {
+      "name": "Trixelcomposer Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 11,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Trixelmap Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 10,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Trixelworld Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 21,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    },
+    {
+      "name": "Unassigned Subsystem",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "member_count": 1,
+      "structurally_ambiguous": false,
+      "grouping_basis": [
+        "refined_by: dependency_cohesion",
+        "seed: directory_structure"
+      ]
+    }
+  ],
+  "top_inspection_targets": [
+    {
+      "filepath": "trixelmap/docs/message_file_package3/unassigned/extracted_block_004.py",
+      "score": 100,
+      "reasons": [
+        "parse_error"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "trixelmap/docs/message_file_package3/vault_spatial_parser_2.py",
+      "score": 100,
+      "reasons": [
+        "parse_error"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "terrain/gates/gate_imports.py",
+      "score": 61,
+      "reasons": [
+        "high_inbound_coupling",
+        "high_outbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "terrain/gates/gate_no_authority_overreach.py",
+      "score": 60,
+      "reasons": [
+        "high_inbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "terrain/gates/gate_adapter_boundary.py",
+      "score": 57,
+      "reasons": [
+        "high_inbound_coupling",
+        "high_outbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "terrain/gates/gate_dirty_chunk_or_delta_shape.py",
+      "score": 57,
+      "reasons": [
+        "high_inbound_coupling",
+        "high_outbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "terrain/gates/gate_terrain_adapter_rejection_proof.py",
+      "score": 57,
+      "reasons": [
+        "high_inbound_coupling",
+        "high_outbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "terrain/gates/gate_thresholds_exist.py",
+      "score": 57,
+      "reasons": [
+        "high_inbound_coupling",
+        "high_outbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "terrain/gates/gate_trixel_retro_surface_paint_document.py",
+      "score": 57,
+      "reasons": [
+        "high_inbound_coupling",
+        "high_outbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "terrain/gates/gate_world_field_boundary.py",
+      "score": 57,
+      "reasons": [
+        "high_inbound_coupling",
+        "high_outbound_coupling",
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/gates/gate_libra_asset_provenance_manifest.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/gates/gate_libra_conductor_roundtrip.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/gates/gate_libra_full_suite.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/gates/gate_libra_real_document_regression.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/gates/gate_libra_snapshot_backend.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/gates/gate_libra_snapshot_exporter_contract.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/gates/gate_libra_snapshot_schema_contract.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/gates/gate_libra_snapshot_stress_set.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/gates/gate_libresprite_starter_set.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred"
+    },
+    {
+      "filepath": "libresprite/ls_cel_parser_mr.py",
+      "score": 40,
+      "reasons": [
+        "high_inbound_coupling",
+        "stubbed_implementation"
+      ],
+      "claim_type": "inferred"
+    }
+  ],
+  "parse_gaps": [
+    {
+      "filepath": "trixelmap/docs/message_file_package3/unassigned/extracted_block_004.py",
+      "error": "IndentationError: unexpected indent (extracted_block_004.py, line 1)",
+      "claim_type": "gap"
+    },
+    {
+      "filepath": "trixelmap/docs/message_file_package3/vault_spatial_parser_2.py",
+      "error": "IndentationError: unexpected indent (vault_spatial_parser_2.py, line 4)",
+      "claim_type": "gap"
+    }
+  ],
+  "boundary_crossings": [
+    {
+      "from": "Gates Subsystem",
+      "to": "Terrain Subsystem",
+      "file": "terrain/trixel_retro_surface_paint_document.py",
+      "claim_type": "inferred"
+    },
+    {
+      "from": "Gates Subsystem",
+      "to": "Terrain Subsystem",
+      "file": "terrain/trixel_world_adapter.py",
+      "claim_type": "inferred"
+    },
+    {
+      "from": "Terrain Subsystem",
+      "to": "Gates Subsystem",
+      "file": "terrain/gates/gate_adapter_boundary.py",
+      "claim_type": "inferred"
+    },
+    {
+      "from": "Terrain Subsystem",
+      "to": "Gates Subsystem",
+      "file": "terrain/gates/gate_dirty_chunk_or_delta_shape.py",
+      "claim_type": "inferred"
+    },
+    {
+      "from": "Terrain Subsystem",
+      "to": "Gates Subsystem",
+      "file": "terrain/gates/gate_imports.py",
+      "claim_type": "inferred"
+    },
+    {
+      "from": "Terrain Subsystem",
+      "to": "Gates Subsystem",
+      "file": "terrain/gates/gate_no_authority_overreach.py",
+      "claim_type": "inferred"
+    },
+    {
+      "from": "Terrain Subsystem",
+      "to": "Gates Subsystem",
+      "file": "terrain/gates/gate_terrain_adapter_rejection_proof.py",
+      "claim_type": "inferred"
+    },
+    {
+      "from": "Terrain Subsystem",
+      "to": "Gates Subsystem",
+      "file": "terrain/gates/gate_thresholds_exist.py",
+      "claim_type": "inferred"
+    },
+    {
+      "from": "Terrain Subsystem",
+      "to": "Gates Subsystem",
+      "file": "terrain/gates/gate_trixel_retro_surface_paint_document.py",
+      "claim_type": "inferred"
+    },
+    {
+      "from": "Terrain Subsystem",
+      "to": "Gates Subsystem",
+      "file": "terrain/gates/gate_world_field_boundary.py",
+      "claim_type": "inferred"
+    }
+  ],
+  "route_summaries": {
+    "grouped_warnings": [
+      {
+        "warning_type": "single_file_static_route",
+        "claim_type": "inferred",
+        "count": 45,
+        "affected_paths": [
+          "libresprite/gates/gate_libra_asset_provenance_manifest.py",
+          "libresprite/gates/gate_libra_conductor_roundtrip.py",
+          "libresprite/gates/gate_libra_full_suite.py",
+          "libresprite/gates/gate_libra_real_document_regression.py",
+          "libresprite/gates/gate_libra_snapshot_backend.py",
+          "libresprite/gates/gate_libra_snapshot_exporter_contract.py",
+          "libresprite/gates/gate_libra_snapshot_schema_contract.py",
+          "libresprite/gates/gate_libra_snapshot_stress_set.py",
+          "libresprite/gates/gate_libresprite_starter_set.py",
+          "terrain/terrain_thresholds.py",
+          "terrain/world_field_nucleus.py",
+          "trixelcomposer/atlas_composer.py",
+          "trixelcomposer/enhanced_trixel_core.py",
+          "trixelcomposer/scene_server.py",
+          "trixelcomposer/terminal_trixel.py",
+          "trixelcomposer/tile_server.py",
+          "trixelcomposer/trixel_render_bridge.py",
+          "trixelmap/debug_layout_svg.py",
+          "trixelmap/docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+          "trixelmap/docs/message_file_package (1)/spatial_authority_extractor.py",
+          "trixelmap/location_ranker.py",
+          "trixelmap/spatial_pattern_matcher.py",
+          "trixelmap/trixel_recipes_mr.py",
+          "trixelmap/trixelmap_build.py",
+          "trixelmap/vault_spatial_parser.py",
+          "trixelworld/brushes/gbr_parser_mr.py",
+          "trixelworld/brushes/gdyn_parser_mr.py",
+          "trixelworld/brushes/gfig_parser_mr.py",
+          "trixelworld/brushes/gih_parser_mr.py",
+          "trixelworld/brushes/gpl_parser_mr.py",
+          "trixelworld/brushes/gtp_parser_mr.py",
+          "trixelworld/brushes/vbr_parser_mr.py",
+          "trixelworld/demo_beach_material_sheet.py",
+          "trixelworld/demo_bestiary_fauna_sheet.py",
+          "trixelworld/demo_bestiary_flora_sheet.py",
+          "trixelworld/demo_building_material_sheet.py",
+          "trixelworld/engine_debug_mr.py",
+          "trixelworld/engine_mr.py",
+          "trixelworld/palette_mr.py",
+          "trixelworld/stress_scene_mr.py",
+          "trixelworld/surface_behavior_mr.py",
+          "trixelworld/trixel_brush_adapter.py",
+          "trixelworld/trixel_demo_mr.py",
+          "trixelworld/trixel_recipes_mr.py",
+          "trixelworld/world_tree_mr.py"
+        ]
+      }
+    ],
+    "multi_file_routes": [
+      {
+        "entrypoint": "terrain/terrain_control_center.py",
+        "claim_type": "inferred",
+        "route_length": 13,
+        "advisory_next_step": "terrain/gates/gate_imports.py",
+        "boundary_crossings_count": 10
+      },
+      {
+        "entrypoint": "terrain/trixel_world_adapter.py",
+        "claim_type": "inferred",
+        "route_length": 3,
+        "advisory_next_step": "terrain/terrain_thresholds.py",
+        "boundary_crossings_count": 0
+      }
+    ]
+  }
+}

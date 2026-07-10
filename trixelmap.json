@@ -1,0 +1,3260 @@
+{
+  "project_name": "trixelmap",
+  "scanned_at": "2026-07-10T14:15:08.649601Z",
+  "scan_roots": [
+    "/home/mytruelove/Desktop/burdens_of_a_forgotten_past/conductor/conductor_building_blocks/trixelmap"
+  ],
+  "analysis_boundary": "Files under /home/mytruelove/Desktop/burdens_of_a_forgotten_past/conductor/conductor_building_blocks/trixelmap",
+  "limitations": [
+    {
+      "claim_type": "gap",
+      "confidence": "high",
+      "reason": "Static analysis cannot resolve dynamic imports (e.g. __import__, importlib, or dynamic string execution)."
+    },
+    {
+      "claim_type": "gap",
+      "confidence": "high",
+      "reason": "Reflection and dynamic attribute retrieval may hide runtime dependencies."
+    },
+    {
+      "claim_type": "gap",
+      "confidence": "medium",
+      "reason": "Static route paths are inferred from import syntax, not runtime-verified."
+    },
+    {
+      "claim_type": "gap",
+      "confidence": "high",
+      "reason": "Namespace packages without __init__.py are supported, but ambiguous resolutions (multiple candidates matching the same import) are recorded as gaps."
+    }
+  ],
+  "next_files_to_inspect": [
+    {
+      "filepath": "docs/message_file_package3/unassigned/extracted_block_004.py",
+      "score": 100,
+      "reasons": [
+        "parse_error"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "parse_error: IndentationError: unexpected indent (extracted_block_004.py, line 1)"
+      ]
+    },
+    {
+      "filepath": "docs/message_file_package3/vault_spatial_parser_2.py",
+      "score": 100,
+      "reasons": [
+        "parse_error"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "parse_error: IndentationError: unexpected indent (vault_spatial_parser_2.py, line 4)"
+      ]
+    },
+    {
+      "filepath": "docs/message_file_package3/spatial_pattern_matcher.py",
+      "score": 70,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "orphaned_with_code"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Message_file_package3 Subsystem",
+        "status: orphaned, contains 0 classes and 1 functions"
+      ]
+    },
+    {
+      "filepath": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py",
+      "score": 52,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Message_file_package Subsystem",
+        "outbound_count: 1"
+      ]
+    },
+    {
+      "filepath": "docs/message_file_package3/vault_spatial_parser.py",
+      "score": 52,
+      "reasons": [
+        "structurally_ambiguous_subsystem",
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Message_file_package3 Subsystem",
+        "outbound_count: 1"
+      ]
+    },
+    {
+      "filepath": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+      "score": 50,
+      "reasons": [
+        "structurally_ambiguous_subsystem"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "member_of: candidate_subsystem_groups.Message_file_package Subsystem"
+      ]
+    },
+    {
+      "filepath": "docs/message_file_package/unassigned/extracted_block_001.py",
+      "score": 20,
+      "reasons": [
+        "orphaned_with_code"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "status: orphaned, contains 1 classes and 1 functions"
+      ]
+    },
+    {
+      "filepath": "spatial_pattern_matcher.py",
+      "score": 20,
+      "reasons": [
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "inbound_count: 4"
+      ]
+    },
+    {
+      "filepath": "trixelmap_build.py",
+      "score": 8,
+      "reasons": [
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "outbound_count: 4"
+      ]
+    },
+    {
+      "filepath": "spatial_authority_extractor.py",
+      "score": 7,
+      "reasons": [
+        "high_inbound_coupling",
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "inbound_count: 1",
+        "outbound_count: 1"
+      ]
+    },
+    {
+      "filepath": "debug_layout_svg.py",
+      "score": 5,
+      "reasons": [
+        "routine_inspection"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "No critical issues or high coupling detected"
+      ]
+    },
+    {
+      "filepath": "docs/message_file_package (1)/spatial_authority_extractor.py",
+      "score": 5,
+      "reasons": [
+        "routine_inspection"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "No critical issues or high coupling detected"
+      ]
+    },
+    {
+      "filepath": "location_ranker.py",
+      "score": 5,
+      "reasons": [
+        "routine_inspection"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "No critical issues or high coupling detected"
+      ]
+    },
+    {
+      "filepath": "spatial_layout_solver.py",
+      "score": 5,
+      "reasons": [
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "inbound_count: 1"
+      ]
+    },
+    {
+      "filepath": "terrain_field_builder.py",
+      "score": 5,
+      "reasons": [
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "inbound_count: 1"
+      ]
+    },
+    {
+      "filepath": "trixel_recipe_writer.py",
+      "score": 5,
+      "reasons": [
+        "high_inbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "inbound_count: 1"
+      ]
+    },
+    {
+      "filepath": "trixel_recipes_mr.py",
+      "score": 5,
+      "reasons": [
+        "routine_inspection"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "No critical issues or high coupling detected"
+      ]
+    },
+    {
+      "filepath": "vault_spatial_parser.py",
+      "score": 2,
+      "reasons": [
+        "high_outbound_coupling"
+      ],
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "outbound_count: 1"
+      ]
+    }
+  ],
+  "candidate_subsystem_groups": [
+    {
+      "name": "Message_file_package (1) Subsystem",
+      "confidence": "high",
+      "claim_type": "inferred",
+      "evidence": [
+        "Files share directory structure: 'docs/message_file_package (1)'",
+        "Internal cohesion: 0 internal dependency edges",
+        "Cross-group coupling: 0 external dependency edges"
+      ],
+      "member_files": [
+        "docs/message_file_package (1)/spatial_authority_extractor.py"
+      ],
+      "inbound_interface_files": [],
+      "outbound_interface_files": [],
+      "structurally_ambiguous": false,
+      "internal_edge_count": 0,
+      "external_edge_count": 0,
+      "grouping_basis": [
+        "seed: directory_structure",
+        "refined_by: dependency_cohesion"
+      ]
+    },
+    {
+      "name": "Message_file_package Subsystem",
+      "confidence": "low",
+      "claim_type": "inferred",
+      "evidence": [
+        "Files share directory structure: 'docs/message_file_package (1)/message_file_package'",
+        "Internal cohesion: 0 internal dependency edges",
+        "Cross-group coupling: 1 external dependency edges",
+        "Weak internal cohesion relative to strong cross-group coupling; marked as structurally ambiguous"
+      ],
+      "member_files": [
+        "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+        "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py"
+      ],
+      "inbound_interface_files": [],
+      "outbound_interface_files": [
+        "spatial_pattern_matcher.py"
+      ],
+      "structurally_ambiguous": true,
+      "internal_edge_count": 0,
+      "external_edge_count": 1,
+      "grouping_basis": [
+        "seed: directory_structure",
+        "refined_by: dependency_cohesion"
+      ]
+    },
+    {
+      "name": "Message_file_package3 Subsystem",
+      "confidence": "low",
+      "claim_type": "inferred",
+      "evidence": [
+        "Files share directory structure: 'docs/message_file_package3'",
+        "Internal cohesion: 0 internal dependency edges",
+        "Cross-group coupling: 1 external dependency edges",
+        "Weak internal cohesion relative to strong cross-group coupling; marked as structurally ambiguous"
+      ],
+      "member_files": [
+        "docs/message_file_package3/spatial_pattern_matcher.py",
+        "docs/message_file_package3/vault_spatial_parser.py"
+      ],
+      "inbound_interface_files": [],
+      "outbound_interface_files": [
+        "spatial_pattern_matcher.py"
+      ],
+      "structurally_ambiguous": true,
+      "internal_edge_count": 0,
+      "external_edge_count": 1,
+      "grouping_basis": [
+        "seed: directory_structure",
+        "refined_by: dependency_cohesion"
+      ]
+    },
+    {
+      "name": "Root Components",
+      "confidence": "high",
+      "claim_type": "inferred",
+      "evidence": [
+        "Files share directory structure: '.'",
+        "Internal cohesion: 6 internal dependency edges",
+        "Cross-group coupling: 2 external dependency edges"
+      ],
+      "member_files": [
+        "debug_layout_svg.py",
+        "location_ranker.py",
+        "spatial_authority_extractor.py",
+        "spatial_layout_solver.py",
+        "spatial_pattern_matcher.py",
+        "terrain_field_builder.py",
+        "trixel_recipe_writer.py",
+        "trixel_recipes_mr.py",
+        "trixelmap_build.py",
+        "vault_spatial_parser.py"
+      ],
+      "inbound_interface_files": [
+        "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py",
+        "docs/message_file_package3/vault_spatial_parser.py"
+      ],
+      "outbound_interface_files": [],
+      "structurally_ambiguous": false,
+      "internal_edge_count": 6,
+      "external_edge_count": 2,
+      "grouping_basis": [
+        "seed: directory_structure",
+        "refined_by: dependency_cohesion"
+      ]
+    },
+    {
+      "name": "Unassigned Subsystem",
+      "confidence": "high",
+      "claim_type": "inferred",
+      "evidence": [
+        "Files share directory structure: 'docs/message_file_package/unassigned'",
+        "Internal cohesion: 0 internal dependency edges",
+        "Cross-group coupling: 0 external dependency edges"
+      ],
+      "member_files": [
+        "docs/message_file_package/unassigned/extracted_block_001.py"
+      ],
+      "inbound_interface_files": [],
+      "outbound_interface_files": [],
+      "structurally_ambiguous": false,
+      "internal_edge_count": 0,
+      "external_edge_count": 0,
+      "grouping_basis": [
+        "seed: directory_structure",
+        "refined_by: dependency_cohesion"
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "entrypoint": "debug_layout_svg.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "debug_layout_svg.py"
+      ],
+      "boundary_crossings": [],
+      "stubbed_files": [],
+      "unresolved_files": [],
+      "parse_error_files": [],
+      "next_file_to_inspect_in_route": "debug_layout_svg.py"
+    },
+    {
+      "entrypoint": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py"
+      ],
+      "boundary_crossings": [],
+      "stubbed_files": [],
+      "unresolved_files": [],
+      "parse_error_files": [],
+      "next_file_to_inspect_in_route": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py"
+    },
+    {
+      "entrypoint": "docs/message_file_package (1)/spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "docs/message_file_package (1)/spatial_authority_extractor.py"
+      ],
+      "boundary_crossings": [],
+      "stubbed_files": [],
+      "unresolved_files": [],
+      "parse_error_files": [],
+      "next_file_to_inspect_in_route": "docs/message_file_package (1)/spatial_authority_extractor.py"
+    },
+    {
+      "entrypoint": "location_ranker.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "location_ranker.py"
+      ],
+      "boundary_crossings": [],
+      "stubbed_files": [],
+      "unresolved_files": [],
+      "parse_error_files": [],
+      "next_file_to_inspect_in_route": "location_ranker.py"
+    },
+    {
+      "entrypoint": "spatial_pattern_matcher.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "spatial_pattern_matcher.py"
+      ],
+      "boundary_crossings": [],
+      "stubbed_files": [],
+      "unresolved_files": [],
+      "parse_error_files": [],
+      "next_file_to_inspect_in_route": "spatial_pattern_matcher.py"
+    },
+    {
+      "entrypoint": "trixel_recipes_mr.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "trixel_recipes_mr.py"
+      ],
+      "boundary_crossings": [],
+      "stubbed_files": [],
+      "unresolved_files": [],
+      "parse_error_files": [],
+      "next_file_to_inspect_in_route": "trixel_recipes_mr.py"
+    },
+    {
+      "entrypoint": "trixelmap_build.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "trixelmap_build.py",
+        "spatial_authority_extractor.py",
+        "spatial_pattern_matcher.py",
+        "spatial_layout_solver.py",
+        "terrain_field_builder.py",
+        "trixel_recipe_writer.py"
+      ],
+      "boundary_crossings": [],
+      "stubbed_files": [],
+      "unresolved_files": [],
+      "parse_error_files": [],
+      "next_file_to_inspect_in_route": "spatial_pattern_matcher.py"
+    },
+    {
+      "entrypoint": "vault_spatial_parser.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "DFS traversal from entrypoint",
+        "reachable via import chain"
+      ],
+      "route_files": [
+        "vault_spatial_parser.py",
+        "spatial_pattern_matcher.py"
+      ],
+      "boundary_crossings": [],
+      "stubbed_files": [],
+      "unresolved_files": [],
+      "parse_error_files": [],
+      "next_file_to_inspect_in_route": "spatial_pattern_matcher.py"
+    }
+  ],
+  "files": {
+    "terrain_field_builder.py": {
+      "language": "python",
+      "size_bytes": 2925,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "numpy",
+        "typing.Dict",
+        "typing.List"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "build_terrain_field",
+          "start_line": 8,
+          "end_line": 58
+        },
+        {
+          "name": "_smooth",
+          "start_line": 60,
+          "end_line": 61
+        },
+        {
+          "name": "_find_region_id",
+          "start_line": 64,
+          "end_line": 69
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "unknown",
+      "inbound_count": 1,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "inferred",
+        "confidence": "high",
+        "evidence": [
+          "Imported by likely_active file: 'trixelmap_build.py'"
+        ]
+      },
+      "inspection_score": 5
+    },
+    "trixel_recipe_writer.py": {
+      "language": "python",
+      "size_bytes": 2481,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "json",
+        "typing.Dict",
+        "typing.List"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "write_recipe_and_atlas",
+          "start_line": 8,
+          "end_line": 55
+        },
+        {
+          "name": "_biome_name_to_id",
+          "start_line": 57,
+          "end_line": 62
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "unknown",
+      "inbound_count": 1,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "inferred",
+        "confidence": "high",
+        "evidence": [
+          "Imported by likely_active file: 'trixelmap_build.py'"
+        ]
+      },
+      "inspection_score": 5
+    },
+    "trixelmap_build.py": {
+      "language": "python",
+      "size_bytes": 7242,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "argparse",
+        "json",
+        "pathlib.Path",
+        "spatial_authority_extractor.extract_from_scene_json",
+        "spatial_authority_extractor.extract_from_vault_md",
+        "spatial_authority_extractor.extract_from_zonj",
+        "spatial_layout_solver.solve_layout",
+        "sys",
+        "terrain_field_builder.build_terrain_field",
+        "trixel_recipe_writer.write_recipe_and_atlas",
+        "typing.Any",
+        "typing.Dict",
+        "yaml"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "normalize_spatial_authority_yaml",
+          "start_line": 43,
+          "end_line": 127
+        },
+        {
+          "name": "load_authority",
+          "start_line": 130,
+          "end_line": 166
+        },
+        {
+          "name": "run_pipeline",
+          "start_line": 169,
+          "end_line": 215
+        },
+        {
+          "name": "main",
+          "start_line": 218,
+          "end_line": 240
+        }
+      ],
+      "is_entrypoint": true,
+      "role_hint": "cli",
+      "inbound_count": 0,
+      "outbound_count": 4,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "confirmed",
+        "confidence": "high",
+        "evidence": [
+          "Contains 'if __name__ == \"__main__\"' execution block",
+          "Imports the 'argparse' CLI library"
+        ]
+      },
+      "inspection_score": 8
+    },
+    "spatial_authority_extractor.py": {
+      "language": "python",
+      "size_bytes": 3858,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "json",
+        "re",
+        "spatial_pattern_matcher.extract_spatial_facts",
+        "typing.Any",
+        "typing.Dict",
+        "typing.List"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "extract_from_zonj",
+          "start_line": 8,
+          "end_line": 20
+        },
+        {
+          "name": "extract_from_vault_md",
+          "start_line": 22,
+          "end_line": 47
+        },
+        {
+          "name": "extract_from_scene_json",
+          "start_line": 49,
+          "end_line": 59
+        },
+        {
+          "name": "_infer_quadrant",
+          "start_line": 61,
+          "end_line": 71
+        },
+        {
+          "name": "_region_type_to_terrain",
+          "start_line": 73,
+          "end_line": 83
+        },
+        {
+          "name": "_extract_adjacency",
+          "start_line": 85,
+          "end_line": 86
+        },
+        {
+          "name": "_build_edges_from_adjacency",
+          "start_line": 88,
+          "end_line": 95
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "unknown",
+      "inbound_count": 1,
+      "outbound_count": 1,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "inferred",
+        "confidence": "high",
+        "evidence": [
+          "Imported by likely_active file: 'trixelmap_build.py'"
+        ]
+      },
+      "inspection_score": 7
+    },
+    "debug_layout_svg.py": {
+      "language": "python",
+      "size_bytes": 4403,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "json",
+        "pathlib.Path",
+        "sys",
+        "typing.Dict",
+        "typing.List",
+        "typing.Tuple"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "generate_debug_svg",
+          "start_line": 11,
+          "end_line": 79
+        }
+      ],
+      "is_entrypoint": true,
+      "role_hint": "cli",
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "confirmed",
+        "confidence": "high",
+        "evidence": [
+          "Contains 'if __name__ == \"__main__\"' execution block"
+        ]
+      },
+      "inspection_score": 5
+    },
+    "spatial_layout_solver.py": {
+      "language": "python",
+      "size_bytes": 8052,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "math",
+        "numpy",
+        "random",
+        "typing.Dict",
+        "typing.List",
+        "typing.Tuple"
+      ],
+      "classes": [
+        {
+          "name": "DeterministicSpatialSolver",
+          "methods": [
+            "__init__",
+            "solve",
+            "_phase1_quadrant_placement",
+            "_phase2_vector_refinement"
+          ],
+          "start_line": 40,
+          "end_line": 190
+        }
+      ],
+      "functions": [
+        {
+          "name": "solve_layout",
+          "start_line": 192,
+          "end_line": 193
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "unknown",
+      "inbound_count": 1,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "inferred",
+        "confidence": "high",
+        "evidence": [
+          "Imported by likely_active file: 'trixelmap_build.py'"
+        ]
+      },
+      "inspection_score": 5
+    },
+    "vault_spatial_parser.py": {
+      "language": "python",
+      "size_bytes": 15238,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "argparse",
+        "dataclasses.dataclass",
+        "dataclasses.field",
+        "json",
+        "math",
+        "pathlib.Path",
+        "re",
+        "spatial_pattern_matcher.extract_location_mentions",
+        "spatial_pattern_matcher.extract_spatial_facts",
+        "spatial_pattern_matcher.normalize_id",
+        "typing.Dict",
+        "typing.List",
+        "typing.Optional",
+        "typing.Tuple"
+      ],
+      "classes": [
+        {
+          "name": "SpatialEvidence",
+          "methods": [],
+          "start_line": 26,
+          "end_line": 33
+        },
+        {
+          "name": "LocationRecord",
+          "methods": [],
+          "start_line": 36,
+          "end_line": 46
+        },
+        {
+          "name": "VaultSpatialParser",
+          "methods": [
+            "__init__",
+            "parse_vault"
+          ],
+          "start_line": 179,
+          "end_line": 270
+        }
+      ],
+      "functions": [
+        {
+          "name": "resolve_canonical_id",
+          "start_line": 59,
+          "end_line": 68
+        },
+        {
+          "name": "detect_conflicts",
+          "start_line": 80,
+          "end_line": 105
+        },
+        {
+          "name": "score_location",
+          "start_line": 108,
+          "end_line": 175
+        },
+        {
+          "name": "_invert_relation",
+          "start_line": 272,
+          "end_line": 281
+        },
+        {
+          "name": "generate_evidence_json",
+          "start_line": 284,
+          "end_line": 307
+        },
+        {
+          "name": "generate_report_md",
+          "start_line": 309,
+          "end_line": 339
+        },
+        {
+          "name": "main",
+          "start_line": 342,
+          "end_line": 358
+        }
+      ],
+      "is_entrypoint": true,
+      "role_hint": "cli",
+      "inbound_count": 0,
+      "outbound_count": 1,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "confirmed",
+        "confidence": "high",
+        "evidence": [
+          "Contains 'if __name__ == \"__main__\"' execution block",
+          "Imports the 'argparse' CLI library"
+        ]
+      },
+      "inspection_score": 2
+    },
+    "spatial_pattern_matcher.py": {
+      "language": "python",
+      "size_bytes": 11658,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "re",
+        "typing.Dict",
+        "typing.List",
+        "typing.Optional"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "normalize_id",
+          "start_line": 109,
+          "end_line": 116
+        },
+        {
+          "name": "resolve_canonical_id",
+          "start_line": 118,
+          "end_line": 126
+        },
+        {
+          "name": "_is_hygienic_id",
+          "start_line": 128,
+          "end_line": 164
+        },
+        {
+          "name": "extract_location_mentions",
+          "start_line": 166,
+          "end_line": 197
+        },
+        {
+          "name": "extract_spatial_facts",
+          "start_line": 199,
+          "end_line": 267
+        }
+      ],
+      "is_entrypoint": true,
+      "role_hint": "cli",
+      "inbound_count": 4,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "confirmed",
+        "confidence": "high",
+        "evidence": [
+          "Contains 'if __name__ == \"__main__\"' execution block"
+        ]
+      },
+      "inspection_score": 20
+    },
+    "location_ranker.py": {
+      "language": "python",
+      "size_bytes": 6425,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "argparse",
+        "json",
+        "pathlib.Path",
+        "re",
+        "typing.Dict",
+        "typing.List",
+        "typing.Tuple"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "score_location",
+          "start_line": 55,
+          "end_line": 118
+        },
+        {
+          "name": "generate_registry",
+          "start_line": 120,
+          "end_line": 165
+        }
+      ],
+      "is_entrypoint": true,
+      "role_hint": "cli",
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "confirmed",
+        "confidence": "high",
+        "evidence": [
+          "Contains 'if __name__ == \"__main__\"' execution block",
+          "Imports the 'argparse' CLI library"
+        ]
+      },
+      "inspection_score": 5
+    },
+    "trixel_recipes_mr.py": {
+      "language": "python",
+      "size_bytes": 14383,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "__future__.annotations",
+        "brush_models_mr.BrushRecipe",
+        "brush_models_mr.BrushShapeAsset",
+        "dataclasses.dataclass",
+        "pathlib.Path",
+        "sys",
+        "trixel_brush_adapter.AssetRegistry",
+        "typing.Optional",
+        "typing.TYPE_CHECKING"
+      ],
+      "classes": [
+        {
+          "name": "TrixelRecipeDef",
+          "methods": [
+            "uses_bundle",
+            "uses_shape"
+          ],
+          "start_line": 52,
+          "end_line": 87
+        }
+      ],
+      "functions": [
+        {
+          "name": "build",
+          "start_line": 298,
+          "end_line": 351
+        },
+        {
+          "name": "build_all",
+          "start_line": 354,
+          "end_line": 364
+        },
+        {
+          "name": "describe",
+          "start_line": 367,
+          "end_line": 370
+        }
+      ],
+      "is_entrypoint": true,
+      "role_hint": "cli",
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "confirmed",
+        "confidence": "high",
+        "evidence": [
+          "Contains 'if __name__ == \"__main__\"' execution block"
+        ]
+      },
+      "inspection_score": 5
+    },
+    "docs/message_file_package (1)/spatial_authority_extractor.py": {
+      "language": "python",
+      "size_bytes": 10776,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "re",
+        "typing.Dict",
+        "typing.List",
+        "typing.Optional",
+        "typing.Tuple"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "normalize_id",
+          "start_line": 92,
+          "end_line": 100
+        },
+        {
+          "name": "infer_region_type",
+          "start_line": 102,
+          "end_line": 123
+        },
+        {
+          "name": "extract_spatial_facts",
+          "start_line": 127,
+          "end_line": 212
+        }
+      ],
+      "is_entrypoint": true,
+      "role_hint": "cli",
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "confirmed",
+        "confidence": "high",
+        "evidence": [
+          "Contains 'if __name__ == \"__main__\"' execution block"
+        ]
+      },
+      "inspection_score": 5
+    },
+    "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py": {
+      "language": "python",
+      "size_bytes": 10776,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "re",
+        "typing.Dict",
+        "typing.List",
+        "typing.Optional",
+        "typing.Tuple"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "normalize_id",
+          "start_line": 92,
+          "end_line": 100
+        },
+        {
+          "name": "infer_region_type",
+          "start_line": 102,
+          "end_line": 123
+        },
+        {
+          "name": "extract_spatial_facts",
+          "start_line": 127,
+          "end_line": 212
+        }
+      ],
+      "is_entrypoint": true,
+      "role_hint": "cli",
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "status": {
+        "status": "likely_active",
+        "claim_type": "confirmed",
+        "confidence": "high",
+        "evidence": [
+          "Contains 'if __name__ == \"__main__\"' execution block"
+        ]
+      },
+      "inspection_score": 50
+    },
+    "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py": {
+      "language": "python",
+      "size_bytes": 589,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "spatial_pattern_matcher.extract_spatial_facts"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "extract_from_vault_md",
+          "start_line": 3,
+          "end_line": 17
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "unknown",
+      "inbound_count": 0,
+      "outbound_count": 1,
+      "status": {
+        "status": "dormant",
+        "claim_type": "inferred",
+        "confidence": "medium",
+        "evidence": [
+          "No inbound local imports found, but file imports other local modules (unused subsystem entrypoint)"
+        ]
+      },
+      "inspection_score": 52
+    },
+    "docs/message_file_package/unassigned/extracted_block_001.py": {
+      "language": "python",
+      "size_bytes": 9162,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "numpy",
+        "random",
+        "typing.Dict",
+        "typing.List",
+        "typing.Optional",
+        "typing.Tuple"
+      ],
+      "classes": [
+        {
+          "name": "DeterministicSpatialSolver",
+          "methods": [
+            "__init__",
+            "solve",
+            "_phase1_quadrant_placement",
+            "_phase2_relationship_refinement"
+          ],
+          "start_line": 37,
+          "end_line": 237
+        }
+      ],
+      "functions": [
+        {
+          "name": "solve_layout",
+          "start_line": 240,
+          "end_line": 245
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "unknown",
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "status": {
+        "status": "orphaned",
+        "claim_type": "inferred",
+        "confidence": "high",
+        "evidence": [
+          "Isolated standalone file with no inbound or outbound local dependencies in the project"
+        ]
+      },
+      "inspection_score": 20
+    },
+    "docs/message_file_package3/spatial_pattern_matcher.py": {
+      "language": "python",
+      "size_bytes": 1083,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [],
+      "classes": [],
+      "functions": [
+        {
+          "name": "extract_location_mentions",
+          "start_line": 3,
+          "end_line": 25
+        }
+      ],
+      "is_entrypoint": false,
+      "role_hint": "unknown",
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "status": {
+        "status": "orphaned",
+        "claim_type": "inferred",
+        "confidence": "high",
+        "evidence": [
+          "Isolated standalone file with no inbound or outbound local dependencies in the project"
+        ]
+      },
+      "inspection_score": 70
+    },
+    "docs/message_file_package3/vault_spatial_parser.py": {
+      "language": "python",
+      "size_bytes": 625,
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Direct AST parsing of Python source code"
+      ],
+      "raw_imports": [
+        "spatial_pattern_matcher.extract_location_mentions",
+        "spatial_pattern_matcher.extract_spatial_facts",
+        "spatial_pattern_matcher.normalize_id"
+      ],
+      "classes": [
+        {
+          "name": "LocationRecord",
+          "methods": [],
+          "start_line": 6,
+          "end_line": 15
+        }
+      ],
+      "functions": [],
+      "is_entrypoint": false,
+      "role_hint": "unknown",
+      "inbound_count": 0,
+      "outbound_count": 1,
+      "status": {
+        "status": "dormant",
+        "claim_type": "inferred",
+        "confidence": "medium",
+        "evidence": [
+          "No inbound local imports found, but file imports other local modules (unused subsystem entrypoint)"
+        ]
+      },
+      "inspection_score": 52
+    }
+  },
+  "local_dependencies": [
+    {
+      "source": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py",
+      "target": "spatial_pattern_matcher.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py",
+        "Resolved import string to local path spatial_pattern_matcher.py"
+      ]
+    },
+    {
+      "source": "docs/message_file_package3/vault_spatial_parser.py",
+      "target": "spatial_pattern_matcher.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of docs/message_file_package3/vault_spatial_parser.py",
+        "Resolved import string to local path spatial_pattern_matcher.py"
+      ]
+    },
+    {
+      "source": "spatial_authority_extractor.py",
+      "target": "spatial_pattern_matcher.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of spatial_authority_extractor.py",
+        "Resolved import string to local path spatial_pattern_matcher.py"
+      ]
+    },
+    {
+      "source": "trixelmap_build.py",
+      "target": "spatial_authority_extractor.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of trixelmap_build.py",
+        "Resolved import string to local path spatial_authority_extractor.py"
+      ]
+    },
+    {
+      "source": "trixelmap_build.py",
+      "target": "spatial_layout_solver.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of trixelmap_build.py",
+        "Resolved import string to local path spatial_layout_solver.py"
+      ]
+    },
+    {
+      "source": "trixelmap_build.py",
+      "target": "terrain_field_builder.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of trixelmap_build.py",
+        "Resolved import string to local path terrain_field_builder.py"
+      ]
+    },
+    {
+      "source": "trixelmap_build.py",
+      "target": "trixel_recipe_writer.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of trixelmap_build.py",
+        "Resolved import string to local path trixel_recipe_writer.py"
+      ]
+    },
+    {
+      "source": "vault_spatial_parser.py",
+      "target": "spatial_pattern_matcher.py",
+      "type": "import",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Import statement found in source code of vault_spatial_parser.py",
+        "Resolved import string to local path spatial_pattern_matcher.py"
+      ]
+    }
+  ],
+  "parse_errors": [
+    {
+      "filepath": "docs/message_file_package3/vault_spatial_parser_2.py",
+      "error": "IndentationError: unexpected indent (vault_spatial_parser_2.py, line 4)",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "AST parser or dependency resolver flagged a structural gap"
+      ]
+    },
+    {
+      "filepath": "docs/message_file_package3/unassigned/extracted_block_004.py",
+      "error": "IndentationError: unexpected indent (extracted_block_004.py, line 1)",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "AST parser or dependency resolver flagged a structural gap"
+      ]
+    }
+  ],
+  "payload_handoffs": [
+    {
+      "payload_candidate_id": "flow_build_terrain_field_to_write_recipe_and_atlas",
+      "observed_name": "inferred_dictionary",
+      "producer": {
+        "component": "terrain_field_builder.py",
+        "file": "terrain_field_builder.py",
+        "function": "build_terrain_field"
+      },
+      "consumers": [
+        {
+          "component": "trixel_recipe_writer.py",
+          "file": "trixel_recipe_writer.py",
+          "function": "write_recipe_and_atlas",
+          "matched_parameter": "terrain_field",
+          "evidence": "Passed as argument to parameter terrain_field"
+        }
+      ],
+      "handoff_method": "function_return_to_argument",
+      "route_status": "connected_partial",
+      "observed_shape": {
+        "keys": [
+          "grid_size",
+          "tiles",
+          "version"
+        ],
+        "utilized_keys": [
+          "grid_size"
+        ],
+        "unutilized_keys": [
+          "tiles",
+          "version"
+        ]
+      },
+      "contract_identifiers": [
+        "1.0"
+      ],
+      "artifact_paths": [],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Dataflow assignment in trixelmap_build.py",
+        "Local variables matched in context: run_pipeline",
+        "Unutilized fields: tiles, version"
+      ],
+      "limitations": [
+        "Alias mutation is not tracked statically",
+        "Container insertion/retrieval is not traced",
+        "State tracking across class attributes is omitted",
+        "Callback triggers and reflection are unsupported"
+      ]
+    },
+    {
+      "payload_candidate_id": "flow_load_authority_to_solve_layout",
+      "observed_name": "extract_from_zonj",
+      "producer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "load_authority"
+      },
+      "consumers": [
+        {
+          "component": "spatial_layout_solver.py",
+          "file": "spatial_layout_solver.py",
+          "function": "solve_layout",
+          "matched_parameter": "spatial_authority",
+          "evidence": "Passed as argument to parameter spatial_authority"
+        }
+      ],
+      "handoff_method": "function_return_to_argument",
+      "route_status": "connected",
+      "observed_shape": {
+        "keys": [],
+        "utilized_keys": [],
+        "unutilized_keys": []
+      },
+      "contract_identifiers": [],
+      "artifact_paths": [],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Dataflow assignment in trixelmap_build.py",
+        "Local variables matched in context: run_pipeline"
+      ],
+      "limitations": [
+        "Alias mutation is not tracked statically",
+        "Container insertion/retrieval is not traced",
+        "State tracking across class attributes is omitted",
+        "Callback triggers and reflection are unsupported"
+      ]
+    },
+    {
+      "payload_candidate_id": "flow_resolve_canonical_id_to__is_hygienic_id",
+      "observed_name": "inferred_dictionary",
+      "producer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "resolve_canonical_id"
+      },
+      "consumers": [
+        {
+          "component": "spatial_pattern_matcher.py",
+          "file": "spatial_pattern_matcher.py",
+          "function": "_is_hygienic_id",
+          "matched_parameter": "nid",
+          "evidence": "Passed as argument to parameter nid"
+        }
+      ],
+      "handoff_method": "function_return_to_argument",
+      "route_status": "connected",
+      "observed_shape": {
+        "keys": [],
+        "utilized_keys": [],
+        "unutilized_keys": []
+      },
+      "contract_identifiers": [],
+      "artifact_paths": [],
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Dataflow assignment in spatial_pattern_matcher.py",
+        "Local variables matched in context: extract_location_mentions"
+      ],
+      "limitations": [
+        "Alias mutation is not tracked statically",
+        "Container insertion/retrieval is not traced",
+        "State tracking across class attributes is omitted",
+        "Callback triggers and reflection are unsupported"
+      ]
+    },
+    {
+      "payload_candidate_id": "flow_resolve_canonical_id_to__is_hygienic_id",
+      "observed_name": "inferred_dictionary",
+      "producer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "resolve_canonical_id"
+      },
+      "consumers": [
+        {
+          "component": "spatial_pattern_matcher.py",
+          "file": "spatial_pattern_matcher.py",
+          "function": "_is_hygienic_id",
+          "matched_parameter": "nid",
+          "evidence": "Passed as argument to parameter nid"
+        }
+      ],
+      "handoff_method": "function_return_to_argument",
+      "route_status": "connected",
+      "observed_shape": {
+        "keys": [],
+        "utilized_keys": [],
+        "unutilized_keys": []
+      },
+      "contract_identifiers": [],
+      "artifact_paths": [],
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Dataflow assignment in spatial_pattern_matcher.py",
+        "Local variables matched in context: extract_location_mentions"
+      ],
+      "limitations": [
+        "Alias mutation is not tracked statically",
+        "Container insertion/retrieval is not traced",
+        "State tracking across class attributes is omitted",
+        "Callback triggers and reflection are unsupported"
+      ]
+    },
+    {
+      "payload_candidate_id": "flow_resolve_canonical_id_to__is_hygienic_id",
+      "observed_name": "inferred_dictionary",
+      "producer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "resolve_canonical_id"
+      },
+      "consumers": [
+        {
+          "component": "spatial_pattern_matcher.py",
+          "file": "spatial_pattern_matcher.py",
+          "function": "_is_hygienic_id",
+          "matched_parameter": "nid",
+          "evidence": "Passed as argument to parameter nid"
+        }
+      ],
+      "handoff_method": "function_return_to_argument",
+      "route_status": "connected",
+      "observed_shape": {
+        "keys": [],
+        "utilized_keys": [],
+        "unutilized_keys": []
+      },
+      "contract_identifiers": [],
+      "artifact_paths": [],
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Dataflow assignment in spatial_pattern_matcher.py",
+        "Local variables matched in context: extract_spatial_facts"
+      ],
+      "limitations": [
+        "Alias mutation is not tracked statically",
+        "Container insertion/retrieval is not traced",
+        "State tracking across class attributes is omitted",
+        "Callback triggers and reflection are unsupported"
+      ]
+    },
+    {
+      "payload_candidate_id": "flow_solve_layout_to_build_terrain_field",
+      "observed_name": "solve",
+      "producer": {
+        "component": "spatial_layout_solver.py",
+        "file": "spatial_layout_solver.py",
+        "function": "solve_layout"
+      },
+      "consumers": [
+        {
+          "component": "terrain_field_builder.py",
+          "file": "terrain_field_builder.py",
+          "function": "build_terrain_field",
+          "matched_parameter": "resolved_layout",
+          "evidence": "Passed as argument to parameter resolved_layout"
+        }
+      ],
+      "handoff_method": "function_return_to_argument",
+      "route_status": "connected",
+      "observed_shape": {
+        "keys": [],
+        "utilized_keys": [],
+        "unutilized_keys": []
+      },
+      "contract_identifiers": [],
+      "artifact_paths": [],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Dataflow assignment in trixelmap_build.py",
+        "Local variables matched in context: run_pipeline"
+      ],
+      "limitations": [
+        "Alias mutation is not tracked statically",
+        "Container insertion/retrieval is not traced",
+        "State tracking across class attributes is omitted",
+        "Callback triggers and reflection are unsupported"
+      ]
+    },
+    {
+      "payload_candidate_id": "flow_solve_layout_to_write_recipe_and_atlas",
+      "observed_name": "solve",
+      "producer": {
+        "component": "spatial_layout_solver.py",
+        "file": "spatial_layout_solver.py",
+        "function": "solve_layout"
+      },
+      "consumers": [
+        {
+          "component": "trixel_recipe_writer.py",
+          "file": "trixel_recipe_writer.py",
+          "function": "write_recipe_and_atlas",
+          "matched_parameter": "terrain_field",
+          "evidence": "Passed as argument to parameter terrain_field"
+        }
+      ],
+      "handoff_method": "function_return_to_argument",
+      "route_status": "connected",
+      "observed_shape": {
+        "keys": [],
+        "utilized_keys": [],
+        "unutilized_keys": []
+      },
+      "contract_identifiers": [],
+      "artifact_paths": [],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "confirmed",
+      "confidence": "high",
+      "evidence": [
+        "Dataflow assignment in trixelmap_build.py",
+        "Local variables matched in context: run_pipeline"
+      ],
+      "limitations": [
+        "Alias mutation is not tracked statically",
+        "Container insertion/retrieval is not traced",
+        "State tracking across class attributes is omitted",
+        "Callback triggers and reflection are unsupported"
+      ]
+    }
+  ],
+  "unresolved_payload_routes": [
+    {
+      "payload_candidate_id": "unresolved_cons_debug_layout_svg.py_generate_debug_svg",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "debug_layout_svg.py",
+        "file": "debug_layout_svg.py",
+        "function": "generate_debug_svg"
+      },
+      "scan_boundary": "debug_layout_svg.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_debug_layout_svg.py_to_svg",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "debug_layout_svg.py",
+        "file": "debug_layout_svg.py",
+        "function": "to_svg"
+      },
+      "scan_boundary": "debug_layout_svg.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py_extract_spatial_facts",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+        "function": "extract_spatial_facts"
+      },
+      "scan_boundary": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py_infer_region_type",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+        "function": "infer_region_type"
+      },
+      "scan_boundary": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py_normalize_id",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+        "function": "normalize_id"
+      },
+      "scan_boundary": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py_extract_from_vault_md",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py",
+        "function": "extract_from_vault_md"
+      },
+      "scan_boundary": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package (1)/spatial_authority_extractor.py_extract_spatial_facts",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/spatial_authority_extractor.py",
+        "function": "extract_spatial_facts"
+      },
+      "scan_boundary": "docs/message_file_package (1)/spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package (1)/spatial_authority_extractor.py_infer_region_type",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/spatial_authority_extractor.py",
+        "function": "infer_region_type"
+      },
+      "scan_boundary": "docs/message_file_package (1)/spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package (1)/spatial_authority_extractor.py_normalize_id",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/spatial_authority_extractor.py",
+        "function": "normalize_id"
+      },
+      "scan_boundary": "docs/message_file_package (1)/spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package/unassigned/extracted_block_001.py___init__",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package/unassigned/extracted_block_001.py",
+        "function": "__init__"
+      },
+      "scan_boundary": "docs/message_file_package/unassigned/extracted_block_001.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package/unassigned/extracted_block_001.py__phase1_quadrant_placement",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package/unassigned/extracted_block_001.py",
+        "function": "_phase1_quadrant_placement"
+      },
+      "scan_boundary": "docs/message_file_package/unassigned/extracted_block_001.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package/unassigned/extracted_block_001.py__phase2_relationship_refinement",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package/unassigned/extracted_block_001.py",
+        "function": "_phase2_relationship_refinement"
+      },
+      "scan_boundary": "docs/message_file_package/unassigned/extracted_block_001.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package/unassigned/extracted_block_001.py_solve",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package/unassigned/extracted_block_001.py",
+        "function": "solve"
+      },
+      "scan_boundary": "docs/message_file_package/unassigned/extracted_block_001.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package/unassigned/extracted_block_001.py_solve_layout",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package/unassigned/extracted_block_001.py",
+        "function": "solve_layout"
+      },
+      "scan_boundary": "docs/message_file_package/unassigned/extracted_block_001.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_docs/message_file_package3/spatial_pattern_matcher.py_extract_location_mentions",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "docs",
+        "file": "docs/message_file_package3/spatial_pattern_matcher.py",
+        "function": "extract_location_mentions"
+      },
+      "scan_boundary": "docs/message_file_package3/spatial_pattern_matcher.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_location_ranker.py_generate_registry",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "location_ranker.py",
+        "file": "location_ranker.py",
+        "function": "generate_registry"
+      },
+      "scan_boundary": "location_ranker.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_location_ranker.py_score_location",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "location_ranker.py",
+        "file": "location_ranker.py",
+        "function": "score_location"
+      },
+      "scan_boundary": "location_ranker.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_authority_extractor.py__build_edges_from_adjacency",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "_build_edges_from_adjacency"
+      },
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_authority_extractor.py__extract_adjacency",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "_extract_adjacency"
+      },
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_authority_extractor.py__infer_quadrant",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "_infer_quadrant"
+      },
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_authority_extractor.py__region_type_to_terrain",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "_region_type_to_terrain"
+      },
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_authority_extractor.py_extract_from_scene_json",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "extract_from_scene_json"
+      },
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_authority_extractor.py_extract_from_vault_md",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "extract_from_vault_md"
+      },
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_authority_extractor.py_extract_from_zonj",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "extract_from_zonj"
+      },
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_layout_solver.py___init__",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_layout_solver.py",
+        "file": "spatial_layout_solver.py",
+        "function": "__init__"
+      },
+      "scan_boundary": "spatial_layout_solver.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_layout_solver.py__phase1_quadrant_placement",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_layout_solver.py",
+        "file": "spatial_layout_solver.py",
+        "function": "_phase1_quadrant_placement"
+      },
+      "scan_boundary": "spatial_layout_solver.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_layout_solver.py__phase2_vector_refinement",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_layout_solver.py",
+        "file": "spatial_layout_solver.py",
+        "function": "_phase2_vector_refinement"
+      },
+      "scan_boundary": "spatial_layout_solver.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_layout_solver.py_solve",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_layout_solver.py",
+        "file": "spatial_layout_solver.py",
+        "function": "solve"
+      },
+      "scan_boundary": "spatial_layout_solver.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_pattern_matcher.py_extract_location_mentions",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "extract_location_mentions"
+      },
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_pattern_matcher.py_extract_spatial_facts",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "extract_spatial_facts"
+      },
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_pattern_matcher.py_normalize_id",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "normalize_id"
+      },
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_spatial_pattern_matcher.py_resolve_canonical_id",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "resolve_canonical_id"
+      },
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_terrain_field_builder.py__find_region_id",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "terrain_field_builder.py",
+        "file": "terrain_field_builder.py",
+        "function": "_find_region_id"
+      },
+      "scan_boundary": "terrain_field_builder.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_terrain_field_builder.py__smooth",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "terrain_field_builder.py",
+        "file": "terrain_field_builder.py",
+        "function": "_smooth"
+      },
+      "scan_boundary": "terrain_field_builder.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_trixel_recipe_writer.py__biome_name_to_id",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "trixel_recipe_writer.py",
+        "file": "trixel_recipe_writer.py",
+        "function": "_biome_name_to_id"
+      },
+      "scan_boundary": "trixel_recipe_writer.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_trixel_recipes_mr.py_build",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "trixel_recipes_mr.py",
+        "file": "trixel_recipes_mr.py",
+        "function": "build"
+      },
+      "scan_boundary": "trixel_recipes_mr.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_trixel_recipes_mr.py_build_all",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "trixel_recipes_mr.py",
+        "file": "trixel_recipes_mr.py",
+        "function": "build_all"
+      },
+      "scan_boundary": "trixel_recipes_mr.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_trixel_recipes_mr.py_describe",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "trixel_recipes_mr.py",
+        "file": "trixel_recipes_mr.py",
+        "function": "describe"
+      },
+      "scan_boundary": "trixel_recipes_mr.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_trixel_recipes_mr.py_uses_bundle",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "trixel_recipes_mr.py",
+        "file": "trixel_recipes_mr.py",
+        "function": "uses_bundle"
+      },
+      "scan_boundary": "trixel_recipes_mr.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_trixel_recipes_mr.py_uses_shape",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "trixel_recipes_mr.py",
+        "file": "trixel_recipes_mr.py",
+        "function": "uses_shape"
+      },
+      "scan_boundary": "trixel_recipes_mr.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_trixelmap_build.py_load_authority",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "load_authority"
+      },
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_trixelmap_build.py_normalize_spatial_authority_yaml",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "normalize_spatial_authority_yaml"
+      },
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_trixelmap_build.py_run_pipeline",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "run_pipeline"
+      },
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_vault_spatial_parser.py___init__",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "__init__"
+      },
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_vault_spatial_parser.py__invert_relation",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "_invert_relation"
+      },
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_vault_spatial_parser.py_detect_conflicts",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "detect_conflicts"
+      },
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_vault_spatial_parser.py_generate_evidence_json",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "generate_evidence_json"
+      },
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_vault_spatial_parser.py_generate_report_md",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "generate_report_md"
+      },
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_vault_spatial_parser.py_parse_vault",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "parse_vault"
+      },
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_vault_spatial_parser.py_resolve_canonical_id",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "resolve_canonical_id"
+      },
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_cons_vault_spatial_parser.py_score_location",
+      "observed_name": "unknown",
+      "status": "consumer_only",
+      "reason": "consumer input without visible producer",
+      "consumer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "score_location"
+      },
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer function defined but no matching producer found."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_debug_layout_svg.py_generate_debug_svg",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "debug_layout_svg.py",
+        "file": "debug_layout_svg.py",
+        "function": "generate_debug_svg"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "debug_layout_svg.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py_extract_spatial_facts",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+        "function": "extract_spatial_facts"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py_extract_from_vault_md",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py",
+        "function": "extract_from_vault_md"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "docs/message_file_package (1)/message_file_package/spatial_authority_extractor_2.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_docs/message_file_package (1)/spatial_authority_extractor.py_extract_spatial_facts",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "docs",
+        "file": "docs/message_file_package (1)/spatial_authority_extractor.py",
+        "function": "extract_spatial_facts"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "docs/message_file_package (1)/spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_docs/message_file_package/unassigned/extracted_block_001.py_solve",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "docs",
+        "file": "docs/message_file_package/unassigned/extracted_block_001.py",
+        "function": "solve"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "docs/message_file_package/unassigned/extracted_block_001.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_docs/message_file_package/unassigned/extracted_block_001.py_solve_layout",
+      "observed_name": "solve",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "docs",
+        "file": "docs/message_file_package/unassigned/extracted_block_001.py",
+        "function": "solve_layout"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "docs/message_file_package/unassigned/extracted_block_001.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_docs/message_file_package3/spatial_pattern_matcher.py_extract_location_mentions",
+      "observed_name": "list",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "docs",
+        "file": "docs/message_file_package3/spatial_pattern_matcher.py",
+        "function": "extract_location_mentions"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "docs/message_file_package3/spatial_pattern_matcher.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_location_ranker.py_generate_registry_location_authority_registry.json",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "location_ranker.py",
+        "file": "location_ranker.py",
+        "function": "generate_registry"
+      },
+      "artifact_paths": [
+        "location_authority_registry.json"
+      ],
+      "scan_boundary": "location_ranker.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Emitted artifact: location_authority_registry.json has no matching readers inside the scanned boundary."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_location_ranker.py_generate_registry_location_authority_report.md",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "location_ranker.py",
+        "file": "location_ranker.py",
+        "function": "generate_registry"
+      },
+      "artifact_paths": [
+        "location_authority_report.md"
+      ],
+      "scan_boundary": "location_ranker.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Emitted artifact: location_authority_report.md has no matching readers inside the scanned boundary."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_authority_extractor.py__build_edges_from_adjacency",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "_build_edges_from_adjacency"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_authority_extractor.py__extract_adjacency",
+      "observed_name": "findall",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "_extract_adjacency"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_authority_extractor.py__region_type_to_terrain",
+      "observed_name": "get",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "_region_type_to_terrain"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_authority_extractor.py_extract_from_scene_json",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "extract_from_scene_json"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_authority_extractor.py_extract_from_vault_md",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "extract_from_vault_md"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_authority_extractor.py_extract_from_zonj",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_authority_extractor.py",
+        "file": "spatial_authority_extractor.py",
+        "function": "extract_from_zonj"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_authority_extractor.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_layout_solver.py_solve",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_layout_solver.py",
+        "file": "spatial_layout_solver.py",
+        "function": "solve"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_layout_solver.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_pattern_matcher.py_extract_location_mentions",
+      "observed_name": "list",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "extract_location_mentions"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_pattern_matcher.py_extract_spatial_facts",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "extract_spatial_facts"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_spatial_pattern_matcher.py_normalize_id",
+      "observed_name": "replace",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "spatial_pattern_matcher.py",
+        "file": "spatial_pattern_matcher.py",
+        "function": "normalize_id"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "spatial_pattern_matcher.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_terrain_field_builder.py__smooth",
+      "observed_name": "pad",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "terrain_field_builder.py",
+        "file": "terrain_field_builder.py",
+        "function": "_smooth"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "terrain_field_builder.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixel_recipe_writer.py__biome_name_to_id",
+      "observed_name": "get",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "trixel_recipe_writer.py",
+        "file": "trixel_recipe_writer.py",
+        "function": "_biome_name_to_id"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "trixel_recipe_writer.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixel_recipe_writer.py_write_recipe_and_atlas",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "trixel_recipe_writer.py",
+        "file": "trixel_recipe_writer.py",
+        "function": "write_recipe_and_atlas"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "trixel_recipe_writer.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixel_recipes_mr.py_build",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "trixel_recipes_mr.py",
+        "file": "trixel_recipes_mr.py",
+        "function": "build"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "trixel_recipes_mr.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixel_recipes_mr.py_build_all",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "trixel_recipes_mr.py",
+        "file": "trixel_recipes_mr.py",
+        "function": "build_all"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "trixel_recipes_mr.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixelmap_build.py_normalize_spatial_authority_yaml",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "normalize_spatial_authority_yaml"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixelmap_build.py_run_pipeline_resolved_layout.json",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "run_pipeline"
+      },
+      "artifact_paths": [
+        "resolved_layout.json"
+      ],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Emitted artifact: resolved_layout.json has no matching readers inside the scanned boundary."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixelmap_build.py_run_pipeline_spatial_authority.json",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "run_pipeline"
+      },
+      "artifact_paths": [
+        "spatial_authority.json"
+      ],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Emitted artifact: spatial_authority.json has no matching readers inside the scanned boundary."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixelmap_build.py_run_pipeline_terrain_field.json",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "run_pipeline"
+      },
+      "artifact_paths": [
+        "terrain_field.json"
+      ],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Emitted artifact: terrain_field.json has no matching readers inside the scanned boundary."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixelmap_build.py_run_pipeline_trixelcomposer_atlas_plan.json",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "consumer outside scan boundary",
+      "producer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "run_pipeline"
+      },
+      "artifact_paths": [
+        "trixelcomposer_atlas_plan.json"
+      ],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer not visible within scanned boundary.",
+        "File written: trixelcomposer_atlas_plan.json is intended for cross-boundary consumption."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_trixelmap_build.py_run_pipeline_trixelcomposer_recipe.json",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "consumer outside scan boundary",
+      "producer": {
+        "component": "trixelmap_build.py",
+        "file": "trixelmap_build.py",
+        "function": "run_pipeline"
+      },
+      "artifact_paths": [
+        "trixelcomposer_recipe.json"
+      ],
+      "scan_boundary": "trixelmap_build.py",
+      "claim_type": "gap",
+      "confidence": "high",
+      "evidence": [
+        "Consumer not visible within scanned boundary.",
+        "File written: trixelcomposer_recipe.json is intended for cross-boundary consumption."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_vault_spatial_parser.py__invert_relation",
+      "observed_name": "get",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "_invert_relation"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_vault_spatial_parser.py_generate_evidence_json",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "generate_evidence_json"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_vault_spatial_parser.py_generate_report_md",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "generate_report_md"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_vault_spatial_parser.py_resolve_canonical_id",
+      "observed_name": "unknown",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "resolve_canonical_id"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    },
+    {
+      "payload_candidate_id": "unresolved_prod_vault_spatial_parser.py_score_location",
+      "observed_name": "round",
+      "status": "producer_only",
+      "reason": "returned object not subsequently observed",
+      "producer": {
+        "component": "vault_spatial_parser.py",
+        "file": "vault_spatial_parser.py",
+        "function": "score_location"
+      },
+      "artifact_paths": [],
+      "scan_boundary": "vault_spatial_parser.py",
+      "claim_type": "inferred",
+      "confidence": "high",
+      "evidence": [
+        "Producer candidate defined but no consumer matched in current workspace."
+      ]
+    }
+  ]
+}

@@ -147,6 +147,20 @@ def generate_report(project_dir, files_data, parse_errors):
     # Sort local dependencies for deterministic outputs
     local_dependencies.sort(key=lambda d: (d["source"], d["target"]))
 
+    # Extract payload candidates per file
+    from code_atlas.core.payload_extractor import extract_payload_candidates
+    candidates_by_file = {}
+    for filepath in cleaned_files_data.keys():
+        full_path = os.path.join(project_dir, filepath)
+        if os.path.exists(full_path):
+            candidates_by_file[filepath] = extract_payload_candidates(full_path)
+        else:
+            candidates_by_file[filepath] = {"producers": [], "consumers": [], "dataflows": []}
+
+    # Call payload handoff diagnostics
+    from code_atlas.core.payload_analyzer import analyze_payload_handoffs
+    handoffs_data = analyze_payload_handoffs(cleaned_files_data, candidates_by_file, project_dir)
+
     # Limitations definitions (claim_type: gap, confidence: high/medium, reason: string)
     limitations = [
         {
@@ -174,13 +188,17 @@ def generate_report(project_dir, files_data, parse_errors):
     report = {
         "project_name": project_name,
         "scanned_at": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
+        "scan_roots": handoffs_data.get("scan_roots", []),
+        "analysis_boundary": handoffs_data.get("analysis_boundary", ""),
         "limitations": limitations,
         "next_files_to_inspect": inspect_list,
         "candidate_subsystem_groups": candidate_subsystem_groups,
         "routes": routes,
         "files": cleaned_files_data,
         "local_dependencies": local_dependencies,
-        "parse_errors": formatted_errors
+        "parse_errors": formatted_errors,
+        "payload_handoffs": handoffs_data.get("payload_handoffs", []),
+        "unresolved_payload_routes": handoffs_data.get("unresolved_payload_routes", [])
     }
 
     return report
