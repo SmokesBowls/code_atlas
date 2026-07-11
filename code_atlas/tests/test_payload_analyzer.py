@@ -239,3 +239,44 @@ def step3(p):
         self.assertEqual(flow["route_status"], "connected_partial")
         self.assertIn("scene_id", flow["observed_shape"]["utilized_keys"])
         self.assertIn("metadata", flow["observed_shape"]["unutilized_keys"])
+
+    def test_i_json_dump_sink_value_provenance(self):
+        # Prerequisite for EFFECT Fixture A: connect a utilized payload field,
+        # through a local alias and dict wrapper, to a literal-path file sink.
+        files = {
+            "producer.py": """
+def build_terrain_field(seed):
+    return {
+        "grid_size": compute_grid_size(seed),
+        "tiles": generate_tiles(seed),
+        "version": "1.0",
+    }
+""",
+            "consumer.py": """
+import json
+
+def write_recipe_and_atlas(payload):
+    size = payload["grid_size"]
+    with open("trixelcomposer_recipe.json", "w") as fp:
+        json.dump({"size": size}, fp)
+""",
+            "main.py": """
+from producer import build_terrain_field
+from consumer import write_recipe_and_atlas
+write_recipe_and_atlas(build_terrain_field(1))
+""",
+        }
+
+        res = self._run_diagnostics(files)
+        flow = next(
+            h for h in res["payload_handoffs"]
+            if h["payload_candidate_id"] == "flow_build_terrain_field_to_write_recipe_and_atlas"
+        )
+
+        self.assertEqual(flow["artifact_paths"], ["trixelcomposer_recipe.json"])
+        self.assertEqual(flow["observed_shape"]["utilized_keys"], ["grid_size"])
+        self.assertEqual(flow["observed_shape"]["unutilized_keys"], ["tiles", "version"])
+        self.assertFalse(any(
+            u.get("artifact_paths") == ["trixelcomposer_recipe.json"]
+            for u in res["unresolved_payload_routes"]
+        ))

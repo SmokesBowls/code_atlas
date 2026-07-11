@@ -244,6 +244,18 @@ def analyze_payload_handoffs(files_data, candidates_by_file, workspace_dir):
                 evidence.append(f"Call-site destructuring utilized key: {destructured_key}")
             if unutilized_keys:
                 evidence.append(f"Unutilized fields: {', '.join(unutilized_keys)}")
+
+            artifact_paths = []
+            for terminal_write in consumer.get("terminal_writes", []):
+                sink_keys = set(terminal_write.get("origin_keys", []))
+                if sink_keys & utilized_keys:
+                    sink_path = terminal_write["filename"]
+                    artifact_paths.append(sink_path)
+                    evidence.append(
+                        f"Utilized field reaches {terminal_write['sink']} FILE_WRITE sink: {sink_path}"
+                    )
+                    matched_file_writes.add((cons_file, cons_func, sink_path))
+            artifact_paths = sorted(set(artifact_paths))
                 
             handoffs.append({
                 "payload_candidate_id": f"flow_{prod_func}_to_{cons_func}",
@@ -268,7 +280,7 @@ def analyze_payload_handoffs(files_data, candidates_by_file, workspace_dir):
                     "unutilized_keys": unutilized_keys
                 },
                 "contract_identifiers": producer.get("contract_identifiers", []),
-                "artifact_paths": [],
+                "artifact_paths": artifact_paths,
                 "scan_boundary": rel_path,
                 "claim_type": "confirmed",
                 "confidence": "high",

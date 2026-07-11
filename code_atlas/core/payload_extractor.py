@@ -133,6 +133,33 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
             
         return []
 
+    def _resolve_parameter_origin_keys(self, expr, assignments, parameter_names, visited=None):
+        """Resolve local value expressions back to subscripted parameter keys."""
+        visited = set() if visited is None else visited
+        if isinstance(expr, ast.Name):
+            if expr.id in visited:
+                return set()
+            visited.add(expr.id)
+            assigned = assignments.get(expr.id)
+            if assigned is None:
+                return set()
+            return self._resolve_parameter_origin_keys(
+                assigned, assignments, parameter_names, visited
+            )
+        if isinstance(expr, ast.Subscript) and isinstance(expr.value, ast.Name):
+            key = self._get_slice_val(expr.slice)
+            if expr.value.id in parameter_names and key:
+                return {key}
+            return set()
+        if isinstance(expr, ast.Dict):
+            origins = set()
+            for value in expr.values:
+                origins.update(self._resolve_parameter_origin_keys(
+                    value, assignments, parameter_names, set(visited)
+                ))
+            return origins
+        return set()
+
     def visit_FunctionDef(self, node):
         old_function = self.current_function
         old_params = self.current_params
@@ -211,12 +238,53 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
         file_writes = []
         file_writes_detailed = []
         file_reads = []
+        terminal_writes = []
+
+        # Bind literal write-path opens to their ``with ... as handle`` names.
+        write_handles = {}
+        for subnode in ast.walk(node):
+            if not isinstance(subnode, ast.With):
+                continue
+            for item in subnode.items:
+                call = item.context_expr
+                if not (isinstance(call, ast.Call) and self._get_func_name(call.func) == 'open'):
+                    continue
+                if not isinstance(item.optional_vars, ast.Name) or not call.args:
+                    continue
+                filename = self._get_constant_str(call.args[0])
+                mode = self._get_constant_str(call.args[1]) if len(call.args) >= 2 else 'r'
+                for kw in call.keywords:
+                    if kw.arg == 'mode':
+                        mode = self._get_constant_str(kw.value) or 'r'
+                if filename and mode and any(c in mode for c in ('w', 'a', 'x')):
+                    write_handles[item.optional_vars.id] = filename
         
         for subnode in ast.walk(node):
             if isinstance(subnode, ast.Call):
                 func_id = self._get_func_name(subnode.func)
                 written_expr = None
                 filename = None
+
+                # Serializer sinks have the shape module.dump(value, handle).
+                # Keep this allowlisted to avoid treating arbitrary .dump calls as writes.
+                if (
+                    isinstance(subnode.func, ast.Attribute)
+                    and subnode.func.attr == 'dump'
+                    and isinstance(subnode.func.value, ast.Name)
+                    and subnode.func.value.id in {'json', 'pickle', 'yaml'}
+                    and len(subnode.args) >= 2
+                    and isinstance(subnode.args[1], ast.Name)
+                    and subnode.args[1].id in write_handles
+                ):
+                    sink_filename = write_handles[subnode.args[1].id]
+                    origin_keys = self._resolve_parameter_origin_keys(
+                        subnode.args[0], self.local_assignments, set(self.current_params)
+                    )
+                    terminal_writes.append({
+                        "filename": sink_filename,
+                        "sink": f"{subnode.func.value.id}.dump",
+                        "origin_keys": sorted(origin_keys)
+                    })
                 
                 if func_id == 'open':
                     mode = 'r'
@@ -290,7 +358,8 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
             "function": node.name,
             "file_reads": sorted(list(set(file_reads))),
             "param_utilization": param_utilization,
-            "all_accessed_keys": sorted(list(all_accessed))
+            "all_accessed_keys": sorted(list(all_accessed)),
+            "terminal_writes": terminal_writes
         })
         
         self.current_function = old_function
