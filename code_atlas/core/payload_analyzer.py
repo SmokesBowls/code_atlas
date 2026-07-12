@@ -75,14 +75,6 @@ def analyze_payload_handoffs(
         if len(candidates) == 1:
             return candidates[0]
         elif len(candidates) > 1:
-            caller_dir = os.path.dirname(caller_rel_path)
-            same_directory = [
-                candidate
-                for candidate in candidates
-                if os.path.dirname(candidate) == caller_dir
-            ]
-            if len(same_directory) == 1:
-                return same_directory[0]
             return None
         return None
 

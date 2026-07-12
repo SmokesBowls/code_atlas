@@ -50,7 +50,7 @@ class TestPayloadAnalyzerRestructured(unittest.TestCase):
 def build_scene():
     return {"wrong": True}
 """,
-            "tier1/producer.py": """
+            "producer.py": """
 def build_scene():
     return {"scene_id": 1}
 """,
