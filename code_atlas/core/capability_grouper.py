@@ -129,6 +129,8 @@ def infer_subsystem_groups(files_data, local_dependencies):
     for tgt, seeds in utility_inbound_seeds.items():
         if len(seeds) >= 2:
             shared_utilities.add(tgt)
+    if len(shared_utilities) < 2:
+        shared_utilities.clear()
 
     # Preserve a directory toolbox before cross-boundary utility consolidation.
     # Package initializers are neutral, and consumers are distinct source files.
@@ -191,6 +193,7 @@ def infer_subsystem_groups(files_data, local_dependencies):
         internal_edges = 0
         external_inbound = set()
         external_outbound = set()
+        external_outbound_by_source = {}
         
         for dep in local_dependencies:
             src = dep["source"]
@@ -201,6 +204,7 @@ def infer_subsystem_groups(files_data, local_dependencies):
             elif src in member_set and tgt not in member_set:
                 # Outbound dependency to an external file
                 external_outbound.add(tgt)
+                external_outbound_by_source.setdefault(src, set()).add(tgt)
             elif src not in member_set and tgt in member_set:
                 # Inbound dependency from an external file
                 external_inbound.add(src)
@@ -223,12 +227,36 @@ def infer_subsystem_groups(files_data, local_dependencies):
         )
         toolbox_exempt = utility_ratio >= (2 / 3) and len(external_inbound) >= 2
 
+        coordinator_members = [
+            filepath
+            for filepath in members
+            if os.path.splitext(os.path.basename(filepath))[0].endswith("_control_center")
+            or os.path.splitext(os.path.basename(filepath))[0] == "control_center"
+        ]
+        coordinator_outbound_count = sum(
+            len(external_outbound_by_source.get(filepath, set()))
+            for filepath in coordinator_members
+        )
+        total_outbound_count = sum(
+            len(targets) for targets in external_outbound_by_source.values()
+        )
+        coordinator_outbound_ratio = (
+            coordinator_outbound_count / total_outbound_count
+            if total_outbound_count else 0.0
+        )
+        coordinator_exempt = (
+            coordinator_outbound_count >= 3
+            and coordinator_outbound_ratio >= (2 / 3)
+        )
+
         # Heuristic rules for Structural Ambiguity & Confidence
         structurally_ambiguous = False
         confidence = "high"
         
         if gname != "Testing Suite":
             if toolbox_exempt:
+                confidence = "medium"
+            elif coordinator_exempt:
                 confidence = "medium"
             elif len(members) > 1 and internal_edges == 0 and external_edges > 0:
                 structurally_ambiguous = True
@@ -267,6 +295,14 @@ def infer_subsystem_groups(files_data, local_dependencies):
                 "internal dependency edges are not required"
             )
             grouping_basis.append("refined_by: toolbox_external_consumers")
+
+        if coordinator_exempt:
+            evidence.append(
+                "Coordinator cohesion: explicitly named control center emits "
+                f"{coordinator_outbound_count}/{total_outbound_count} outbound edges "
+                f"({coordinator_outbound_ratio:.1%}); internal dependency edges are not required"
+            )
+            grouping_basis.append("refined_by: coordinator_outbound_concentration")
 
         if structurally_ambiguous:
             evidence.append("Weak internal cohesion relative to strong cross-group coupling; marked as structurally ambiguous")

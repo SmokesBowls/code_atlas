@@ -148,10 +148,10 @@ class TestReporterAndGrouping(unittest.TestCase):
         self.assertIn("Root Components", group_names)
         self.assertIn("Core Subsystem", group_names)
         self.assertIn("Testing Suite", group_names)
-        self.assertIn("Shared Utility Subsystem", group_names)
+        self.assertIn("Utilities Subsystem", group_names)
 
         self.assertEqual(group_names["Root Components"]["member_files"], ["main.py"])
-        self.assertEqual(group_names["Shared Utility Subsystem"]["member_files"], ["utils/helper.py"])
+        self.assertEqual(group_names["Utilities Subsystem"]["member_files"], ["utils/helper.py"])
 
         self.assertEqual(group_names["Root Components"]["internal_edge_count"], 0)
         self.assertEqual(group_names["Root Components"]["external_edge_count"], 3)
@@ -190,6 +190,87 @@ class TestReporterAndGrouping(unittest.TestCase):
         core_group = group_names["Core Subsystem"]
         self.assertTrue(core_group["structurally_ambiguous"])
         self.assertEqual(core_group["confidence"], "low")
+
+    def test_named_control_center_with_concentrated_outbound_edges_is_cohesive(self):
+        files_data = {
+            "engainos/__init__.py": {"role_hint": "package_init", "raw_imports": []},
+            "engainos/engainos_control_center.py": {"role_hint": "unknown", "raw_imports": []},
+            "engainos/server.py": {"role_hint": "unknown", "raw_imports": []},
+            "engainos/gates/a.py": {"role_hint": "unknown", "raw_imports": []},
+            "engainos/gates/b.py": {"role_hint": "unknown", "raw_imports": []},
+            "engainos/gates/c.py": {"role_hint": "unknown", "raw_imports": []},
+        }
+        local_deps = [
+            {"source": "engainos/engainos_control_center.py", "target": "engainos/gates/a.py", "type": "import"},
+            {"source": "engainos/engainos_control_center.py", "target": "engainos/gates/b.py", "type": "import"},
+            {"source": "engainos/engainos_control_center.py", "target": "engainos/gates/c.py", "type": "import"},
+        ]
+
+        groups = infer_subsystem_groups(files_data, local_deps)
+        engainos = next(group for group in groups if group["name"] == "Engainos Subsystem")
+
+        self.assertFalse(engainos["structurally_ambiguous"])
+        self.assertEqual(engainos["confidence"], "medium")
+        self.assertTrue(any("Coordinator cohesion" in item for item in engainos["evidence"]))
+        self.assertIn("refined_by: coordinator_outbound_concentration", engainos["grouping_basis"])
+
+    def test_outbound_concentration_without_named_coordinator_remains_ambiguous(self):
+        files_data = {
+            "runner/a.py": {"role_hint": "unknown", "raw_imports": []},
+            "runner/b.py": {"role_hint": "unknown", "raw_imports": []},
+            "gates/x.py": {"role_hint": "unknown", "raw_imports": []},
+            "gates/y.py": {"role_hint": "unknown", "raw_imports": []},
+            "gates/z.py": {"role_hint": "unknown", "raw_imports": []},
+        }
+        local_deps = [
+            {"source": "runner/a.py", "target": "gates/x.py", "type": "import"},
+            {"source": "runner/a.py", "target": "gates/y.py", "type": "import"},
+            {"source": "runner/a.py", "target": "gates/z.py", "type": "import"},
+        ]
+
+        groups = infer_subsystem_groups(files_data, local_deps)
+        runner = next(group for group in groups if group["name"] == "Runner Subsystem")
+
+        self.assertTrue(runner["structurally_ambiguous"])
+
+    def test_single_qualifying_utility_stays_in_source_directory(self):
+        files_data = {
+            "shared/common.py": {"role_hint": "utility", "raw_imports": []},
+            "alpha/use_common.py": {"role_hint": "unknown", "raw_imports": []},
+            "beta/use_common.py": {"role_hint": "unknown", "raw_imports": []},
+        }
+        local_deps = [
+            {"source": "alpha/use_common.py", "target": "shared/common.py", "type": "import"},
+            {"source": "beta/use_common.py", "target": "shared/common.py", "type": "import"},
+        ]
+
+        groups = infer_subsystem_groups(files_data, local_deps)
+        group_names = {group["name"]: group for group in groups}
+
+        self.assertNotIn("Shared Utility Subsystem", group_names)
+        self.assertEqual(
+            group_names["Shared Subsystem"]["member_files"],
+            ["shared/common.py"],
+        )
+
+    def test_multiple_qualifying_utilities_can_form_shared_group(self):
+        files_data = {
+            "alpha/common.py": {"role_hint": "utility", "raw_imports": []},
+            "beta/helper.py": {"role_hint": "utility", "raw_imports": []},
+            "one/use.py": {"role_hint": "unknown", "raw_imports": []},
+            "two/use.py": {"role_hint": "unknown", "raw_imports": []},
+        }
+        local_deps = [
+            {"source": "one/use.py", "target": "alpha/common.py", "type": "import"},
+            {"source": "two/use.py", "target": "alpha/common.py", "type": "import"},
+            {"source": "one/use.py", "target": "beta/helper.py", "type": "import"},
+            {"source": "two/use.py", "target": "beta/helper.py", "type": "import"},
+        ]
+
+        groups = infer_subsystem_groups(files_data, local_deps)
+        shared = next(group for group in groups if group["name"] == "Shared Utility Subsystem")
+
+        self.assertEqual(shared["member_files"], ["alpha/common.py", "beta/helper.py"])
 
     def test_utility_toolbox_uses_external_consumer_cohesion(self):
         files_data = {
