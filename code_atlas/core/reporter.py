@@ -8,41 +8,69 @@ from code_atlas.core.ranking import calculate_inspection_rankings
 from code_atlas.core.entrypoint_detector import detect_entrypoint
 from code_atlas.core.router import calculate_dependency_routes
 
-def resolve_import_to_local_file(import_str, scanned_files, project_dir_name=None):
-    """Resolve an import string to a local relative file path from scanned_files.
-    
-    If resolution is ambiguous (multiple candidates), returns 'AMBIGUOUS'.
-    """
-    candidates = set()
+def _resolve_import_with_candidates(import_str, scanned_files, project_dir_name=None):
+    """Return the resolution and candidate evidence for a local import."""
+    scanned_files = set(scanned_files)
 
-    def find_candidates(parts):
+    def find_exact_candidates(parts):
         matches = set()
         for i in range(len(parts), 0, -1):
-            prefix_parts = parts[:i]
-            candidate_path = "/".join(prefix_parts)
+            candidate_path = "/".join(parts[:i])
             py_file = candidate_path + ".py"
             init_file = candidate_path + "/__init__.py"
-            
+
             if py_file in scanned_files:
                 matches.add(py_file)
             if init_file in scanned_files:
                 matches.add(init_file)
-            # If we found matches at a longer prefix, do not look at shorter prefixes
             if matches:
                 break
         return matches
 
-    parts = import_str.split('.')
-    candidates.update(find_candidates(parts))
-
+    parts = import_str.split(".")
+    exact_candidates = find_exact_candidates(parts)
     if project_dir_name and parts and parts[0] == project_dir_name:
-        candidates.update(find_candidates(parts[1:]))
+        exact_candidates.update(find_exact_candidates(parts[1:]))
 
-    if len(candidates) > 1:
-        return "AMBIGUOUS"
-    elif len(candidates) == 1:
-        return list(candidates)[0]
-    return None
+    if exact_candidates:
+        candidates = exact_candidates
+    else:
+        candidates = set()
+        for i in range(len(parts), 0, -1):
+            module_path = "/".join(parts[:i])
+            suffixes = [module_path + ".py"]
+            if i == len(parts):
+                suffixes.append(module_path + "/__init__.py")
+            candidates = {
+                filepath
+                for filepath in scanned_files
+                if any(
+                    filepath == suffix or filepath.endswith("/" + suffix)
+                    for suffix in suffixes
+                )
+            }
+            if candidates:
+                break
+
+    ordered_candidates = sorted(candidates)
+    if len(ordered_candidates) > 1:
+        return "AMBIGUOUS", ordered_candidates
+    if len(ordered_candidates) == 1:
+        return ordered_candidates[0], ordered_candidates
+    return None, []
+
+
+def resolve_import_to_local_file(import_str, scanned_files, project_dir_name=None):
+    """Resolve an import string to a local relative file path from scanned_files.
+
+    Exact root-relative resolution has priority. If it fails, a complete-path
+    suffix is accepted only when it identifies one scanned file. Ambiguous
+    resolution returns ``AMBIGUOUS``.
+    """
+    resolved, _ = _resolve_import_with_candidates(
+        import_str, scanned_files, project_dir_name
+    )
+    return resolved
 
 def generate_report(project_dir, files_data, parse_errors):
     """Processes parsed files data to resolve dependencies, run status checks, grouping, and build report."""
@@ -63,11 +91,16 @@ def generate_report(project_dir, files_data, parse_errors):
         resolved_for_file = set()
         
         for imp in raw_imports:
-            resolved_file = resolve_import_to_local_file(imp, scanned_files, project_name)
+            resolved_file, resolution_candidates = _resolve_import_with_candidates(
+                imp, scanned_files, project_name
+            )
             if resolved_file == "AMBIGUOUS":
                 parse_errors.append({
                     "filepath": rel_path,
-                    "error": f"AmbiguousImportError: Import '{imp}' resolved to multiple local candidates."
+                    "error": (
+                        f"AmbiguousImportError: Import '{imp}' resolved to multiple "
+                        f"local candidates: {resolution_candidates}."
+                    )
                 })
             elif resolved_file and resolved_file != rel_path:
                 resolved_for_file.add(resolved_file)
