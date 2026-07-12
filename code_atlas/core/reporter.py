@@ -192,7 +192,12 @@ def generate_report(project_dir, files_data, parse_errors):
 
     # Call payload handoff diagnostics
     from code_atlas.core.payload_analyzer import analyze_payload_handoffs
-    handoffs_data = analyze_payload_handoffs(cleaned_files_data, candidates_by_file, project_dir)
+    handoffs_data = analyze_payload_handoffs(
+        cleaned_files_data,
+        candidates_by_file,
+        project_dir,
+        local_dependencies=local_dependencies,
+    )
 
     # Limitations definitions (claim_type: gap, confidence: high/medium, reason: string)
     limitations = [

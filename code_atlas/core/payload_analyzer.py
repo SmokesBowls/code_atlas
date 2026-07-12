@@ -6,11 +6,22 @@ and structures output according to the strict Milestone 9 contract.
 
 import os
 
-def analyze_payload_handoffs(files_data, candidates_by_file, workspace_dir):
+def analyze_payload_handoffs(
+    files_data,
+    candidates_by_file,
+    workspace_dir,
+    local_dependencies=None,
+):
     """Link payload candidates across scanned files and classify connections or boundary gaps."""
     workspace_dir = os.path.abspath(workspace_dir)
     scan_roots = [workspace_dir]
     analysis_boundary = f"Files under {workspace_dir}"
+    local_dependencies = local_dependencies or []
+    dependency_targets = {}
+    for dependency in local_dependencies:
+        dependency_targets.setdefault(dependency["source"], set()).add(
+            dependency["target"]
+        )
     
     # Map exported functions to their defining files
     exported_functions = {}
@@ -20,12 +31,33 @@ def analyze_payload_handoffs(files_data, candidates_by_file, workspace_dir):
                 exported_functions.setdefault(prod["function"], []).append(rel_path)
                 
     # Helper to resolve defining modules
+    def file_defines_function(file_path, func_name):
+        file_data = files_data.get(file_path, {})
+        if any(func.get("name") == func_name for func in file_data.get("functions", [])):
+            return True
+        file_candidates = candidates_by_file.get(file_path, {})
+        return any(
+            candidate.get("function") == func_name
+            for category in ("producers", "consumers")
+            for candidate in file_candidates.get(category, [])
+        )
+
     def resolve_defining_file(func_name, caller_rel_path):
         caller_data = files_data.get(caller_rel_path, {})
         local_funcs = [f["name"] for f in caller_data.get("functions", [])]
         if func_name in local_funcs:
             return caller_rel_path
-            
+
+        resolved_targets = sorted(
+            target
+            for target in dependency_targets.get(caller_rel_path, set())
+            if file_defines_function(target, func_name)
+        )
+        if len(resolved_targets) == 1:
+            return resolved_targets[0]
+        if len(resolved_targets) > 1:
+            return None
+
         imports = caller_data.get("raw_imports", [])
         for imp in imports:
             parts = imp.split('.')

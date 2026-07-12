@@ -23,7 +23,7 @@ class TestPayloadAnalyzerRestructured(unittest.TestCase):
             f.write(content)
         return full_path
 
-    def _run_diagnostics(self, file_contents):
+    def _run_diagnostics(self, file_contents, local_dependencies=None):
         files_data = {}
         candidates_by_file = {}
         
@@ -37,7 +37,45 @@ class TestPayloadAnalyzerRestructured(unittest.TestCase):
             files_data[rel_path] = parser.parse_file(full_path, self.test_dir)
             candidates_by_file[rel_path] = extract_payload_candidates(full_path)
             
-        return analyze_payload_handoffs(files_data, candidates_by_file, self.test_dir)
+        return analyze_payload_handoffs(
+            files_data,
+            candidates_by_file,
+            self.test_dir,
+            local_dependencies=local_dependencies,
+        )
+
+    def test_reporter_dependency_selects_payload_defining_file(self):
+        files = {
+            "tier2/producer.py": """
+def build_scene():
+    return {"wrong": True}
+""",
+            "tier1/producer.py": """
+def build_scene():
+    return {"scene_id": 1}
+""",
+            "consumer.py": """
+def consume_scene(payload):
+    print(payload["scene_id"])
+""",
+            "main.py": """
+payload = build_scene()
+consume_scene(payload)
+""",
+        }
+        local_dependencies = [
+            {"source": "main.py", "target": "tier1/producer.py", "type": "import"},
+            {"source": "main.py", "target": "consumer.py", "type": "import"},
+        ]
+
+        result = self._run_diagnostics(files, local_dependencies)
+
+        flow = next(
+            handoff
+            for handoff in result["payload_handoffs"]
+            if handoff["payload_candidate_id"] == "flow_build_scene_to_consume_scene"
+        )
+        self.assertEqual(flow["producer"]["file"], "tier1/producer.py")
 
     def test_a_direct_connected_handoff(self):
         # Test A: Direct connected handoff
