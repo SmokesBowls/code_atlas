@@ -44,6 +44,37 @@ class TestPayloadAnalyzerRestructured(unittest.TestCase):
             local_dependencies=local_dependencies,
         )
 
+    def test_ambiguous_exported_function_is_not_guessed(self):
+        files = {
+            "tier2/producer.py": """
+def build_scene():
+    return {"wrong": True}
+""",
+            "tier1/producer.py": """
+def build_scene():
+    return {"scene_id": 1}
+""",
+            "consumer.py": """
+def consume_scene(payload):
+    print(payload["scene_id"])
+""",
+            "main.py": """
+from consumer import consume_scene
+payload = build_scene()
+consume_scene(payload)
+""",
+        }
+
+        result = self._run_diagnostics(files)
+
+        self.assertFalse(
+            any(
+                handoff["payload_candidate_id"]
+                == "flow_build_scene_to_consume_scene"
+                for handoff in result["payload_handoffs"]
+            )
+        )
+
     def test_reporter_dependency_selects_payload_defining_file(self):
         files = {
             "tier2/producer.py": """
