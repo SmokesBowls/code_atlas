@@ -41,13 +41,14 @@ if [ "$PROJECT_NAME" = "." ] || [ "$PROJECT_NAME" = "/" ] || [ -z "$PROJECT_NAME
     PROJECT_NAME="code_atlas_report"
 fi
 
-default_out="$PROJECT_NAME.json"
+default_out="artifacts/$PROJECT_NAME.json"
+mkdir -p "$(dirname "$default_out")"
 
 # Auto-resolve duplicate default file names in current dir
 if [ -f "$default_out" ] || [ -d "$default_out" ]; then
     counter=2
     while true; do
-        candidate="${PROJECT_NAME}_s${counter}.json"
+        candidate="artifacts/${PROJECT_NAME}_s${counter}.json"
         if [ ! -f "$candidate" ] && [ ! -d "$candidate" ]; then
             default_out="$candidate"
             break
