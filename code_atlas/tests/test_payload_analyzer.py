@@ -345,7 +345,140 @@ write_recipe_and_atlas(build_terrain_field(1))
         self.assertEqual(flow["artifact_paths"], ["trixelcomposer_recipe.json"])
         self.assertEqual(flow["observed_shape"]["utilized_keys"], ["grid_size"])
         self.assertEqual(flow["observed_shape"]["unutilized_keys"], ["tiles", "version"])
+        verdicts = {claim["field"]: claim for claim in flow["effect_claims"]}
+        self.assertEqual(verdicts["grid_size"]["verdict"], "EFFECTIVE")
+        self.assertEqual(verdicts["grid_size"]["sink_type"], "FILE_WRITE")
+        self.assertEqual(verdicts["tiles"]["verdict"], "DROPPED")
+        self.assertEqual(verdicts["version"]["verdict"], "DROPPED")
         self.assertFalse(any(
             u.get("artifact_paths") == ["trixelcomposer_recipe.json"]
             for u in res["unresolved_payload_routes"]
         ))
+
+    def test_effect_fixture_b_stranded_denylist_only(self):
+        files = {
+            "producer.py": """
+def build_payload():
+    return {"tiles": [1], "grid_size": 3}
+""",
+            "consumer.py": """
+import logging
+logger = logging.getLogger(__name__)
+def consume(payload):
+    tiles = payload["tiles"]
+    logger.debug(f"tiles={len(tiles)}")
+""",
+            "main.py": """
+from producer import build_payload
+from consumer import consume
+consume(build_payload())
+""",
+        }
+        flow = next(h for h in self._run_diagnostics(files)["payload_handoffs"] if h["payload_candidate_id"] == "flow_build_payload_to_consume")
+        verdicts = {claim["field"]: claim["verdict"] for claim in flow["effect_claims"]}
+        self.assertEqual(verdicts["tiles"], "STRANDED")
+        self.assertEqual(verdicts["grid_size"], "DROPPED")
+
+    def test_effect_fixture_c_unknown_call_is_unclassified(self):
+        files = {
+            "producer.py": """
+def build_payload():
+    return {"size": 3}
+""",
+            "consumer.py": """
+def consume(payload, atlas_service):
+    size = payload["size"]
+    atlas_service.register(size)
+""",
+            "main.py": """
+from producer import build_payload
+from consumer import consume
+consume(build_payload(), service)
+""",
+        }
+        flow = next(h for h in self._run_diagnostics(files)["payload_handoffs"] if h["payload_candidate_id"] == "flow_build_payload_to_consume")
+        claim = flow["effect_claims"][0]
+        self.assertEqual(claim["verdict"], "UNCLASSIFIED_TERMINUS")
+        self.assertEqual(claim["confidence"], "low")
+
+    def test_route_qualified_argument_position_selects_consumer_parameter(self):
+        files = {
+            "producer.py": """
+def build_body():
+    return {"value": 1}
+def build_surface():
+    return {"value": 2}
+""",
+            "consumer.py": """
+def consume(body_lane, surface_lane):
+    return {"body": body_lane["value"], "surface": surface_lane["value"]}
+""",
+            "main.py": """
+from producer import build_body, build_surface
+from consumer import consume
+consume(build_body(), build_surface())
+""",
+        }
+        result = self._run_diagnostics(files)
+        body = next(h for h in result["payload_handoffs"] if h["payload_candidate_id"] == "flow_build_body_to_consume")
+        surface = next(h for h in result["payload_handoffs"] if h["payload_candidate_id"] == "flow_build_surface_to_consume")
+        self.assertEqual(body["consumers"][0]["matched_parameter"], "body_lane")
+        self.assertEqual(surface["consumers"][0]["matched_parameter"], "surface_lane")
+        self.assertEqual(body["access_modes"], {"value": "REQUIRED"})
+        self.assertEqual(surface["access_modes"], {"value": "REQUIRED"})
+        self.assertEqual(
+            surface["construction_observations"],
+            [{
+                "output_field": "surface",
+                "expression": "surface_lane['value']",
+                "source_parameter": "surface_lane",
+                "source_parameter_keys": ["value"],
+            }],
+        )
+
+    def test_returned_call_syntax_is_preserved(self):
+        path = os.path.join(self.test_dir, "smooth.py")
+        with open(path, "w", encoding="utf-8") as handle:
+            handle.write(
+                "import numpy as np\n"
+                "def _smooth(arr, k=3):\n"
+                "    return np.pad(arr, k // 2, mode='edge')\n"
+            )
+
+        candidates = extract_payload_candidates(path)
+        smooth = next(item for item in candidates["producers"] if item["function"] == "_smooth")
+
+        self.assertEqual(smooth["returned_call"], "np.pad(arr, k // 2, mode='edge')")
+
+    def test_access_modes_and_build_influence(self):
+        files = {
+            "producer.py": """
+def build_payload():
+    return {"required": 1, "defaulted": 2, "implicit": 3, "guarded": 4}
+""",
+            "consumer.py": """
+def consume(payload):
+    output = []
+    output.append(payload["required"])
+    payload.get("defaulted", 0)
+    payload.get("implicit")
+    if "guarded" in payload:
+        output.append(payload["guarded"])
+    return output
+""",
+            "main.py": """
+from producer import build_payload
+from consumer import consume
+consume(build_payload())
+""",
+        }
+        flow = next(h for h in self._run_diagnostics(files)["payload_handoffs"] if h["payload_candidate_id"] == "flow_build_payload_to_consume")
+        self.assertEqual(flow["access_modes"], {
+            "defaulted": "DEFAULTED",
+            "guarded": "GUARDED",
+            "implicit": "OPTIONAL_IMPLICIT_NONE",
+            "required": "REQUIRED",
+        })
+        claims = {claim["field"]: claim for claim in flow["effect_claims"]}
+        self.assertEqual(claims["required"]["sink_type"], "BUILD_INFLUENCE")
+        self.assertEqual(claims["guarded"]["sink_type"], "BUILD_INFLUENCE")

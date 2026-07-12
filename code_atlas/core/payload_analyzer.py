@@ -217,22 +217,30 @@ def analyze_payload_handoffs(
             # Connect
             params_util = consumer.get("param_utilization", {})
             matched_param = None
+            parameter_names = list(params_util.keys())
+            argument_index = flow.get("consumer_argument_index")
+            consumer_keyword = flow.get("consumer_keyword")
+            if isinstance(argument_index, int) and argument_index < len(parameter_names):
+                matched_param = parameter_names[argument_index]
+            elif consumer_keyword in params_util:
+                matched_param = consumer_keyword
             
             best_score = -1
             returned_keys_set = set(producer.get("returned_keys", []))
             
-            for param_name, util in params_util.items():
-                score = 0
-                if param_name in prod_func or prod_func in param_name:
-                    score += 5
-                param_accessed = set(util.get("accessed_keys", []))
-                shared_keys = returned_keys_set & param_accessed
-                score += len(shared_keys) * 2
-                
-                if score > best_score:
-                    best_score = score
-                    matched_param = param_name
+            if matched_param is None:
+                for param_name, util in params_util.items():
+                    score = 0
+                    if param_name in prod_func or prod_func in param_name:
+                        score += 5
+                    param_accessed = set(util.get("accessed_keys", []))
+                    shared_keys = returned_keys_set & param_accessed
+                    score += len(shared_keys) * 2
                     
+                    if score > best_score:
+                        best_score = score
+                        matched_param = param_name
+
             if not matched_param and params_util:
                 matched_param = list(params_util.keys())[0]
                 
@@ -284,6 +292,81 @@ def analyze_payload_handoffs(
                     )
                     matched_file_writes.add((cons_file, cons_func, sink_path))
             artifact_paths = sorted(set(artifact_paths))
+
+            matched_utilization = params_util.get(matched_param, {}) if matched_param else {}
+            access_modes = dict(sorted(
+                matched_utilization.get("access_modes", {}).items()
+            ))
+            field_effects = matched_utilization.get("field_effects", {})
+            construction_observations = [
+                observation
+                for observation in consumer.get("construction_fields", [])
+                if observation.get("source_parameter") == matched_param
+                and set(observation.get("source_parameter_keys", [])) & set(access_modes)
+            ]
+            effect_claims = []
+            for index, field in enumerate(sorted(returned_keys_set), start=1):
+                observations = field_effects.get(field, [])
+                terminal = next((
+                    observation for observation in observations
+                    if observation.get("sink_type") not in {"NON_TERMINAL", "UNCLASSIFIED"}
+                ), None)
+                unknown = next((
+                    observation for observation in observations
+                    if observation.get("sink_type") == "UNCLASSIFIED"
+                ), None)
+                if field not in utilized_keys:
+                    verdict = "DROPPED"
+                    confidence = "high"
+                    sink_type = None
+                    reasons = ["not_accessed_by_first_consumer"]
+                elif terminal:
+                    verdict = "EFFECTIVE"
+                    confidence = "high"
+                    sink_type = terminal["sink_type"]
+                    reasons = ["utilized_key", terminal["evidence"]]
+                elif unknown:
+                    verdict = "UNCLASSIFIED_TERMINUS"
+                    confidence = "low"
+                    sink_type = None
+                    reasons = ["utilized_key", f"unclassified call: {unknown['evidence']}"]
+                else:
+                    verdict = "STRANDED"
+                    confidence = "high"
+                    sink_type = None
+                    reasons = ["utilized_key", "local_or_known_nonterminal_only"]
+
+                traced_path = [
+                    {"file": prod_file, "function": prod_func, "role": "PRODUCER"},
+                    {
+                        "file": cons_file,
+                        "function": cons_func,
+                        "role": "INTERPRETER",
+                        "utilized": field in utilized_keys,
+                        "access_mode": access_modes.get(field),
+                    },
+                ]
+                if terminal:
+                    traced_path.append({
+                        "file": cons_file,
+                        "function": cons_func,
+                        "role": "TERMINAL_SINK",
+                        "sink_type": terminal["sink_type"],
+                        "evidence": terminal["evidence"],
+                    })
+                effect_claims.append({
+                    "claim_id": f"effect_{prod_func}_{cons_func}_{field}_{index}",
+                    "field": field,
+                    "origin": {"file": prod_file, "function": prod_func},
+                    "caller_supply": "PROVIDED",
+                    "access_mode": access_modes.get(field),
+                    "traced_path": traced_path,
+                    "verdict": verdict,
+                    "sink_type": sink_type,
+                    "confidence": confidence,
+                    "claim_type": "structural",
+                    "reasons": reasons,
+                })
                 
             handoffs.append({
                 "payload_candidate_id": f"flow_{prod_func}_to_{cons_func}",
@@ -309,6 +392,9 @@ def analyze_payload_handoffs(
                 },
                 "contract_identifiers": producer.get("contract_identifiers", []),
                 "artifact_paths": artifact_paths,
+                "access_modes": access_modes,
+                "effect_claims": effect_claims,
+                "construction_observations": construction_observations,
                 "scan_boundary": rel_path,
                 "claim_type": "confirmed",
                 "confidence": "high",
@@ -530,6 +616,7 @@ def analyze_payload_handoffs(
                                 "function": prod["function"]
                             },
                             "artifact_paths": [],
+                            "returned_call": prod.get("returned_call"),
                             "scan_boundary": rel_path,
                             "claim_type": "inferred",
                             "confidence": "high",

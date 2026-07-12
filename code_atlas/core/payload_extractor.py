@@ -55,52 +55,56 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
                 func_name = self._get_func_name(subnode.func)
                 if func_name:
                     # Check nested call: consumer(producer())
-                    for arg in subnode.args:
+                    for argument_index, arg in enumerate(subnode.args):
                         if isinstance(arg, ast.Call):
                             nested_func = self._get_func_name(arg.func)
                             if nested_func:
                                 self.dataflows.append({
                                     "producer_function": nested_func,
                                     "consumer_function": func_name,
+                                    "consumer_argument_index": argument_index,
                                     "variable": None,
                                     "nested": True,
                                     "context_function": getattr(node, "name", "<module>")
                                 })
                     
                     args = [arg for arg in subnode.args]
-                    kws = [kw.value for kw in subnode.keywords]
+                    kws = [(kw.arg, kw.value) for kw in subnode.keywords]
                     calls.append((func_name, args, kws))
 
         for func_name, args, kws in calls:
-            all_arg_names = []
-            for arg in args:
+            for argument_index, arg in enumerate(args):
+                arg_name = None
+                destructured_key = None
                 if isinstance(arg, ast.Name):
-                    all_arg_names.append(arg.id)
+                    arg_name = arg.id
                 elif isinstance(arg, ast.Subscript):
-                    slice_val = self._get_slice_val(arg.slice)
-                    if slice_val and isinstance(arg.value, ast.Name):
-                        var_name = arg.value.id
-                        if var_name in assignments:
-                            producer_func = assignments[var_name]
-                            self.dataflows.append({
-                                "producer_function": producer_func,
-                                "consumer_function": func_name,
-                                "variable": var_name,
-                                "destructured_key": slice_val,
-                                "context_function": getattr(node, "name", "<module>")
-                            })
-            for kw in kws:
-                if isinstance(kw, ast.Name):
-                    all_arg_names.append(kw.id)
-                    
-            for arg_name in all_arg_names:
+                    destructured_key = self._get_slice_val(arg.slice)
+                    if isinstance(arg.value, ast.Name):
+                        arg_name = arg.value.id
                 if arg_name in assignments:
                     producer_func = assignments[arg_name]
+                    if producer_func != func_name:
+                        flow = {
+                            "producer_function": producer_func,
+                            "consumer_function": func_name,
+                            "consumer_argument_index": argument_index,
+                            "variable": arg_name,
+                            "context_function": getattr(node, "name", "<module>")
+                        }
+                        if destructured_key:
+                            flow["destructured_key"] = destructured_key
+                        self.dataflows.append(flow)
+
+            for keyword_name, value in kws:
+                if isinstance(value, ast.Name) and value.id in assignments:
+                    producer_func = assignments[value.id]
                     if producer_func != func_name:
                         self.dataflows.append({
                             "producer_function": producer_func,
                             "consumer_function": func_name,
-                            "variable": arg_name,
+                            "consumer_keyword": keyword_name,
+                            "variable": value.id,
                             "context_function": getattr(node, "name", "<module>")
                         })
 
@@ -158,7 +162,146 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
                     value, assignments, parameter_names, set(visited)
                 ))
             return origins
+        if isinstance(expr, (ast.List, ast.Tuple, ast.Set)):
+            origins = set()
+            for value in expr.elts:
+                origins.update(self._resolve_parameter_origin_keys(
+                    value, assignments, parameter_names, set(visited)
+                ))
+            return origins
+        if isinstance(expr, ast.Call):
+            origins = set()
+            if isinstance(expr.func, ast.Attribute):
+                origins.update(self._resolve_parameter_origin_keys(
+                    expr.func.value, assignments, parameter_names, set(visited)
+                ))
+            for value in list(expr.args) + [kw.value for kw in expr.keywords]:
+                origins.update(self._resolve_parameter_origin_keys(
+                    value, assignments, parameter_names, set(visited)
+                ))
+            return origins
+        if isinstance(expr, ast.JoinedStr):
+            origins = set()
+            for value in expr.values:
+                target = value.value if isinstance(value, ast.FormattedValue) else value
+                origins.update(self._resolve_parameter_origin_keys(
+                    target, assignments, parameter_names, set(visited)
+                ))
+            return origins
+        if isinstance(expr, (ast.BinOp, ast.BoolOp, ast.Compare, ast.IfExp)):
+            origins = set()
+            for value in ast.iter_child_nodes(expr):
+                origins.update(self._resolve_parameter_origin_keys(
+                    value, assignments, parameter_names, set(visited)
+                ))
+            return origins
         return set()
+
+    def _analyze_field_usage(self, node):
+        """Extract hard-syntax access modes and terminal observations per parameter key."""
+        parameter_names = set(self.current_params)
+        guarded = set()
+        access_modes = {parameter: {} for parameter in parameter_names}
+        effects = {parameter: {} for parameter in parameter_names}
+
+        for subnode in ast.walk(node):
+            if not isinstance(subnode, ast.Compare):
+                continue
+            values = [subnode.left] + list(subnode.comparators)
+            for index, operator in enumerate(subnode.ops):
+                if not isinstance(operator, (ast.In, ast.NotIn)):
+                    continue
+                left, right = values[index], values[index + 1]
+                if isinstance(left, ast.Constant) and isinstance(left.value, str) and isinstance(right, ast.Name) and right.id in parameter_names:
+                    guarded.add((right.id, left.value))
+
+        mode_priority = {
+            "OPTIONAL_IMPLICIT_NONE": 1,
+            "DEFAULTED": 2,
+            "REQUIRED": 3,
+            "GUARDED": 4,
+        }
+
+        def record_mode(parameter, key, mode):
+            if (parameter, key) in guarded:
+                mode = "GUARDED"
+            previous = access_modes[parameter].get(key)
+            if previous is None or mode_priority[mode] > mode_priority[previous]:
+                access_modes[parameter][key] = mode
+
+        for subnode in ast.walk(node):
+            if isinstance(subnode, ast.Subscript) and isinstance(subnode.value, ast.Name) and subnode.value.id in parameter_names:
+                key = self._get_slice_val(subnode.slice)
+                if key:
+                    record_mode(subnode.value.id, key, "REQUIRED")
+            elif isinstance(subnode, ast.Call) and isinstance(subnode.func, ast.Attribute) and subnode.func.attr == "get" and isinstance(subnode.func.value, ast.Name) and subnode.func.value.id in parameter_names and subnode.args:
+                key = self._get_constant_str(subnode.args[0])
+                if key:
+                    record_mode(
+                        subnode.func.value.id,
+                        key,
+                        "DEFAULTED" if len(subnode.args) >= 2 else "OPTIONAL_IMPLICIT_NONE",
+                    )
+
+        def record_effect(origin_keys, sink_type, evidence):
+            for parameter in parameter_names:
+                for key in origin_keys:
+                    if key in access_modes[parameter]:
+                        effects[parameter].setdefault(key, []).append({
+                            "sink_type": sink_type,
+                            "evidence": evidence,
+                        })
+
+        known_nonterminal = {"print", "assert", "debug", "info", "warning", "error", "exception", "format", "len"}
+        serializer_names = {"json.dump", "pickle.dump", "yaml.dump"}
+        build_operations = {"append", "extend", "add", "set", "update"}
+
+        for subnode in ast.walk(node):
+            if isinstance(subnode, ast.Call):
+                func_name = self._get_func_name(subnode.func) or "<dynamic>"
+                qualified = func_name
+                if isinstance(subnode.func, ast.Attribute) and isinstance(subnode.func.value, ast.Name):
+                    qualified = f"{subnode.func.value.id}.{subnode.func.attr}"
+                origin_keys = set()
+                for argument in list(subnode.args) + [kw.value for kw in subnode.keywords]:
+                    origin_keys.update(self._resolve_parameter_origin_keys(
+                        argument, self.local_assignments, parameter_names
+                    ))
+                if not origin_keys:
+                    continue
+                if qualified in serializer_names:
+                    record_effect(origin_keys, "FILE_WRITE", qualified)
+                elif isinstance(subnode.func, ast.Attribute) and subnode.func.attr in build_operations:
+                    record_effect(origin_keys, "BUILD_INFLUENCE", f"construction operation {subnode.func.attr}")
+                elif func_name in known_nonterminal:
+                    record_effect(origin_keys, "NON_TERMINAL", func_name)
+                elif not (
+                    isinstance(subnode.func, ast.Attribute)
+                    and subnode.func.attr == "get"
+                    and isinstance(subnode.func.value, ast.Name)
+                    and subnode.func.value.id in parameter_names
+                ):
+                    record_effect(origin_keys, "UNCLASSIFIED", qualified)
+
+            if isinstance(subnode, ast.Return) and subnode.value is not None:
+                origin_keys = self._resolve_parameter_origin_keys(
+                    subnode.value, self.local_assignments, parameter_names
+                )
+                record_effect(origin_keys, "BUILD_INFLUENCE", "returned output construction")
+
+            if isinstance(subnode, ast.Assign):
+                origin_keys = self._resolve_parameter_origin_keys(
+                    subnode.value, self.local_assignments, parameter_names
+                )
+                for target in subnode.targets:
+                    if isinstance(target, ast.Attribute) and isinstance(target.value, ast.Name) and target.value.id == "self":
+                        record_effect(origin_keys, "STATE_MUTATION", f"assignment to self.{target.attr}")
+                    elif isinstance(target, (ast.Attribute, ast.Subscript)):
+                        root = target.value if isinstance(target, ast.Attribute) else target.value
+                        if isinstance(root, ast.Name) and root.id in parameter_names:
+                            record_effect(origin_keys, "STATE_MUTATION", "assignment through parameter object")
+
+        return access_modes, effects
 
     def visit_FunctionDef(self, node):
         old_function = self.current_function
@@ -181,6 +324,14 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
                 for target in subnode.targets:
                     if isinstance(target, ast.Name):
                         self.local_assignments[target.id] = subnode.value
+            elif isinstance(subnode, ast.For):
+                targets = []
+                if isinstance(subnode.target, ast.Name):
+                    targets = [subnode.target]
+                elif isinstance(subnode.target, (ast.Tuple, ast.List)):
+                    targets = [item for item in subnode.target.elts if isinstance(item, ast.Name)]
+                for target in targets:
+                    self.local_assignments[target.id] = subnode.iter
                         
         self._track_block_dataflows(node)
         self.generic_visit(node)
@@ -189,6 +340,7 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
         returned_keys = set()
         has_dict_return = False
         returned_type = None
+        returned_call = None
         contract_identifiers = []
         returned_dict_structure = {}
         
@@ -226,6 +378,7 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
                                             contract_identifiers.append(dv_str)
                 elif isinstance(subnode.value, ast.Call):
                     func_id = self._get_func_name(subnode.value.func)
+                    returned_call = ast.unparse(subnode.value)
                     if func_id == 'dict':
                         has_dict_return = True
                     elif func_id:
@@ -340,26 +493,52 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
                 "returned_keys": sorted(list(returned_keys)),
                 "returned_dict_structure": returned_dict_structure,
                 "returned_type": returned_type,
+                "returned_call": returned_call,
                 "has_dict_return": has_dict_return,
                 "is_producer_name": is_producer_name,
                 "contract_identifiers": sorted(list(set(contract_identifiers))),
                 "candidate_type": "payload_candidate" if not is_internal_lookup else "internal_lookup"
             })
             
+        access_modes, field_effects = self._analyze_field_usage(node)
+
         param_utilization = {}
         for p in self.current_params:
             param_utilization[p] = {
                 "accessed_keys": sorted(list(self.accessed_params[p])),
                 "forwarded_to": sorted(list(self.forwarded_params[p])),
-                "structural_consumption": p in self.structural_params
+                "structural_consumption": p in self.structural_params,
+                "access_modes": access_modes.get(p, {}),
+                "field_effects": field_effects.get(p, {}),
             }
             
+        construction_fields = []
+        for subnode in ast.walk(node):
+            if not isinstance(subnode, ast.Dict):
+                continue
+            for key_node, value_node in zip(subnode.keys, subnode.values):
+                output_field = self._get_key_str(key_node)
+                if not output_field:
+                    continue
+                for parameter in self.current_params:
+                    source_keys = self._resolve_parameter_origin_keys(
+                        value_node, self.local_assignments, {parameter}
+                    )
+                    if source_keys:
+                        construction_fields.append({
+                            "output_field": output_field,
+                            "expression": ast.unparse(value_node),
+                            "source_parameter": parameter,
+                            "source_parameter_keys": sorted(source_keys),
+                        })
+
         self.consumers.append({
             "function": node.name,
             "file_reads": sorted(list(set(file_reads))),
             "param_utilization": param_utilization,
             "all_accessed_keys": sorted(list(all_accessed)),
-            "terminal_writes": terminal_writes
+            "terminal_writes": terminal_writes,
+            "construction_fields": construction_fields,
         })
         
         self.current_function = old_function
