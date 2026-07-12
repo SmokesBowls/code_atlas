@@ -3,7 +3,11 @@
 import os
 import datetime
 from code_atlas.core.status_classifier import classify_statuses
-from code_atlas.core.capability_grouper import infer_subsystem_groups, get_role_hint
+from code_atlas.core.capability_grouper import (
+    infer_subsystem_groups,
+    get_role_hint,
+    get_role_signals,
+)
 from code_atlas.core.ranking import calculate_inspection_rankings
 from code_atlas.core.entrypoint_detector import detect_entrypoint
 from code_atlas.core.router import calculate_dependency_routes
@@ -133,6 +137,7 @@ def generate_report(project_dir, files_data, parse_errors):
         file_info["is_entrypoint"] = is_entry
         
         file_info["role_hint"] = get_role_hint(rel_path, file_info)
+        file_info["role_signals"] = get_role_signals(rel_path, file_info)
         file_info["inbound_count"] = inbound_counts.get(rel_path, 0)
         file_info["outbound_count"] = outbound_counts.get(rel_path, 0)
         

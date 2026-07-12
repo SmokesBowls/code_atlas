@@ -1,48 +1,69 @@
 """Module for inferring candidate subsystem groups based on directory layout, role hints, and dependency coupling."""
 
 import os
+import re
+
+
+def get_role_signals(filepath, info):
+    """Return the observable signals used by role classification."""
+    filename = os.path.basename(filepath)
+    filepath_lower = filepath.lower()
+    filename_lower = filename.lower()
+    filename_tokens = set(
+        token for token in re.split(r"[^a-z0-9]+", os.path.splitext(filename_lower)[0])
+        if token
+    )
+    raw_imports = info.get("raw_imports", [])
+
+    return {
+        "package_init": filename == "__init__.py",
+        "test_path": (
+            filename_lower.startswith("test_")
+            or filename_lower.endswith("_test.py")
+            or "tests/" in filepath_lower
+            or "tests\\" in filepath_lower
+            or "/tests" in filepath_lower
+            or "\\tests" in filepath_lower
+        ),
+        "argparse_import": "argparse" in raw_imports,
+        "main_block": bool(info.get("_has_main_block")),
+        "cli_filename_tokens": sorted(
+            filename_tokens & {"cli", "scanner", "command"}
+        ),
+        "config_path_terms": sorted(
+            term for term in ("config", "settings", "setup", "env")
+            if term in filepath_lower
+        ),
+        "model_path_terms": sorted(
+            term for term in ("model", "schema", "db", "database")
+            if term in filepath_lower
+        ),
+        "utility_path_terms": sorted(
+            term for term in ("util", "helper", "tool", "common")
+            if term in filepath_lower
+        ),
+    }
+
 
 def get_role_hint(filepath, info):
     """Assign a role hint to a file based on naming and structural heuristics."""
-    filename = os.path.basename(filepath)
-    if filename == "__init__.py":
+    signals = get_role_signals(filepath, info)
+    if signals["package_init"]:
         return "package_init"
-
-    filepath_lower = filepath.lower()
-    filename_lower = filename.lower()
-
-    # Test file check
-    if (
-        filename_lower.startswith("test_") or 
-        filename_lower.endswith("_test.py") or 
-        "tests/" in filepath_lower or 
-        "tests\\" in filepath_lower or
-        "/tests" in filepath_lower or
-        "\\tests" in filepath_lower
-    ):
+    if signals["test_path"]:
         return "test"
-
-    # CLI check
-    raw_imports = info.get("raw_imports", [])
     if (
-        "argparse" in raw_imports or 
-        info.get("_has_main_block") or
-        any(x in filename_lower for x in ["cli", "scanner", "command"])
+        signals["argparse_import"]
+        or signals["main_block"]
+        or signals["cli_filename_tokens"]
     ):
         return "cli"
-
-    # Config check
-    if any(x in filepath_lower for x in ["config", "settings", "setup", "env"]):
+    if signals["config_path_terms"]:
         return "config"
-
-    # Model check
-    if any(x in filepath_lower for x in ["model", "schema", "db", "database"]):
+    if signals["model_path_terms"]:
         return "model"
-
-    # Utility check
-    if any(x in filepath_lower for x in ["util", "helper", "tool", "common"]):
+    if signals["utility_path_terms"]:
         return "utility"
-
     return "unknown"
 
 def get_group_name(dir_seed):
