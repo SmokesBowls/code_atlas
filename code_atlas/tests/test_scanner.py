@@ -191,6 +191,68 @@ class TestReporterAndGrouping(unittest.TestCase):
         self.assertTrue(core_group["structurally_ambiguous"])
         self.assertEqual(core_group["confidence"], "low")
 
+    def test_utility_toolbox_uses_external_consumer_cohesion(self):
+        files_data = {
+            "brushes/alpha.py": {"role_hint": "utility", "raw_imports": []},
+            "brushes/beta.py": {"role_hint": "utility", "raw_imports": []},
+            "brushes/__init__.py": {"role_hint": "package_init", "raw_imports": []},
+            "editor/tool_a.py": {"role_hint": "unknown", "raw_imports": []},
+            "runtime/tool_b.py": {"role_hint": "unknown", "raw_imports": []},
+        }
+        local_deps = [
+            {"source": "editor/tool_a.py", "target": "brushes/alpha.py", "type": "import"},
+            {"source": "editor/tool_a.py", "target": "brushes/beta.py", "type": "import"},
+            {"source": "runtime/tool_b.py", "target": "brushes/alpha.py", "type": "import"},
+            {"source": "runtime/tool_b.py", "target": "brushes/beta.py", "type": "import"},
+        ]
+
+        groups = infer_subsystem_groups(files_data, local_deps)
+        brushes = next(g for g in groups if "brushes/alpha.py" in g["member_files"])
+
+        self.assertEqual(brushes["internal_edge_count"], 0)
+        self.assertEqual(brushes["inbound_interface_files"], ["editor/tool_a.py", "runtime/tool_b.py"])
+        self.assertFalse(brushes["structurally_ambiguous"])
+        self.assertEqual(brushes["confidence"], "medium")
+        self.assertTrue(any("Toolbox cohesion" in item for item in brushes["evidence"]))
+
+    def test_directory_toolbox_members_are_not_extracted_by_cross_boundary_consolidation(self):
+        files_data = {
+            "shared/__init__.py": {"role_hint": "package_init", "raw_imports": []},
+            "shared/case_tool.py": {"role_hint": "utility", "raw_imports": []},
+            "shared/separator_tool.py": {"role_hint": "utility", "raw_imports": []},
+            "hello/hello_builder.py": {"role_hint": "unknown", "raw_imports": []},
+            "world/world_builder.py": {"role_hint": "unknown", "raw_imports": []},
+            "assembly/message_assembler.py": {"role_hint": "unknown", "raw_imports": []},
+            "formatting/message_formatter.py": {"role_hint": "unknown", "raw_imports": []},
+        }
+        local_deps = [
+            {"source": "hello/hello_builder.py", "target": "shared/case_tool.py", "type": "import"},
+            {"source": "world/world_builder.py", "target": "shared/case_tool.py", "type": "import"},
+            {"source": "assembly/message_assembler.py", "target": "shared/separator_tool.py", "type": "import"},
+            {"source": "formatting/message_formatter.py", "target": "shared/separator_tool.py", "type": "import"},
+        ]
+
+        groups = infer_subsystem_groups(files_data, local_deps)
+        shared = next(group for group in groups if group["name"] == "Shared Subsystem")
+
+        self.assertEqual(
+            shared["member_files"],
+            [
+                "shared/__init__.py",
+                "shared/case_tool.py",
+                "shared/separator_tool.py",
+            ],
+        )
+        self.assertEqual(shared["internal_edge_count"], 0)
+        self.assertEqual(shared["external_edge_count"], 4)
+        self.assertEqual(len(shared["inbound_interface_files"]), 4)
+        self.assertFalse(shared["structurally_ambiguous"])
+        self.assertEqual(shared["confidence"], "medium")
+        self.assertIn("refined_by: toolbox_external_consumers", shared["grouping_basis"])
+        self.assertFalse(
+            any(group["name"] == "Shared Utility Subsystem" for group in groups)
+        )
+
 
 class TestRankingEngine(unittest.TestCase):
     def test_calculate_inspection_rankings(self):

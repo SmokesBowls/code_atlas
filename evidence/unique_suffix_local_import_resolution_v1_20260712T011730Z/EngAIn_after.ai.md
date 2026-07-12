@@ -1,0 +1,635 @@
+# Code Atlas AI Architecture Report: EngAIn
+
+- **Contract:** code_atlas.ai_architecture_packet (v1.0.0)
+- **Scanned At:** 2026-07-12T01:17:42.794820Z
+
+## Static Reachability Warning
+> [!WARNING]
+> WARNING: Static dependency routes and reachability results are derived solely from import statements. They indicate potential compile-time or static dependencies and do not reflect runtime execution sequence, call order, or dynamic control flow.
+
+## Limitations
+- Namespace packages without __init__.py are supported, but ambiguous resolutions (multiple candidates matching the same import) are recorded as gaps. (Claim: `gap`, Confidence: `high`)
+- Reflection and dynamic attribute retrieval may hide runtime dependencies. (Claim: `gap`, Confidence: `high`)
+- Static analysis cannot resolve dynamic imports (e.g. __import__, importlib, or dynamic string execution). (Claim: `gap`, Confidence: `high`)
+- Static route paths are inferred from import syntax, not runtime-verified. (Claim: `gap`, Confidence: `medium`)
+
+## Subsystem Summaries
+- **Adapters Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 10
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Aproom Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 16
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Artifactroom Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 3
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Bridgeroom Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 12
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Builders Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `medium`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Chapter_splitter Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Chapterroom Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 8
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Classroom Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `medium`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Codecs Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Command_center Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Controlroom Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 7
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Core Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 10
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Engainos Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `medium`, Member Count: 5
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Engionality Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Executors Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Extraction Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Gameproof Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 6
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Gates Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 81
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Godotsim Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 24
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Interface Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 12
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Kernels Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 10
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Legacy_payloads Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Mettaext Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 15
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Mrlore Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 32
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Old_tools Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 36
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Paradoxroom Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Passb_fix Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Passroom Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 10
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Phase_4 Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Proofs Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 7
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Reasoning Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `medium`, Member Count: 4
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Reckoningroom Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Relays Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Retired Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Retired_cli_bridge Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Root Components**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 3
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Schemas Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 4
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Server Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Showroom Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 7
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Testing Suite**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 36
+  - Grouping Basis: refined_by: role_consolidation, seed: test_role_hint
+- **Tier2 Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Tier3 Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Tools Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 5
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Topologist Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Unsorted Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 1
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Validators Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 3
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Vaultroom Subsystem**
+  - Claim: `inferred`, Confidence: `high`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+- **Zwcodecs Subsystem** [AMBIGUOUS]
+  - Claim: `inferred`, Confidence: `low`, Member Count: 2
+  - Grouping Basis: refined_by: dependency_cohesion, seed: directory_structure
+
+## Top Inspection Targets (Detail: standard)
+1. `tier2/godotsim/bridge_integration.py` (Score: **100**)
+   - Claim: `inferred`, Reasons: parse_error
+2. `tier2/godotsim/bridge_integration.py` (Score: **100**)
+   - Claim: `inferred`, Reasons: parse_error
+3. `tier1/paradox_machine/reasoning/stn.py` (Score: **80**)
+   - Claim: `inferred`, Reasons: structurally_ambiguous_subsystem, stubbed_implementation
+4. `tier1/paradox_machine/schemas/paradox_state.py` (Score: **80**)
+   - Claim: `inferred`, Reasons: structurally_ambiguous_subsystem, stubbed_implementation
+5. `tier1/paradox_machine/schemas/temporal_truth_packet.py` (Score: **80**)
+   - Claim: `inferred`, Reasons: structurally_ambiguous_subsystem, stubbed_implementation
+6. `tier2/godotsim/builders/godot_scene_piece_builder.py` (Score: **77**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, high_outbound_coupling, structurally_ambiguous_subsystem
+7. `tier1/paradox_machine/schemas/temporal_artifact.py` (Score: **75**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, structurally_ambiguous_subsystem
+8. `tier2/godotsim/kernels/combat3d_mr.py` (Score: **75**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, structurally_ambiguous_subsystem
+9. `tier2/godotsim/kernels/piece3d_mr.py` (Score: **75**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, structurally_ambiguous_subsystem
+10. `tier1/paradox_machine/reasoning/temporal_validator.py` (Score: **74**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, high_outbound_coupling, structurally_ambiguous_subsystem
+11. `tier3/mettaext/scene_identity.py` (Score: **70**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, structurally_ambiguous_subsystem
+12. `tier1/engainos/engainos_control_center.py` (Score: **60**)
+   - Claim: `inferred`, Reasons: high_outbound_coupling, structurally_ambiguous_subsystem
+13. `tier1/engainos/relays/ap_runtime_relay.py` (Score: **60**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, structurally_ambiguous_subsystem
+14. `tier2/engionality/engionality_control_center.py` (Score: **60**)
+   - Claim: `inferred`, Reasons: high_outbound_coupling, structurally_ambiguous_subsystem
+15. `tier2/godotsim/kernels/quest3d_mr.py` (Score: **60**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, structurally_ambiguous_subsystem
+16. `tier3/mettaext/semantic_environment_extractor.py` (Score: **60**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, structurally_ambiguous_subsystem
+17. `tier2/godotsim/adapters/spatial3d_adapter.py` (Score: **59**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, high_outbound_coupling, structurally_ambiguous_subsystem
+18. `tier1/engainos/launch_engine.py` (Score: **58**)
+   - Claim: `inferred`, Reasons: high_outbound_coupling, structurally_ambiguous_subsystem
+19. `tier1/paradox_machine/extraction/naive_temporal_extractor.py` (Score: **57**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, high_outbound_coupling, structurally_ambiguous_subsystem
+20. `tier2/godotsim/adapters/behavior_adapter.py` (Score: **57**)
+   - Claim: `inferred`, Reasons: high_inbound_coupling, high_outbound_coupling, structurally_ambiguous_subsystem
+
+## Unresolved Gaps & Parse Errors
+- `tier2/godotsim/bridge_integration.py`: AmbiguousImportError: Import 'semantic_bridge.SemanticRegistry' resolved to multiple local candidates: ['tier1/engainos/bridgeroom/semantic_bridge.py', 'tier2/godotsim/semantic_bridge.py']. (Claim: `gap`)
+- `tier2/godotsim/bridge_integration.py`: AmbiguousImportError: Import 'semantic_bridge.zon_to_entity3d' resolved to multiple local candidates: ['tier1/engainos/bridgeroom/semantic_bridge.py', 'tier2/godotsim/semantic_bridge.py']. (Claim: `gap`)
+
+## Cross-Subsystem Boundaries
+- `tier2/godotsim/__init__.py`: Boundary `Adapters Subsystem` ➔ `Godotsim Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/slice_builders.py`: Boundary `Adapters Subsystem` ➔ `Godotsim Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/spatial3d.py`: Boundary `Adapters Subsystem` ➔ `Godotsim Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/kernels/combat3d_mr.py`: Boundary `Adapters Subsystem` ➔ `Kernels Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/kernels/quest3d_mr.py`: Boundary `Bridgeroom Subsystem` ➔ `Kernels Subsystem` (Claim: `inferred`)
+- `tier3/mettaext/scene_identity.py`: Boundary `Bridgeroom Subsystem` ➔ `Mettaext Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/kernels/piece3d_mr.py`: Boundary `Builders Subsystem` ➔ `Kernels Subsystem` (Claim: `inferred`)
+- `tier2/topologist/artifactroom/topology_artifact.py`: Boundary `Classroom Subsystem` ➔ `Artifactroom Subsystem` (Claim: `inferred`)
+- `tier2/topologist/reckoningroom/topology_validator.py`: Boundary `Classroom Subsystem` ➔ `Reckoningroom Subsystem` (Claim: `inferred`)
+- `tier2/engionality/showroom/domain_views.py`: Boundary `Controlroom Subsystem` ➔ `Showroom Subsystem` (Claim: `inferred`)
+- `tier2/engionality/showroom/performer_engine.py`: Boundary `Controlroom Subsystem` ➔ `Showroom Subsystem` (Claim: `inferred`)
+- `tier1/engainos/aproom/ap_engine.py`: Boundary `Engainos Subsystem` ➔ `Aproom Subsystem` (Claim: `inferred`)
+- `tier1/engainos/aproom/ap_runtime.py`: Boundary `Engainos Subsystem` ➔ `Aproom Subsystem` (Claim: `inferred`)
+- `tier1/engainos/bridgeroom/godot_adapter.py`: Boundary `Engainos Subsystem` ➔ `Bridgeroom Subsystem` (Claim: `inferred`)
+- `tier1/engainos/bridgeroom/scene_server.py`: Boundary `Engainos Subsystem` ➔ `Bridgeroom Subsystem` (Claim: `inferred`)
+- `tier1/engainos/core/__init__.py`: Boundary `Engainos Subsystem` ➔ `Core Subsystem` (Claim: `inferred`)
+- `tier1/engainos/gates/gate_acceptance_rule.py`: Boundary `Engainos Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/engainos/gates/gate_declared_truth_shape.py`: Boundary `Engainos Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/engainos/gates/gate_governance_rejection_proof.py`: Boundary `Engainos Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/engainos/gates/gate_no_lane_theft_in_packet.py`: Boundary `Engainos Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/engainos/gates/gate_packet_identity.py`: Boundary `Engainos Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/engainos/gates/gate_validated_packets_shape.py`: Boundary `Engainos Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier2/engionality/gates/gate_affect_state_valid.py`: Boundary `Engionality Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier2/engionality/gates/gate_intensity_bounds.py`: Boundary `Engionality Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier2/engionality/gates/gate_no_lane_theft_in_packet.py`: Boundary `Engionality Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier2/engionality/gates/gate_relationship_deltas_valid_if_present.py`: Boundary `Engionality Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier2/engionality/gates/gate_required_fields.py`: Boundary `Engionality Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier2/engionality/gates/gate_scene_mood_valid_if_present.py`: Boundary `Engionality Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/paradox_machine/schemas/temporal_artifact.py`: Boundary `Extraction Subsystem` ➔ `Schemas Subsystem` (Claim: `inferred`)
+- `tier3/mettaext/chapterroom/chapterroom_bridge.py`: Boundary `Gameproof Subsystem` ➔ `Chapterroom Subsystem` (Claim: `inferred`)
+- `tier2/topologist/gates/gate_accept_proposed_topology_artifact.py`: Boundary `Gameproof Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier3/mettaext/passroom/pass1_spatial.py`: Boundary `Gameproof Subsystem` ➔ `Passroom Subsystem` (Claim: `inferred`)
+- `tier3/mettaext/passroom/passroom_bridge.py`: Boundary `Gameproof Subsystem` ➔ `Passroom Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/builders/godot_scene_piece_builder.py`: Boundary `Gates Subsystem` ➔ `Builders Subsystem` (Claim: `inferred`)
+- `tier1/engainos/core/__init__.py`: Boundary `Gates Subsystem` ➔ `Core Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/kernels/piece3d_mr.py`: Boundary `Gates Subsystem` ➔ `Kernels Subsystem` (Claim: `inferred`)
+- `tier1/paradox_machine/reasoning/temporal_validator.py`: Boundary `Gates Subsystem` ➔ `Reasoning Subsystem` (Claim: `inferred`)
+- `tier1/engainos/relays/ap_runtime_relay.py`: Boundary `Gates Subsystem` ➔ `Relays Subsystem` (Claim: `inferred`)
+- `tools/ollama_diff_patcher.py`: Boundary `Gates Subsystem` ➔ `Tools Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/adapters/behavior_adapter.py`: Boundary `Godotsim Subsystem` ➔ `Adapters Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/adapters/combat3d_adapter.py`: Boundary `Godotsim Subsystem` ➔ `Adapters Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/adapters/dialogue3d_integration.py`: Boundary `Godotsim Subsystem` ➔ `Adapters Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/adapters/inventory3d_integration.py`: Boundary `Godotsim Subsystem` ➔ `Adapters Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/adapters/perception_adapter.py`: Boundary `Godotsim Subsystem` ➔ `Adapters Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/adapters/spatial3d_adapter.py`: Boundary `Godotsim Subsystem` ➔ `Adapters Subsystem` (Claim: `inferred`)
+- `tier1/engainos/aproom/ap_complex_rules.py`: Boundary `Godotsim Subsystem` ➔ `Aproom Subsystem` (Claim: `inferred`)
+- `tier1/engainos/aproom/authority_gate.py`: Boundary `Godotsim Subsystem` ➔ `Aproom Subsystem` (Claim: `inferred`)
+- `tier1/engainos/aproom/canon.py`: Boundary `Godotsim Subsystem` ➔ `Aproom Subsystem` (Claim: `inferred`)
+- `tier1/engainos/aproom/reality_mode.py`: Boundary `Godotsim Subsystem` ➔ `Aproom Subsystem` (Claim: `inferred`)
+- `tier1/engainos/core/intent_shadow.py`: Boundary `Godotsim Subsystem` ➔ `Core Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/kernels/behavior3d_mr.py`: Boundary `Godotsim Subsystem` ➔ `Kernels Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/kernels/perception_mr.py`: Boundary `Godotsim Subsystem` ➔ `Kernels Subsystem` (Claim: `inferred`)
+- `tier2/godotsim/kernels/spatial3d_mr.py`: Boundary `Godotsim Subsystem` ➔ `Kernels Subsystem` (Claim: `inferred`)
+- `tier3/mettaext/scene_identity.py`: Boundary `Godotsim Subsystem` ➔ `Mettaext Subsystem` (Claim: `inferred`)
+- `tier1/mrlore/gates/gate_claims_structure.py`: Boundary `Mrlore Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/mrlore/gates/gate_contradiction_stop_proof.py`: Boundary `Mrlore Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/mrlore/gates/gate_enum_values_valid.py`: Boundary `Mrlore Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/mrlore/gates/gate_no_auto_resolve_attempt.py`: Boundary `Mrlore Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/mrlore/gates/gate_no_lane_theft_in_packet.py`: Boundary `Mrlore Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/mrlore/gates/gate_no_vault_path_dependency.py`: Boundary `Mrlore Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/mrlore/gates/gate_required_fields.py`: Boundary `Mrlore Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier3/mettaext/semantic_environment_extractor.py`: Boundary `Passroom Subsystem` ➔ `Mettaext Subsystem` (Claim: `inferred`)
+- `tier3/mettaext/world_rules_loader.py`: Boundary `Passroom Subsystem` ➔ `Mettaext Subsystem` (Claim: `inferred`)
+- `tier1/paradox_machine/extraction/naive_temporal_extractor.py`: Boundary `Proofs Subsystem` ➔ `Extraction Subsystem` (Claim: `inferred`)
+- `tier1/paradox_machine/gates/temporal_gate.py`: Boundary `Proofs Subsystem` ➔ `Gates Subsystem` (Claim: `inferred`)
+- `tier1/paradox_machine/zwcodecs/json_to_zw.py`: Boundary `Proofs Subsystem` ➔ `Zwcodecs Subsystem` (Claim: `inferred`)
+- `tier1/paradox_machine/schemas/temporal_artifact.py`: Boundary `Reasoning Subsystem` ➔ `Schemas Subsystem` (Claim: `inferred`)
+- `tier2/engionality/controlroom/task_types.py`: Boundary `Showroom Subsystem` ➔ `Controlroom Subsystem` (Claim: `inferred`)
+
+## Route Summaries
+### Grouped Single-File Routes
+- Type: `single_file_static_route` (Claim: `inferred`, Count: 155)
+  - `command_center/app.py`
+  - `engainos_boot_kernel.py`
+  - `executors/boot_scene_load_executor_v1.py`
+  - `executors/player_input_listener_executor_v1.py`
+  - `gates/gate_boot_scene_authorization_request_v1.py`
+  - `gates/gate_boot_scene_load_executor_request_v1.py`
+  - `gates/gate_boot_shell_presentation_ready_v1.py`
+  - `gates/gate_engainos_bootstrap_preflight_v1.py`
+  - `gates/gate_engainos_system_health_preflight_v1.py`
+  - `gates/gate_player_input_authorization_request_v1.py`
+  - `gates/gate_player_input_listener_executor_request_v1.py`
+  - `interface/999_console.py`
+  - `scratch/gameproof_003/retired_cli_bridge/run_gameproof_003_cli.py`
+  - `scratch/tier_relocation/trixel/legacy_payloads/harvest_legacy_trixel_payloads.py`
+  - `start_button.py`
+  - `tier1/engainos/adapters/zonj_to_gamestate.py`
+  - `tier1/engainos/aproom/ap_engine.py`
+  - `tier1/engainos/aproom/ap_quest_rules.py`
+  - `tier1/engainos/aproom/ap_rule_loader.py`
+  - `tier1/engainos/aproom/ap_zw_engine.py`
+  - `tier1/engainos/aproom/engine_summary.py`
+  - `tier1/engainos/aproom/protocol_envelope.py`
+  - `tier1/engainos/bridgeroom/zon_to_game.py`
+  - `tier1/engainos/core/no_godot_scene_proof.py`
+  - `tier1/engainos/gates/gate_ap_core_behavior_parity.py`
+  - `tier1/engainos/gates/gate_ap_core_migration_authority.py`
+  - `tier1/engainos/gates/gate_ap_core_rule_activation.py`
+  - `tier1/engainos/gates/gate_ap_core_signature_probe.py`
+  - `tier1/engainos/gates/gate_ap_engine_historical_probe.py`
+  - `tier1/engainos/gates/gate_ap_engine_historical_source_map.py`
+  - `tier1/engainos/gates/gate_ap_engine_migration_authority.py`
+  - `tier1/engainos/gates/gate_ap_runtime_behavior_probe.py`
+  - `tier1/engainos/gates/gate_ap_runtime_blocker_lane.py`
+  - `tier1/engainos/gates/gate_ap_runtime_relay_readiness.py`
+  - `tier1/engainos/gates/gate_ap_runtime_repair_readiness.py`
+  - `tier1/engainos/gates/gate_ap_zw_engine_canonical_claim.py`
+  - `tier1/engainos/gates/gate_ap_zw_engine_migration.py`
+  - `tier1/engainos/gates/gate_controlled_runtime_salvage_lane.py`
+  - `tier1/engainos/gates/gate_gamestate_draft_review_contract.py`
+  - `tier1/engainos/gates/gate_gamestate_draft_review_ready.py`
+  - `tier1/engainos/gates/gate_safe_server_wrapper_behavior_lane.py`
+  - `tier1/engainos/gates/gate_safe_server_wrapper_blueprint_lane.py`
+  - `tier1/engainos/gates/gate_safe_server_wrapper_implementation_lane.py`
+  - `tier1/engainos/gates/gate_server_entrypoint_repair_lane.py`
+  - `tier1/engainos/gates/gate_server_runtime_preflight_lane.py`
+  - `tier1/engainos/gates/gate_vault_boot_side_effect_fence_lane.py`
+  - `tier1/engainos/gates/run_active_gates.py`
+  - `tier1/engainos/tools/chapter_discovery.py`
+  - `tier1/engainos/tools/chapter_splitter/chapter_to_stage_packets.py`
+  - `tier1/engainos/tools/chapter_splitter/promote_stage_draft.py`
+  - `tier1/engainos/tools/vault_discovery.py`
+  - `tier1/engainos/validators/runtime_stage_identity.py`
+  - `tier1/mrlore/archive/old_tools/artifact_extractor.py`
+  - `tier1/mrlore/archive/old_tools/authority_score_calculator.py`
+  - `tier1/mrlore/archive/old_tools/build_codex_candidates.py`
+  - `tier1/mrlore/archive/old_tools/build_registry.py`
+  - `tier1/mrlore/archive/old_tools/chapter_ledger_extractor.py`
+  - `tier1/mrlore/archive/old_tools/compile_entity_states.py`
+  - `tier1/mrlore/archive/old_tools/continuity_audit.py`
+  - `tier1/mrlore/archive/old_tools/draft_rel_evidence_review.py`
+  - `tier1/mrlore/archive/old_tools/extract_candidates.py`
+  - `tier1/mrlore/archive/old_tools/extract_member_of.py`
+  - `tier1/mrlore/archive/old_tools/identity_review_queue.py`
+  - `tier1/mrlore/archive/old_tools/identity_reviewer.py`
+  - `tier1/mrlore/archive/old_tools/identity_signal_math.py`
+  - `tier1/mrlore/archive/old_tools/ingest_source_stub.py`
+  - `tier1/mrlore/archive/old_tools/lint_codex_candidates.py`
+  - `tier1/mrlore/archive/old_tools/lint_entity_contract.py`
+  - `tier1/mrlore/archive/old_tools/lint_relationship_schema.py`
+  - `tier1/mrlore/archive/old_tools/lint_scene_contract.py`
+  - `tier1/mrlore/archive/old_tools/lint_wiki.py`
+  - `tier1/mrlore/archive/old_tools/mrlore_query.py`
+  - `tier1/mrlore/archive/old_tools/mrlore_rebuild_findings.py`
+  - `tier1/mrlore/archive/old_tools/mrlore_run_changed.py`
+  - `tier1/mrlore/archive/old_tools/mrlore_session.py`
+  - `tier1/mrlore/archive/old_tools/ollama_ingest_cockpit.py`
+  - `tier1/mrlore/archive/old_tools/pass2_math.py`
+  - `tier1/mrlore/archive/old_tools/populate_registry.py`
+  - `tier1/mrlore/archive/old_tools/propose_corrections.py`
+  - `tier1/mrlore/archive/old_tools/propose_rel_source_stubs.py`
+  - `tier1/mrlore/archive/old_tools/propose_rel_summaries.py`
+  - `tier1/mrlore/archive/old_tools/provisional_identity_router.py`
+  - `tier1/mrlore/archive/old_tools/registry_builder.py`
+  - `tier1/mrlore/archive/old_tools/stb_lint.py`
+  - `tier1/mrlore/archive/old_tools/stb_scanner.py`
+  - `tier1/mrlore/archive/old_tools/write_changed_manifest.py`
+  - `tier1/mrlore/evidence/proofs/phase_4/collect_delta.py`
+  - `tier1/mrlore/mrlore_accepted_lore_packet_schema.py`
+  - `tier1/mrlore/mrlore_claim_extraction_runner.py`
+  - `tier1/mrlore/mrlore_coming_calendar_registry_gate.py`
+  - `tier1/mrlore/mrlore_contradiction_candidate_audit_summary.py`
+  - `tier1/mrlore/mrlore_contradiction_candidate_grouper.py`
+  - `tier1/mrlore/mrlore_cosmic_year_context_enrichment.py`
+  - `tier1/mrlore/mrlore_high_claim_scene_review_manifest.py`
+  - `tier1/mrlore/mrlore_major_event_internal_receipt_map.py`
+  - `tier1/mrlore/mrlore_manual_review_decision_schema.py`
+  - `tier1/mrlore/mrlore_predicate_collision_policy_registry_gate.py`
+  - `tier1/mrlore/mrlore_preserve_entity_allowlist_registry_gate.py`
+  - `tier1/mrlore/mrlore_proposed_claim_audit_summary.py`
+  - `tier1/mrlore/mrlore_proposed_claim_shape_gate.py`
+  - `tier1/mrlore/mrlore_quality_aware_queue_summary.py`
+  - `tier1/mrlore/mrlore_quality_aware_review_queue_builder.py`
+  - `tier1/mrlore/mrlore_review_queue_builder.py`
+  - `tier1/mrlore/mrlore_review_queue_clean_view.py`
+  - `tier1/mrlore/mrlore_review_queue_noise_audit.py`
+  - `tier1/mrlore/mrlore_revision_breathing_map.py`
+  - `tier1/mrlore/mrlore_revision_breathing_map_guidance_gate.py`
+  - `tier1/mrlore/mrlore_scene_intake_runner.py`
+  - `tier1/mrlore/mrlore_temporal_aware_queue_summary.py`
+  - `tier1/mrlore/mrlore_temporal_aware_review_by_chapter_view.py`
+  - `tier1/mrlore/mrlore_temporal_aware_review_queue_builder.py`
+  - `tier1/mrlore/mrlore_temporal_claim_context_enrichment.py`
+  - `tier1/mrlore/tools/mrlore_full_output_dump.py`
+  - `tier1/paradox_machine/proofs/proof_008_spatiotemporal_gate_stub.py`
+  - `tier1/paradox_machine/proofs/read_paradox_machine_gate_triad_result.py`
+  - `tier1/paradox_machine/proofs/run_paradox_machine_gate_triad.py`
+  - `tier2/godotsim/gates/gate_trigger_zone_light_off_proof.py`
+  - `tier2/godotsim/gates/gate_trigger_zone_multi_trigger_light_route_proof.py`
+  - `tier2/godotsim/kernels/dialogue3d_mr.py`
+  - `tier2/godotsim/kernels/inventory3d_mr.py`
+  - `tier2/godotsim/kernels/navigation_mr.py`
+  - `tier2/godotsim/kernels/perception_mr.py`
+  - `tier2/godotsim/kernels/quest3d_mr.py`
+  - `tier2/godotsim/scan_old_vault_paths.py`
+  - `tier2/godotsim/scene_extractor.py`
+  - `tier2/godotsim/trixel_composer.py`
+  - `tier2/godotsim/vault_linker.py`
+  - `tier3/mettaext/build_scene_index.py`
+  - `tier3/mettaext/chapterroom/chapterroom_runner.py`
+  - `tier3/mettaext/chapterroom/passA_chapter_intake.py`
+  - `tier3/mettaext/chapterroom/passB5_environment_detector.py`
+  - `tier3/mettaext/chapterroom/passB_scene_boundary_provider.py`
+  - `tier3/mettaext/chapterroom/passC_scene_packet_writer.py`
+  - `tier3/mettaext/engain_ingest.py`
+  - `tier3/mettaext/master_pipeline.py`
+  - `tier3/mettaext/narrative_to_game.py`
+  - `tier3/mettaext/passroom/pass1_explicit.py`
+  - `tier3/mettaext/passroom/pass1_spatial.py`
+  - `tier3/mettaext/passroom/pass2_event_builder.py`
+  - `tier3/mettaext/passroom/pass3_merge.py`
+  - `tier3/mettaext/pipeline_runner.py`
+  - `tier3/mettaext/run1time.py`
+  - `tier3/mettaext/segmenter.py`
+  - `tier3/mettaext/semantic_environment_extractor.py`
+  - `tier3/mettaext/stageroom_manifest.py`
+  - `tier3/mettaext/vaultroom/vault_source_index.py`
+  - `tier3/mettaext/world_rules_loader.py`
+  - `tier3/mettaext/zw_compiler.py`
+  - `tier3/mettaext/zw_world_rules_compiler.py`
+  - `tier3/mettaext/zwify_python.py`
+  - `tools/gameproof/run_gameproof_001.py`
+  - `tools/gameproof/run_gameproof_002.py`
+  - `tools/ollama_diff_patcher.py`
+  - `tools/passB_fix/passB_day_boundary_runner.py`
+  - `tools/retired/ollama_patcher.py`
+
+### Multi-File Static Routes
+- Entrypoint: `interface/000_status.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `interface/010_show_protected_files.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `interface/020_show_ledger.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `interface/030_create_task_packet.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `interface/040_show_next_command.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `interface/050_record_command_output.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `interface/060_run_py_compile.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `interface/070_run_headless_gate.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `interface/080_stamp_result.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `interface/090_recover_file_from_git.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `interface/interface_common.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/engainos/aproom/ap_runtime.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/engainos/aproom/ap_zw_engine.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/engainos/aproom/ap_world_rules.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/engainos/aproom/engine_summary.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/engainos/bridgeroom/godot_adapter.py` (Claim: `inferred`)
+  - Length: 4, Advisory Next Step: `tier1/engainos/bridgeroom/spatial_skin_system.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/engainos/bridgeroom/quest3d_integration.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier2/godotsim/kernels/quest3d_mr.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier1/engainos/bridgeroom/scene_loader.py` (Claim: `inferred`)
+  - Length: 4, Advisory Next Step: `tier3/mettaext/scene_identity.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier1/engainos/bridgeroom/scene_server.py` (Claim: `inferred`)
+  - Length: 5, Advisory Next Step: `tier3/mettaext/scene_identity.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier1/engainos/engainos_control_center.py` (Claim: `inferred`)
+  - Length: 10, Advisory Next Step: `tier1/engainos/gates/gate_acceptance_rule.py`
+  - Boundary Crossings Count: 6
+- Entrypoint: `tier1/engainos/engainos_server.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier1/engainos/runtime_client.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier1/engainos/gates/gate_ap_default_rules_registered.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/engainos/core/__init__.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier1/engainos/gates/gate_ap_runtime_relay_behavior.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/engainos/relays/ap_runtime_relay.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier1/engainos/gates/gate_ap_runtime_relay_real_integration.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/engainos/relays/ap_runtime_relay.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier1/engainos/gates/gate_ap_zw_engine_timeline_fence.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/engainos/core/__init__.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier1/engainos/gates/gate_governance_contract_board.py` (Claim: `inferred`)
+  - Length: 9, Advisory Next Step: `tier1/engainos/gates/gate_acceptance_rule.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/engainos/launch_engine.py` (Claim: `inferred`)
+  - Length: 12, Advisory Next Step: `tier3/mettaext/scene_identity.py`
+  - Boundary Crossings Count: 5
+- Entrypoint: `tier1/engainos/validators/runtime_stage_manifest.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/engainos/validators/runtime_stage_identity.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/mrlore/archive/old_tools/promote_candidate.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/mrlore/archive/old_tools/authority_score_calculator.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/mrlore/archive/old_tools/promotion_eligibility_gate.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/mrlore/archive/old_tools/authority_score_calculator.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/mrlore/mrlore_control_center.py` (Claim: `inferred`)
+  - Length: 9, Advisory Next Step: `tier1/mrlore/gates/gate_contradictions_valid_if_present.py`
+  - Boundary Crossings Count: 7
+- Entrypoint: `tier1/mrlore/mrlore_entity_candidate_quality_gate.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/mrlore/mrlore_preserve_entity_allowlist_registry_gate.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/mrlore/mrlore_manual_review_decision_example_writer.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/mrlore/mrlore_manual_review_decision_schema.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/mrlore/mrlore_p3_sequential_entity_second_pass_quality_audit.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/mrlore/mrlore_preserve_entity_allowlist_registry_gate.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/mrlore/mrlore_review_rail_health_runner.py` (Claim: `inferred`)
+  - Length: 18, Advisory Next Step: `tier1/mrlore/mrlore_preserve_entity_allowlist_registry_gate.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/mrlore/mrlore_temporal_collision_classification.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/mrlore/mrlore_predicate_collision_policy_registry_gate.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier1/paradox_machine/proofs/export_gate_triad_result_zw.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier1/paradox_machine/zwcodecs/json_to_zw.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier1/paradox_machine/proofs/proof_007_temporal_mvp.py` (Claim: `inferred`)
+  - Length: 6, Advisory Next Step: `tier1/paradox_machine/schemas/temporal_artifact.py`
+  - Boundary Crossings Count: 4
+- Entrypoint: `tier1/paradox_machine/proofs/proof_007b_temporal_rejection.py` (Claim: `inferred`)
+  - Length: 5, Advisory Next Step: `tier1/paradox_machine/schemas/temporal_artifact.py`
+  - Boundary Crossings Count: 3
+- Entrypoint: `tier2/engionality/controlroom/bootstrap.py` (Claim: `inferred`)
+  - Length: 10, Advisory Next Step: `tier2/engionality/controlroom/task_types.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/engionality/controlroom/performance_harness.py` (Claim: `inferred`)
+  - Length: 7, Advisory Next Step: `tier2/engionality/controlroom/task_types.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/engionality/controlroom/zon4d_kernel.py` (Claim: `inferred`)
+  - Length: 9, Advisory Next Step: `tier2/engionality/controlroom/task_types.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/engionality/engionality_control_center.py` (Claim: `inferred`)
+  - Length: 7, Advisory Next Step: `tier2/engionality/gates/gate_affect_state_valid.py`
+  - Boundary Crossings Count: 6
+- Entrypoint: `tier2/godotsim/adapters/combat3d_integration.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier2/godotsim/kernels/combat3d_mr.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier2/godotsim/adapters/dialogue3d_integration.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier2/godotsim/__init__.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier2/godotsim/adapters/inventory3d_integration.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier2/godotsim/__init__.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier2/godotsim/adapters/navigation_adapter.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier2/godotsim/slice_builders.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier2/godotsim/adapters/spatial3d_adapter.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier2/godotsim/__init__.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/godotsim/gates/gate_floor_headless_parse_proof.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier2/godotsim/kernels/piece3d_mr.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier2/godotsim/gates/gate_ollama_diff_patcher_tests.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tools/ollama_diff_patcher.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier2/godotsim/gates/gate_piece3d_baseline.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier2/godotsim/kernels/piece3d_mr.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier2/godotsim/gates/gate_piece_recipe_pack_001.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier2/godotsim/kernels/piece3d_mr.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier2/godotsim/gates/gate_piece_recipe_pack_001_visible_proof.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier2/godotsim/builders/godot_scene_piece_builder.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/godotsim/gates/gate_piece_recipe_pack_002_door_proof.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier2/godotsim/builders/godot_scene_piece_builder.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/godotsim/gates/gate_player_body_visible_proof.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier2/godotsim/builders/godot_scene_piece_builder.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/godotsim/gates/gate_player_movement_proof.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier2/godotsim/builders/godot_scene_piece_builder.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/godotsim/gates/gate_player_movement_visible_observer_proof.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier2/godotsim/builders/godot_scene_piece_builder.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/godotsim/gates/gate_static_room_visible_proof.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier2/godotsim/builders/godot_scene_piece_builder.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier2/godotsim/gates/gate_visible_floor_render_proof.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier2/godotsim/kernels/piece3d_mr.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier2/godotsim/sim_runtime.py` (Claim: `inferred`)
+  - Length: 34, Advisory Next Step: `tier2/godotsim/bridge_integration.py`
+  - Boundary Crossings Count: 18
+- Entrypoint: `tier2/topologist/classroom/run_topologist_classroom_probe.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier2/topologist/reckoningroom/topology_validator.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tier3/mettaext/chapterroom/chapterroom_index_runner.py` (Claim: `inferred`)
+  - Length: 5, Advisory Next Step: `tier3/mettaext/chapterroom/passA_chapter_intake.py`
+  - Boundary Crossings Count: 0
+- Entrypoint: `tier3/mettaext/passroom/pass2_enhanced.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier3/mettaext/world_rules_loader.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier3/mettaext/passroom/pass4_zon_bridge.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier3/mettaext/semantic_environment_extractor.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tier3/mettaext/passroom/pass5_game_bridge.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier3/mettaext/semantic_environment_extractor.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tools/gameproof/run_gameproof_003.py` (Claim: `inferred`)
+  - Length: 5, Advisory Next Step: `tier3/mettaext/chapterroom/chapterroom_bridge.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tools/gameproof/run_gameproof_004.py` (Claim: `inferred`)
+  - Length: 3, Advisory Next Step: `tier3/mettaext/passroom/passroom_bridge.py`
+  - Boundary Crossings Count: 1
+- Entrypoint: `tools/gameproof/run_gameproof_005.py` (Claim: `inferred`)
+  - Length: 4, Advisory Next Step: `tier3/mettaext/passroom/passroom_bridge.py`
+  - Boundary Crossings Count: 2
+- Entrypoint: `tools/gameproof/run_gameproof_006.py` (Claim: `inferred`)
+  - Length: 2, Advisory Next Step: `tier2/topologist/gates/gate_accept_proposed_topology_artifact.py`
+  - Boundary Crossings Count: 1

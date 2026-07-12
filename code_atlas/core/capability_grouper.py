@@ -70,7 +70,7 @@ def infer_subsystem_groups(files_data, local_dependencies):
     enriched_files = {}
     for filepath, info in files_data.items():
         enriched_files[filepath] = {
-            "role_hint": get_role_hint(filepath, info),
+            "role_hint": info.get("role_hint") or get_role_hint(filepath, info),
             "raw_imports": info.get("raw_imports", [])
         }
 
@@ -109,6 +109,33 @@ def infer_subsystem_groups(files_data, local_dependencies):
         if len(seeds) >= 2:
             shared_utilities.add(tgt)
 
+    # Preserve a directory toolbox before cross-boundary utility consolidation.
+    # Package initializers are neutral, and consumers are distinct source files.
+    toolbox_dir_seeds = set()
+    for dir_seed, filepaths in dir_seeds.items():
+        eligible_members = [
+            filepath for filepath in filepaths
+            if enriched_files[filepath]["role_hint"] != "package_init"
+        ]
+        utility_members = [
+            filepath for filepath in eligible_members
+            if enriched_files[filepath]["role_hint"] == "utility"
+        ]
+        external_consumers = {
+            dep["source"] for dep in local_dependencies
+            if dep["target"] in filepaths and dep["source"] not in filepaths
+        }
+        utility_ratio = (
+            len(utility_members) / len(eligible_members)
+            if eligible_members else 0.0
+        )
+        if (
+            len(utility_members) >= 2
+            and utility_ratio >= (2 / 3)
+            and len(external_consumers) >= 2
+        ):
+            toolbox_dir_seeds.add(dir_seed)
+
     # Distribute files to groups
     for dir_seed, filepaths in dir_seeds.items():
         for filepath in filepaths:
@@ -116,6 +143,11 @@ def infer_subsystem_groups(files_data, local_dependencies):
             
             if role == "test":
                 groups["Testing Suite"].add(filepath)
+            elif dir_seed in toolbox_dir_seeds:
+                gname = get_group_name(dir_seed)
+                if gname not in groups:
+                    groups[gname] = set()
+                groups[gname].add(filepath)
             elif filepath in shared_utilities:
                 groups["Shared Utility Subsystem"].add(filepath)
             else:
@@ -154,17 +186,30 @@ def infer_subsystem_groups(files_data, local_dependencies):
 
         external_edges = len(external_outbound) + len(external_inbound)
 
+        # Toolbox cohesion is expressed by serving multiple external consumers,
+        # not by utilities importing one another. Package initializers are neutral.
+        eligible_members = [
+            filepath for filepath in members
+            if enriched_files.get(filepath, {}).get("role_hint") != "package_init"
+        ]
+        utility_members = [
+            filepath for filepath in eligible_members
+            if enriched_files.get(filepath, {}).get("role_hint") == "utility"
+        ]
+        utility_ratio = (
+            len(utility_members) / len(eligible_members)
+            if eligible_members else 0.0
+        )
+        toolbox_exempt = utility_ratio >= (2 / 3) and len(external_inbound) >= 2
+
         # Heuristic rules for Structural Ambiguity & Confidence
         structurally_ambiguous = False
         confidence = "high"
         
-        if gname == "Shared Utility Subsystem":
-            # Junk drawer trap rule: require at least 2 internal edges
-            if internal_edges < 2:
-                structurally_ambiguous = True
-                confidence = "low"
-        elif gname != "Testing Suite":
-            if len(members) > 1 and internal_edges == 0 and external_edges > 0:
+        if gname != "Testing Suite":
+            if toolbox_exempt:
+                confidence = "medium"
+            elif len(members) > 1 and internal_edges == 0 and external_edges > 0:
                 structurally_ambiguous = True
                 confidence = "low"
             elif external_edges > 2 * internal_edges and internal_edges <= 1:
@@ -181,8 +226,6 @@ def infer_subsystem_groups(files_data, local_dependencies):
         elif gname == "Shared Utility Subsystem":
             evidence.append("Consolidated utility files imported by multiple directory seeds")
             grouping_basis = ["seed: utility_role_hint", "refined_by: cross_boundary_consolidation"]
-            if structurally_ambiguous:
-                evidence.append("Junk drawer trap: shared utility group contains low internal cohesion (< 2 internal edges)")
         else:
             seed_dirs = {os.path.dirname(f).replace(os.sep, '/') or "." for f in members}
             dir_str = ", ".join(sorted(list(seed_dirs)))
@@ -195,7 +238,16 @@ def infer_subsystem_groups(files_data, local_dependencies):
         evidence.append(f"Internal cohesion: {internal_edges} internal dependency edges")
         evidence.append(f"Cross-group coupling: {external_edges} external dependency edges")
 
-        if structurally_ambiguous and gname != "Shared Utility Subsystem":
+        if toolbox_exempt:
+            evidence.append(
+                "Toolbox cohesion: utility-dominated group "
+                f"({len(utility_members)}/{len(eligible_members)} eligible members) "
+                f"serves {len(external_inbound)} distinct external consumers; "
+                "internal dependency edges are not required"
+            )
+            grouping_basis.append("refined_by: toolbox_external_consumers")
+
+        if structurally_ambiguous:
             evidence.append("Weak internal cohesion relative to strong cross-group coupling; marked as structurally ambiguous")
 
         candidate_groups.append({
