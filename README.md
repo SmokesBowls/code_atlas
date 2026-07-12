@@ -266,6 +266,165 @@ A committed evidence set should be final, named for the behavior it proves, repr
 
 See [`evidence/README.md`](evidence/README.md) for the current proof index and admission rules.
 
+## Troubleshooting
+
+### Port 8080 is already in use
+
+If the viewer reports:
+
+```text
+Error: Failed to bind server to port 8080.
+[Errno 98] Address already in use
+```
+
+another process is already listening on that port.
+
+Inspect it:
+
+```bash
+ss -ltnp 'sport = :8080'
+```
+
+Start the viewer on another port:
+
+```bash
+python3 -m code_atlas.viewer.server \
+  --report artifacts/project.json \
+  --port 8081
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8081/
+```
+
+If the existing process is an old Code Atlas viewer, stop it from its original terminal with `Ctrl+C`.
+
+You can also stop the process occupying port 8080:
+
+```bash
+fuser -k 8080/tcp
+```
+
+### `ModuleNotFoundError: No module named 'code_atlas'`
+
+Run viewer commands from the Code Atlas repository root:
+
+```bash
+cd /path/to/code_atlas_rescue
+
+python3 -m code_atlas.viewer.server \
+  --report artifacts/project.json \
+  --port 8080
+```
+
+### Report file not found
+
+Confirm that the scan completed and that the path exists:
+
+```bash
+ls -lh artifacts/
+```
+
+Then pass the exact JSON path:
+
+```bash
+python3 -m code_atlas.viewer.server \
+  --report artifacts/project.json
+```
+
+The viewer loads the main `.json` report, not the `.md` or `.ai.json` export.
+
+### `Permission denied` when running the launcher
+
+Make the launcher executable:
+
+```bash
+chmod +x start_atlas.sh
+./start_atlas.sh
+```
+
+Alternatively:
+
+```bash
+bash start_atlas.sh
+```
+
+### The viewer rejects the report
+
+The report may be incomplete, outdated, or not a normal Code Atlas JSON report.
+
+Regenerate it:
+
+```bash
+python3 code_atlas/scanner.py \
+  --dir /path/to/python/project \
+  --output artifacts/project.json
+```
+
+Then restart the viewer with the newly generated file.
+
+### The scan reports parse failures
+
+Parse failures do not necessarily mean Code Atlas itself failed. They indicate that one or more scanned Python files could not be parsed.
+
+Common causes include:
+
+* incomplete or damaged source files;
+* Python syntax unsupported by the active interpreter;
+* generated files that are not valid Python;
+* merge-conflict markers;
+* files using a non-Python format despite a `.py` extension.
+
+Inspect the `parse_errors` section of the JSON or Markdown report. Code Atlas reports these files but does not repair them.
+
+### Expected dependency or payload edges are missing
+
+A missing edge means the static pass did not establish it. Check for:
+
+* dynamic imports;
+* reflection or `getattr()` dispatch;
+* wrapper functions hiding returned fields;
+* multiple possible provider files;
+* dynamically generated dictionary keys;
+* calls crossing unsupported language boundaries.
+
+Ambiguous targets are deliberately left unresolved rather than guessed.
+
+### A field is marked `DROPPED`, `STRANDED`, or `UNCLASSIFIED_TERMINUS`
+
+These verdicts describe different static conditions:
+
+```text
+DROPPED
+The proven caller supplies the field, but the matched consumer does not
+access it.
+
+STRANDED
+The consumer accesses the field, but the value does not reach a recognized
+sink or returned construction.
+
+UNCLASSIFIED_TERMINUS
+The value reaches an operation Code Atlas cannot classify safely.
+```
+
+Inspect the claim’s caller supply, access mode, traced path, sink type, and reasons before deciding which file needs repair.
+
+### Run the verification suite
+
+After changing Code Atlas itself:
+
+```bash
+python3 -m unittest discover -s code_atlas/tests -v
+git diff --check
+bash -n start_atlas.sh
+```
+
+A scanner finding is not a test failure by itself. These commands verify the Code Atlas implementation and launcher.
+
+
+
 ## Design rule
 
 Code Atlas reports observations, confidence, and refusal boundaries separately. When the scanner cannot prove a unique route or classify a terminal operation, the report should say so plainly. A smaller honest map is more useful than a complete-looking map built from guesses.
