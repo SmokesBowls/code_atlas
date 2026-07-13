@@ -355,6 +355,46 @@ write_recipe_and_atlas(build_terrain_field(1))
             for u in res["unresolved_payload_routes"]
         ))
 
+    def test_effect_fixture_d_whole_parameter_to_serializer(self):
+        files = {
+            "producer.py": """
+def produce():
+    return {
+        "book_count": 1,
+        "books": [],
+        "chapter_count": 4,
+        "contract": "chapter_index.v1",
+        "vault_root": "/vault",
+    }
+""",
+            "consumer.py": """
+import json
+
+def consume(index, path):
+    with open("chapter_index.json", "w") as handle:
+        json.dump(index, handle)
+""",
+            "main.py": """
+from producer import produce
+from consumer import consume
+consume(produce(), "chapter_index.json")
+""",
+        }
+
+        flow = next(
+            handoff for handoff in self._run_diagnostics(files)["payload_handoffs"]
+            if handoff["payload_candidate_id"] == "flow_produce_to_consume"
+        )
+        claims = {claim["field"]: claim for claim in flow["effect_claims"]}
+
+        self.assertEqual(flow["consumers"][0]["matched_parameter"], "index")
+        self.assertTrue(flow["whole_parameter_forwarded"])
+        self.assertEqual(flow["observed_shape"]["utilized_keys"], [
+            "book_count", "books", "chapter_count", "contract", "vault_root",
+        ])
+        self.assertTrue(all(claim["verdict"] == "EFFECTIVE" for claim in claims.values()))
+        self.assertTrue(all(claim["sink_type"] == "FILE_WRITE" for claim in claims.values()))
+
     def test_effect_fixture_b_stranded_denylist_only(self):
         files = {
             "producer.py": """

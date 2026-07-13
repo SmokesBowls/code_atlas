@@ -141,6 +141,8 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
         """Resolve local value expressions back to subscripted parameter keys."""
         visited = set() if visited is None else visited
         if isinstance(expr, ast.Name):
+            if expr.id in parameter_names:
+                return {f"{expr.id}:*"}
             if expr.id in visited:
                 return set()
             visited.add(expr.id)
@@ -246,7 +248,12 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
         def record_effect(origin_keys, sink_type, evidence):
             for parameter in parameter_names:
                 for key in origin_keys:
-                    if key in access_modes[parameter]:
+                    if key == f"{parameter}:*":
+                        effects[parameter].setdefault("*", []).append({
+                            "sink_type": sink_type,
+                            "evidence": evidence,
+                        })
+                    elif key in access_modes[parameter]:
                         effects[parameter].setdefault(key, []).append({
                             "sink_type": sink_type,
                             "evidence": evidence,
@@ -271,6 +278,8 @@ class PayloadCandidateASTVisitor(ast.NodeVisitor):
                     continue
                 if qualified in serializer_names:
                     record_effect(origin_keys, "FILE_WRITE", qualified)
+                elif isinstance(subnode.func, ast.Attribute) and subnode.func.attr in {"write", "write_text", "write_bytes"}:
+                    record_effect(origin_keys, "FILE_WRITE", subnode.func.attr)
                 elif isinstance(subnode.func, ast.Attribute) and subnode.func.attr in build_operations:
                     record_effect(origin_keys, "BUILD_INFLUENCE", f"construction operation {subnode.func.attr}")
                 elif func_name in known_nonterminal:

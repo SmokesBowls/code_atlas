@@ -298,6 +298,16 @@ def analyze_payload_handoffs(
                 matched_utilization.get("access_modes", {}).items()
             ))
             field_effects = matched_utilization.get("field_effects", {})
+            whole_parameter_observations = field_effects.get("*", [])
+            whole_parameter_terminal_observations = [
+                observation for observation in whole_parameter_observations
+                if observation.get("sink_type") not in {"NON_TERMINAL", "UNCLASSIFIED"}
+            ]
+            whole_parameter_forwarded = bool(whole_parameter_terminal_observations)
+            if whole_parameter_forwarded:
+                utilized_keys = returned_keys_set
+                unutilized_keys = []
+                status = "connected"
             construction_observations = [
                 observation
                 for observation in consumer.get("construction_fields", [])
@@ -306,7 +316,7 @@ def analyze_payload_handoffs(
             ]
             effect_claims = []
             for index, field in enumerate(sorted(returned_keys_set), start=1):
-                observations = field_effects.get(field, [])
+                observations = field_effects.get(field, []) + whole_parameter_observations
                 terminal = next((
                     observation for observation in observations
                     if observation.get("sink_type") not in {"NON_TERMINAL", "UNCLASSIFIED"}
@@ -393,6 +403,7 @@ def analyze_payload_handoffs(
                 "contract_identifiers": producer.get("contract_identifiers", []),
                 "artifact_paths": artifact_paths,
                 "access_modes": access_modes,
+                "whole_parameter_forwarded": whole_parameter_forwarded,
                 "effect_claims": effect_claims,
                 "construction_observations": construction_observations,
                 "scan_boundary": rel_path,

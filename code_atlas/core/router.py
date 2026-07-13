@@ -103,9 +103,7 @@ def calculate_dependency_routes(files_data, parse_errors, local_dependencies, ca
         
         # Find next file to inspect inside this specific route (excluding entrypoint if possible)
         inspectable_files = [s for s in visited_steps if s["filepath"] != entrypoint]
-        if not inspectable_files and visited_steps:
-            inspectable_files = visited_steps
-            
+
         if inspectable_files:
             # Sort descending by inspection score, then alphabetically by path
             inspectable_files.sort(key=lambda s: (-s["score"], s["filepath"]))

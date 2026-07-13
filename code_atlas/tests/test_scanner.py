@@ -523,6 +523,22 @@ class TestRouting(unittest.TestCase):
         
         self.assertEqual(r["next_file_to_inspect_in_route"], "broken.py")
 
+    def test_single_node_route_has_no_self_referential_advisory(self):
+        from code_atlas.core.router import calculate_dependency_routes
+
+        files_data = {
+            "main.py": {
+                "is_entrypoint": True,
+                "status": {"status": "likely_active"},
+                "inspection_score": 60,
+            }
+        }
+
+        routes = calculate_dependency_routes(files_data, [], [], [])
+
+        self.assertEqual(routes[0]["route_files"], ["main.py"])
+        self.assertIsNone(routes[0]["next_file_to_inspect_in_route"])
+
     def test_routing_cycles(self):
         from code_atlas.core.router import calculate_dependency_routes
         
