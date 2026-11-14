@@ -10,6 +10,8 @@ This directory contains curated proof artifacts, not routine scanner output.
 - `coordinator_singleton_policy_20260712T031419Z/` — coordinator concentration and singleton utility policy scan.
 - `effect_trixel_validation_20260712T124653Z/` — final route-qualified EFFECT/Trixel validation scan.
 - `effect_assembly_inventory_v1.md` — contract-to-implementation inventory for EFFECT assembly.
+- `development_checkpoint_20261114T012211Z/` — pre-repair source audit and
+  checksum-sealed benchmark/scratchpad preservation checkpoint.
 - `legacy_root_reports/` — preserved reports that predate the evidence naming policy; retained for historical comparison, not current authority.
 
 ## Admission rule
