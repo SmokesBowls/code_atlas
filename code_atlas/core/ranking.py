@@ -4,7 +4,7 @@ def calculate_inspection_rankings(files_data, parse_errors, candidate_groups):
     """Calculate inspection scores (0 to 100) for all files based on architectural features.
     
     Ranking Factors:
-        1. parse_errors present -> score = 100
+        1. parse error that is a source defect -> score = 100 (analysis limitations are not scored)
         2. structurally_ambiguous: true -> score += 50
         3. inbound_count > 0 -> score += min(25, inbound_count * 5)
         4. status == "stubbed" -> score += 30
@@ -22,8 +22,11 @@ def calculate_inspection_rankings(files_data, parse_errors, candidate_groups):
 
     rankings = []
 
-    # 1. Broken files (highest priority)
+    # 1. Source defects (highest priority). Files Atlas failed to read for other reasons
+    #    ("analysis_limitation") are scanner gaps, not EngAIn findings, and are not scored.
     for pe in parse_errors:
+        if pe.get("kind", "source_defect") != "source_defect":
+            continue
         rankings.append({
             "filepath": pe["filepath"],
             "score": 100,

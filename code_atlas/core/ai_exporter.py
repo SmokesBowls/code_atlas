@@ -8,7 +8,7 @@ import os
 
 CONTRACT_HEADER = {
     "contract": "code_atlas.ai_architecture_packet",
-    "contract_version": "1.0.0",
+    "contract_version": "1.1.0",
     "source_report_contract": "code_atlas.report",
     "source_report_contract_version": None
 }
@@ -81,10 +81,17 @@ def generate_ai_json(report_data, detail_level="standard"):
         gaps.append({
             "filepath": pe.get("filepath", ""),
             "error": pe.get("error", ""),
+            "kind": pe.get("kind", "source_defect"),
             "claim_type": pe.get("claim_type", "gap")
         })
     gaps.sort(key=lambda x: x["filepath"])
     result["parse_gaps"] = gaps
+    # Scanner limitations, kept apart from source findings: possible dependencies only.
+    result["unresolved_imports"] = [
+        {"source": u["source"], "import": u["import"], "candidates": u["candidates"],
+         "kind": u["kind"], "claim_type": u["claim_type"]}
+        for u in report_data.get("unresolved_imports", [])
+    ]
 
     if detail_level in ("standard", "full"):
         # 5. Boundary Crossings (deterministic sorting, duplicate prevention)
@@ -220,14 +227,17 @@ def generate_ai_markdown(ai_json, detail_level="standard"):
         lines.append(f"   - Claim: `{t['claim_type']}`, Reasons: {reasons_str}")
     lines.append("")
 
-    # Gaps
-    lines.append("## Unresolved Gaps & Parse Errors")
+    # Gaps: source defects and scanner limitations are listed separately
     gaps = ai_json.get("parse_gaps", [])
-    if not gaps:
-        lines.append("No active parse gaps detected.")
-    else:
-        for gap in gaps:
-            lines.append(f"- `{gap['filepath']}`: {gap['error']} (Claim: `{gap['claim_type']}`)")
+    for title, kind in (("Source Defects (Python parser rejected the file)", "source_defect"),
+                        ("Analysis Limitations: Files Atlas Could Not Read", "analysis_limitation")):
+        lines.append(f"## {title}")
+        rows = [g for g in gaps if g.get("kind", "source_defect") == kind]
+        lines.extend([f"- `{g['filepath']}`: {g['error']}" for g in rows] or ["None."])
+        lines.append("")
+    lines.append("## Analysis Limitations: Unresolved Imports (possible dependencies, not counted)")
+    lines.extend([f"- `{u['source']}` imports `{u['import']}`: candidates {', '.join(f'`{c}`' for c in u['candidates'])}"
+                  for u in ai_json.get("unresolved_imports", [])] or ["None."])
     lines.append("")
 
     if detail_level in ("standard", "full"):

@@ -54,10 +54,13 @@ function renderReport(report) {
     // 2. Metadata Totals
     const files = report.files || {};
     const parseErrors = report.parse_errors || [];
+    const unresolvedImports = report.unresolved_imports || [];
     const entrypoints = Object.keys(files).filter(k => files[k].is_entrypoint);
 
     document.getElementById("total-files").textContent = Object.keys(files).length;
-    document.getElementById("total-errors").textContent = parseErrors.length;
+    const defectCount = parseErrors.filter(pe => (pe.kind || "source_defect") === "source_defect").length;
+    document.getElementById("total-errors").textContent =
+        `${defectCount} source defects · ${parseErrors.length - defectCount} unreadable · ${unresolvedImports.length} unresolved imports`;
     document.getElementById("entrypoints-list").textContent = entrypoints.length > 0 ? entrypoints.join(", ") : "None";
 
     // 3. Status Distribution
@@ -118,7 +121,7 @@ function renderReport(report) {
     const gapsBody = document.getElementById("gaps-table-body");
     gapsBody.innerHTML = "";
     
-    if (parseErrors.length === 0) {
+    if (parseErrors.length === 0 && unresolvedImports.length === 0) {
         gapsBody.innerHTML = `
             <tr>
                 <td colspan="3" style="text-align: center; color: var(--text-secondary); font-style: italic;">
@@ -131,8 +134,17 @@ function renderReport(report) {
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td><code>${pe.filepath}</code></td>
-                <td><span class="claim-badge badge-gap">gap</span> ${pe.error}</td>
+                <td><span class="claim-badge badge-gap">${(pe.kind || "source_defect") === "source_defect" ? "source defect" : "analysis limitation"}</span> ${pe.error}</td>
                 <td><span style="text-transform: capitalize;">${pe.confidence || "high"}</span></td>
+            `;
+            gapsBody.appendChild(tr);
+        });
+        unresolvedImports.forEach(u => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td><code>${u.source}</code></td>
+                <td><span class="claim-badge badge-gap">analysis limitation</span> unresolved import <code>${u.import}</code>; possible targets: ${u.candidates.map(c => `<code>${c}</code>`).join(", ")}</td>
+                <td><span style="text-transform: capitalize;">${u.confidence || "high"}</span></td>
             `;
             gapsBody.appendChild(tr);
         });

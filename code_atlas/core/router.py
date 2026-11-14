@@ -1,6 +1,6 @@
 """Module for tracing static dependency routes from entrypoints and mapping subsystem boundary crossings."""
 
-def calculate_dependency_routes(files_data, parse_errors, local_dependencies, candidate_groups):
+def calculate_dependency_routes(files_data, parse_errors, local_dependencies, candidate_groups, unresolved_imports=()):
     """Trace ordered static dependency paths from each entrypoint and analyze their properties.
     
     Returns:
@@ -16,6 +16,7 @@ def calculate_dependency_routes(files_data, parse_errors, local_dependencies, ca
                 "stubbed_files": [...],
                 "unresolved_files": [...],
                 "parse_error_files": [...],
+                "unresolved_import_files": [...],  # route may continue past these; edge unknown
                 "next_file_to_inspect_in_route": "..."
             }
         ]
@@ -26,6 +27,8 @@ def calculate_dependency_routes(files_data, parse_errors, local_dependencies, ca
     # 2. Build adjacency list of dependencies (source -> list of targets)
     adj = {f: [] for f in files_data}
     parse_errors_dict = {pe["filepath"]: pe["error"] for pe in parse_errors}
+    defect_files = {pe["filepath"] for pe in parse_errors if pe.get("kind", "source_defect") == "source_defect"}
+    unresolved_sources = {u["source"] for u in unresolved_imports}
     
     # Also initialize key in adjacency list for broken files
     for filepath in parse_errors_dict:
@@ -76,7 +79,7 @@ def calculate_dependency_routes(files_data, parse_errors, local_dependencies, ca
             has_parse_error = (node in parse_errors_dict)
             
             score = file_info.get("inspection_score", 0)
-            if has_parse_error:
+            if node in defect_files:
                 score = 100
                 
             visited_steps.append({
@@ -100,6 +103,7 @@ def calculate_dependency_routes(files_data, parse_errors, local_dependencies, ca
         stubbed_files = [s["filepath"] for s in visited_steps if s["is_stub"]]
         unresolved_files = [s["filepath"] for s in visited_steps if s["is_unresolved"]]
         parse_error_files = [s["filepath"] for s in visited_steps if s["has_parse_error"]]
+        unresolved_import_files = [s["filepath"] for s in visited_steps if s["filepath"] in unresolved_sources]
         
         # Find next file to inspect inside this specific route (excluding entrypoint if possible)
         inspectable_files = [s for s in visited_steps if s["filepath"] != entrypoint]
@@ -124,6 +128,7 @@ def calculate_dependency_routes(files_data, parse_errors, local_dependencies, ca
             "stubbed_files": stubbed_files,
             "unresolved_files": unresolved_files,
             "parse_error_files": parse_error_files,
+            "unresolved_import_files": unresolved_import_files,
             "next_file_to_inspect_in_route": next_file
         })
         

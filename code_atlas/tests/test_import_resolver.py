@@ -66,13 +66,26 @@ class TestUniqueSuffixLocalImportResolution(unittest.TestCase):
         report = generate_report("/nonexistent/project", scanned_files, [])
 
         self.assertEqual(report["local_dependencies"], [])
-        ambiguity = next(
-            error
-            for error in report["parse_errors"]
-            if "AmbiguousImportError" in error["error"]
-        )
-        self.assertIn("tier1/alpha/shared/tool.py", ambiguity["error"])
-        self.assertIn("tier2/beta/shared/tool.py", ambiguity["error"])
+        # A resolver limitation, not a source defect: never in parse_errors, never scored.
+        self.assertEqual(report["parse_errors"], [])
+        [ambiguity] = report["unresolved_imports"]
+        self.assertEqual(ambiguity["source"], "consumer.py")
+        self.assertEqual(ambiguity["kind"], "analysis_limitation")
+        self.assertEqual(ambiguity["candidates"], ["tier1/alpha/shared/tool.py", "tier2/beta/shared/tool.py"])
+        consumer = [r for r in report["next_files_to_inspect"] if r["filepath"] == "consumer.py"]
+        self.assertEqual(len(consumer), 1)
+        self.assertNotIn("parse_error", consumer[0]["reasons"])
+
+    def test_parse_errors_split_into_defects_and_limitations(self):
+        files = {"ok.py": {"raw_imports": []}}
+        errors = [{"filepath": "bad.py", "error": "SyntaxError: invalid syntax (bad.py, line 3)"},
+                  {"filepath": "binary.py", "error": "UnicodeDecodeError: 'utf-8' codec can't decode"}]
+        report = generate_report("/nonexistent/project", files, errors)
+        kinds = {e["filepath"]: e["kind"] for e in report["parse_errors"]}
+        self.assertEqual(kinds, {"bad.py": "source_defect", "binary.py": "analysis_limitation"})
+        scored = {r["filepath"]: r["score"] for r in report["next_files_to_inspect"]}
+        self.assertEqual(scored.get("bad.py"), 100)
+        self.assertNotIn("binary.py", scored)
 
     def test_no_target_import_remains_unresolved(self):
         scanned_files = {

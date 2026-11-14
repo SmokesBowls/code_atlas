@@ -76,6 +76,14 @@ def resolve_import_to_local_file(import_str, scanned_files, project_dir_name=Non
     )
     return resolved
 
+SOURCE_DEFECT_ERRORS = ("SyntaxError", "IndentationError", "TabError")
+
+
+def parse_error_kind(error):
+    """source_defect when Python's parser rejected the code; analysis_limitation otherwise (I/O, decoding, ...)."""
+    return "source_defect" if error.split(":", 1)[0] in SOURCE_DEFECT_ERRORS else "analysis_limitation"
+
+
 def generate_report(project_dir, files_data, parse_errors):
     """Processes parsed files data to resolve dependencies, run status checks, grouping, and build report."""
     project_name = os.path.basename(os.path.abspath(project_dir))
@@ -84,7 +92,10 @@ def generate_report(project_dir, files_data, parse_errors):
     scanned_files = set(files_data.keys()).union({pe["filepath"] for pe in parse_errors})
 
     local_dependencies = []
-    
+    unresolved_imports = []
+    for pe in parse_errors:
+        pe["kind"] = parse_error_kind(pe["error"])
+
     # Track counts
     inbound_counts = {f: 0 for f in scanned_files}
     outbound_counts = {f: 0 for f in scanned_files}
@@ -99,12 +110,18 @@ def generate_report(project_dir, files_data, parse_errors):
                 imp, scanned_files, project_name
             )
             if resolved_file == "AMBIGUOUS":
-                parse_errors.append({
-                    "filepath": rel_path,
-                    "error": (
-                        f"AmbiguousImportError: Import '{imp}' resolved to multiple "
-                        f"local candidates: {resolution_candidates}."
-                    )
+                # A limitation of Atlas's resolver, not a defect in the source: no edge is recorded.
+                unresolved_imports.append({
+                    "source": rel_path,
+                    "import": imp,
+                    "candidates": resolution_candidates,
+                    "kind": "analysis_limitation",
+                    "claim_type": "gap",
+                    "confidence": "high",
+                    "evidence": [
+                        f"Import '{imp}' matches {len(resolution_candidates)} scanned files; "
+                        "Atlas records no dependency for it, so each candidate is a possible (not confirmed) target"
+                    ]
                 })
             elif resolved_file and resolved_file != rel_path:
                 resolved_for_file.add(resolved_file)
@@ -167,23 +184,34 @@ def generate_report(project_dir, files_data, parse_errors):
         file_info["inspection_score"] = score_map.get(filepath, 0)
 
     # 6. Trace dependency paths and group boundary crossings from entrypoints (Milestone 6)
-    routes = calculate_dependency_routes(cleaned_files_data, parse_errors, local_dependencies, candidate_subsystem_groups)
+    routes = calculate_dependency_routes(cleaned_files_data, parse_errors, local_dependencies,
+                                         candidate_subsystem_groups, unresolved_imports)
 
-    # 7. Format parse errors as gaps
+    # 7. Format parse errors: source defects vs files Atlas could not read for other reasons
     formatted_errors = []
     for pe in parse_errors:
         formatted_errors.append({
             "filepath": pe["filepath"],
             "error": pe["error"],
+            "kind": pe["kind"],
             "claim_type": "gap",
             "confidence": "high",
             "evidence": [
-                "AST parser or dependency resolver flagged a structural gap"
+                "Python's parser rejected the file's source" if pe["kind"] == "source_defect"
+                else "Atlas could not read or parse the file; this is not evidence of a source defect"
             ]
         })
+    unresolved_imports.sort(key=lambda u: (u["source"], u["import"]))
 
     # Sort local dependencies for deterministic outputs
     local_dependencies.sort(key=lambda d: (d["source"], d["target"]))
+
+    # Blast radius counts (who depends on each file); lists come from the blast_radius query
+    from code_atlas.core.blast_radius import blast_radius_counts
+    counts = blast_radius_counts({"files": cleaned_files_data, "local_dependencies": local_dependencies,
+                                  "unresolved_imports": unresolved_imports})
+    for filepath, file_info in cleaned_files_data.items():
+        file_info["blast_radius"] = counts[filepath]
 
     # Extract payload candidates per file
     from code_atlas.core.payload_extractor import extract_payload_candidates
@@ -224,7 +252,7 @@ def generate_report(project_dir, files_data, parse_errors):
         {
             "claim_type": "gap",
             "confidence": "high",
-            "reason": "Namespace packages without __init__.py are supported, but ambiguous resolutions (multiple candidates matching the same import) are recorded as gaps."
+            "reason": "Namespace packages without __init__.py are supported, but an import matching multiple scanned files is listed in unresolved_imports and contributes no dependency edge, so inbound counts and reachability are lower bounds."
         }
     ]
 
@@ -240,6 +268,13 @@ def generate_report(project_dir, files_data, parse_errors):
         "files": cleaned_files_data,
         "local_dependencies": local_dependencies,
         "parse_errors": formatted_errors,
+        "unresolved_imports": unresolved_imports,
+        "blast_radius_scope": {
+            "evidence_level": "source-level impact estimate over resolved static Python imports; not a prediction of runtime failure",
+            "confirmed": "files that import this file directly or through other resolved imports",
+            "possible": "files reached only through an unresolved import; not counted as dependents",
+            "query": "python3 -m code_atlas.core.blast_radius --report <this report> --file <path>"
+        },
         "payload_handoffs": handoffs_data.get("payload_handoffs", []),
         "unresolved_payload_routes": handoffs_data.get("unresolved_payload_routes", [])
     }
@@ -263,7 +298,10 @@ def generate_markdown_report(report):
                 
     lines.append("## 1. Project Overview")
     lines.append(f"- **Total Files Scanned:** {len(files)}")
-    lines.append(f"- **Total Parse Errors (Gaps):** {len(errors)}")
+    defects = [e for e in errors if e.get("kind") == "source_defect"]
+    lines.append(f"- **Source Defects (Python parser rejected the file):** {len(defects)}")
+    lines.append(f"- **Files Atlas Could Not Read (analysis limitation):** {len(errors) - len(defects)}")
+    lines.append(f"- **Unresolved Imports (analysis limitation, no edge recorded):** {len(report.get('unresolved_imports', []))}")
     lines.append(f"- **Detected Entrypoints:** {', '.join(entrypoints) if entrypoints else 'None'}")
     lines.append("")
     
@@ -345,6 +383,8 @@ def generate_markdown_report(report):
                 flags = []
                 if file in r["parse_error_files"]:
                     flags.append("PARSE ERROR")
+                if file in r.get("unresolved_import_files", []):
+                    flags.append("UNRESOLVED IMPORT")
                 if file in r["stubbed_files"]:
                     flags.append("STUB")
                 if file in r["unresolved_files"]:
@@ -361,6 +401,17 @@ def generate_markdown_report(report):
                         
                 lines.append(f"  - `{file}`{flag_str}{crossing_str}")
             lines.append("")
+
+    # Findings vs scanner limitations, listed separately and never scored together
+    lines.append("## Source Defects and Analysis Limitations")
+    lines.append("### Source defects")
+    lines.extend([f"- `{e['filepath']}`: {e['error']}" for e in defects] or ["None."])
+    lines.append("### Analysis limitations: files Atlas could not read")
+    lines.extend([f"- `{e['filepath']}`: {e['error']}" for e in errors if e.get("kind") != "source_defect"] or ["None."])
+    lines.append("### Analysis limitations: unresolved imports (possible dependencies, not counted)")
+    lines.extend([f"- `{u['source']}` imports `{u['import']}`: candidates {', '.join(f'`{c}`' for c in u['candidates'])}"
+                  for u in report.get("unresolved_imports", [])] or ["None."])
+    lines.append("")
 
     # 5. Limitations
     lines.append("## 5. Limitations")

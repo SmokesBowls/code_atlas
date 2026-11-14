@@ -72,13 +72,13 @@ def classify_statuses(files_data, local_dependencies):
             }
 
     # Step 2: Reachability traversal (BFS) to identify other likely_active files
-    queue = list(active_roots)
+    queue = sorted(active_roots)  # sorted: set order varies with PYTHONHASHSEED
     visited = set(active_roots)
     imported_by = {}
     
     while queue:
         current = queue.pop(0)
-        for neighbor in adj_list[current]:
+        for neighbor in sorted(adj_list[current]):
             if neighbor not in visited:
                 visited.add(neighbor)
                 imported_by[neighbor] = current

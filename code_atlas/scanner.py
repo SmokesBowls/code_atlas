@@ -15,12 +15,50 @@ if parent_dir not in sys.path:
 from code_atlas.core.parser import parse_file
 from code_atlas.core.reporter import generate_report, generate_markdown_report
 
-def run_scan(target_dir, output_file, ai_output=None, ai_json_output=None, ai_detail="standard"):
+def write_boundaries(target_dir, report, boundaries_output):
+    """Separate analysis: HTTP boundary inventory + matching over the files the scan found.
+
+    Reads the finished report only for its file list and (optional) profile systems; the
+    report itself is not modified."""
+    from code_atlas.core.http_boundaries import build_http_inventory
+    from code_atlas.core.boundary_matcher import match_boundaries
+    owner = {f: s["name"] for s in report.get("systems", []) for f in s["files"]}
+    default_system = report.get("project_name", os.path.basename(target_dir))
+    inventory = build_http_inventory(target_dir, sorted(report["files"]),
+                                     lambda rel: owner.get(rel, default_system))
+    data = {"scanned_at": report.get("scanned_at"), "root": target_dir,
+            "profile": report.get("profile"), "inventory": inventory,
+            "matching": match_boundaries([inventory])}
+    path = os.path.abspath(boundaries_output)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2)
+    cs = inventory["coverage_summary"]["sites_by_status"]
+    print(f"  HTTP boundaries saved to: {path}")
+    print(f"    outgoing calls: {len(inventory['outgoing'])}, routes: {len(inventory['incoming'])}, "
+          f"call sites not interpreted: {cs.get('not-interpreted', 0)}")
+
+
+def run_scan(target_dir, output_file, ai_output=None, ai_json_output=None, ai_detail="standard",
+             profile_path=None, mermaid_dir=None, boundaries_output=None):
     """Scan the target directory, parse Python files, and generate JSON and Markdown reports."""
     target_dir = os.path.abspath(target_dir)
     if not os.path.isdir(target_dir):
         print(f"Error: Target directory '{target_dir}' does not exist.", file=sys.stderr)
         sys.exit(1)
+
+    # Validate the optional profile before scanning so a bad profile never yields partial output.
+    profile = profile_provenance = None
+    if mermaid_dir is not None and profile_path is None:
+        print("Error: --mermaid-dir requires --profile (diagrams follow the declared system hierarchy).", file=sys.stderr)
+        sys.exit(1)
+    if profile_path is not None:
+        from code_atlas.core.profile import load_profile, ProfileError
+        try:
+            profile, profile_provenance = load_profile(profile_path)
+        except ProfileError as e:
+            print(f"Error: invalid profile: {e}", file=sys.stderr)
+            sys.exit(1)
 
     files_data = {}
     parse_errors = []
@@ -51,6 +89,9 @@ def run_scan(target_dir, output_file, ai_output=None, ai_json_output=None, ai_de
 
     # Generate full report data
     report = generate_report(target_dir, files_data, parse_errors)
+    if profile is not None:
+        from code_atlas.core.profile import build_profile_sections
+        report.update(build_profile_sections(report, profile, profile_provenance, ignored_dirs))
 
     # Save to output JSON file
     output_path = os.path.abspath(output_file)
@@ -76,6 +117,21 @@ def run_scan(target_dir, output_file, ai_output=None, ai_json_output=None, ai_de
     print(f"  Parse Errors:  {len(parse_errors)}")
     print(f"  JSON Report saved to: {output_path}")
     print(f"  Markdown Report saved to: {md_output_path}")
+
+    if mermaid_dir is not None:
+        from code_atlas.core.mermaid_exporter import (
+            generate_repository_structure_mmd, generate_repository_structure_page)
+        mermaid_path = os.path.abspath(mermaid_dir)
+        os.makedirs(mermaid_path, exist_ok=True)
+        mmd = generate_repository_structure_mmd(report)
+        with open(os.path.join(mermaid_path, "repository_structure.mmd"), 'w', encoding='utf-8') as f:
+            f.write(mmd)
+        with open(os.path.join(mermaid_path, "repository_structure.md"), 'w', encoding='utf-8') as f:
+            f.write(generate_repository_structure_page(report, mmd))
+        print(f"  Mermaid structure diagram saved to: {mermaid_path}")
+
+    if boundaries_output is not None:
+        write_boundaries(target_dir, report, boundaries_output)
 
     # Conditionally execute the AI architecture packet exporter (opt-in)
     if ai_output is not None or ai_json_output is not None:
@@ -129,8 +185,25 @@ def main():
         choices=["compact", "standard", "full"],
         help="Detail level for the AI export: compact, standard, or full (default: standard)"
     )
+    parser.add_argument(
+        "--profile",
+        default=None,
+        help="Optional JSON profile declaring systems, components and external systems"
+    )
+    parser.add_argument(
+        "--mermaid-dir",
+        default=None,
+        help="Directory for Mermaid structure diagrams (requires --profile)"
+    )
+    parser.add_argument(
+        "--boundaries-output",
+        default=None,
+        help="Optional JSON file for the HTTP boundary inventory and matches (separate analysis)"
+    )
     args = parser.parse_args()
-    run_scan(args.dir, args.output, args.ai_output, args.ai_json_output, args.ai_detail)
+    run_scan(args.dir, args.output, args.ai_output, args.ai_json_output, args.ai_detail,
+             profile_path=args.profile, mermaid_dir=args.mermaid_dir,
+             boundaries_output=args.boundaries_output)
 
 if __name__ == "__main__":
     main()

@@ -107,6 +107,15 @@ class TestEntrypointAndStatus(unittest.TestCase):
         self.assertEqual(statuses["unimported.py"]["status"], "orphaned")
         self.assertEqual(statuses["stub.py"]["status"], "stubbed")
 
+    def test_reachability_evidence_is_order_independent(self):
+        # helper.py is reachable from two roots; the named importer must not depend on set order.
+        files = {f: {"_has_main_block": True, "raw_imports": []} for f in ("z_root.py", "a_root.py", "m_root.py")}
+        files["helper.py"] = {"raw_imports": []}
+        deps = [{"source": r, "target": "helper.py", "type": "import"} for r in ("z_root.py", "m_root.py", "a_root.py")]
+        for order in (files, dict(reversed(list(files.items())))):
+            ev = classify_statuses(order, deps)["helper.py"]["evidence"]
+            self.assertEqual(ev, ["Imported by likely_active file: 'a_root.py'"])
+
 
 class TestReporterAndGrouping(unittest.TestCase):
     def test_get_role_hint(self):
